@@ -29,7 +29,7 @@ repositories {
 ext {
     jwtVersion = "0.13.0"
     springAiVersion="1.0.0-RC1"
-    testContainer = "2.0.3"
+//    testContainer = "2.0.3"
     openApi = "2.8.13"
     mapStruct = "1.5.5.Final"
     springModulithVersion = "2.0.3"
@@ -75,9 +75,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
+
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-mongodb'
-
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -97,6 +97,7 @@ spotless {
         palantirJavaFormat()
     }
 }
+
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
@@ -110,8 +111,9 @@ tasks.withType(JavaCompile).configureEach {
 def jacocoExcludes = [
         'com/tragepro/api/Application*',
         'com/tragepro/api/application/service/mapper/**',
-        'com/tragepro/api/security/**',
-        'com.tragepro.api.config.**',
+        'com/tragepro/api/security/filter/**',
+        'com/tragepro/api/security/filter/**',
+        'com/tragepro/api/config.**',
         'com/tragepro/api/common/**',
         'com/tragepro/api/exception/**',
         "com/tragepro/api/core/strategy/**"

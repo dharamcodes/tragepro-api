@@ -3,7 +3,10 @@ package com.tragepro.api.common;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.tragepro.api.security.constant.RoleType;
 import com.tragepro.api.security.model.request.AuthenticationRequest;
 import com.tragepro.api.security.model.request.LoginRequest;
@@ -11,26 +14,16 @@ import com.tragepro.api.security.model.response.LoginResponse;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.mongodb.MongoDBContainer;
 
-@Testcontainers
-public abstract class BaseApiTestSetup {
-
-    @Container
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = MongoContainer.getInstance();
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-    }
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+public abstract class ApiTestSetup extends ContainerConfig {
 
     @Autowired
     protected MockMvc mockMvc;
@@ -42,7 +35,10 @@ public abstract class BaseApiTestSetup {
 
     @BeforeEach
     void setupUserAndAuth() throws Exception {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .build();
         uuid = UUID.randomUUID().toString();
         AuthenticationRequest signupRequest = AuthenticationRequest.builder()
                 .userName(uuid)

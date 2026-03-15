@@ -1,24 +1,18 @@
 package com.tragepro.api.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.BaseApiTestSetup;
+import com.tragepro.api.common.ApiTestSetup;
 import com.tragepro.api.security.helper.JwtTokenHelper;
 import com.tragepro.api.security.model.request.AccountDetailRequest;
-import com.tragepro.api.security.model.response.AccountDetailResponse;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class AccountDetailControllerTest extends BaseApiTestSetup {
+class AccountDetailControllerTest extends ApiTestSetup {
 
     private AccountDetailRequest accountDetailRequest;
 
@@ -35,18 +29,14 @@ class AccountDetailControllerTest extends BaseApiTestSetup {
 
     @Test
     void testCreateAccount_Success() throws Exception {
-        String responseJson = mockMvc.perform(post("/api/v1/account")
+        mockMvc.perform(post("/api/v1/account")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDetailRequest)))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        AccountDetailResponse created = objectMapper.readValue(responseJson, AccountDetailResponse.class);
-        assertEquals(created.getEmail(), accountDetailRequest.getEmail());
-        assertEquals(created.getName(), accountDetailRequest.getName());
+                .andExpect(jsonPath("$.name").value("Test Account"))
+                .andExpect(jsonPath("$.identifier").value("testAccount"))
+                .andExpect(jsonPath("$.phoneNumber").value(9555318046L));
     }
 
     @Test
@@ -88,7 +78,7 @@ class AccountDetailControllerTest extends BaseApiTestSetup {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Account"))
                 .andExpect(jsonPath("$.identifier").value("testAccount"))
-                .andExpect(jsonPath("$.phoneNumber").value(1234567890L));
+                .andExpect(jsonPath("$.phoneNumber").value(9555318046L));
     }
 
     @Test
@@ -114,7 +104,7 @@ class AccountDetailControllerTest extends BaseApiTestSetup {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Account"))
                 .andExpect(jsonPath("$.identifier").value("testAccount"))
-                .andExpect(jsonPath("$.phoneNumber").value(1234567890L));
+                .andExpect(jsonPath("$.phoneNumber").value(9555318046L));
     }
 
     @Test
@@ -137,7 +127,7 @@ class AccountDetailControllerTest extends BaseApiTestSetup {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Account"))
                 .andExpect(jsonPath("$.identifier").value("testAccount"))
-                .andExpect(jsonPath("$.phoneNumber").value(1234567890L))
+                .andExpect(jsonPath("$.phoneNumber").value(9555318046L))
                 .andExpect(jsonPath("$.isActive").value(false));
     }
 

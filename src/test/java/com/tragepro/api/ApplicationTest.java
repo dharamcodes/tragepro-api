@@ -12,7 +12,7 @@ class ApplicationTest {
     @Test
     void contextLoads() {
         ApplicationModules modules = ApplicationModules.of(Application.class);
-        modules.forEach(module -> log.info(module.getDisplayName()));
+        modules.forEach(module -> log.debug(module.getDisplayName()));
         modules.verify();
     }
 }

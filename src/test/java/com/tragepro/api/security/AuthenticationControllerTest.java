@@ -1,27 +1,21 @@
 package com.tragepro.api.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.BaseApiTestSetup;
+import com.tragepro.api.common.ApiTestSetup;
 import com.tragepro.api.security.constant.RoleType;
 import com.tragepro.api.security.helper.JwtTokenHelper;
 import com.tragepro.api.security.model.request.AuthenticationRequest;
 import com.tragepro.api.security.model.request.LoginRequest;
 import com.tragepro.api.security.model.request.ResetPasswordRequest;
-import com.tragepro.api.security.model.response.AuthenticationResponse;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class AuthenticationControllerTest extends BaseApiTestSetup {
+class AuthenticationControllerTest extends ApiTestSetup {
 
     private static final String PASSWORD_RESET_CLAIM = "PASSWORD_RESET_CLAIM";
 
@@ -45,16 +39,12 @@ class AuthenticationControllerTest extends BaseApiTestSetup {
     @Test
     void testSignup_Success() throws Exception {
         authenticationRequest.setUserName("");
-        String responseJson = mockMvc.perform(post("/api/v1/auth/signup")
+        mockMvc.perform(post("/api/v1/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authenticationRequest)))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        AuthenticationResponse created = objectMapper.readValue(responseJson, AuthenticationResponse.class);
-        assertEquals(created.getIsActive(), authenticationRequest.getIsActive());
-        assertEquals(created.getUserName(), authenticationRequest.getUserName());
+                .andExpect(jsonPath("$.userName").value(authenticationRequest.getUserName()))
+                .andExpect(jsonPath("$.isActive").value(authenticationRequest.getIsActive()));
     }
 
     @Test
