@@ -12,7 +12,6 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-// @NoArgsConstructor
 public class AuthenticationRequest {
 
     @Email(message = "Invalid email format")

@@ -2,11 +2,13 @@ package com.tragepro.api.security.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class ResetPasswordRequest {
     @NotBlank(message = "Username must not be blank")
     private String userName;

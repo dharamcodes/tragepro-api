@@ -8,17 +8,17 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.modulith.NamedInterface;
 
 @Data
 @Builder
 @Base32IdGen
-@NamedInterface
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "accountDetail")
 public class AccountDetailEntity extends BaseEntity {
