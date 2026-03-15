@@ -1,0 +1,22 @@
+meta {
+  name: Add index data
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/index/add/security
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "symbol": "ABC",
+    "securityId": 123,
+    "indexes": [
+      "NIFTY_50"
+    ],
+    "exchange": "NSE_EQ"
+  }
+}

@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="build_and_run" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="homebrew-21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="spring.profiles.active" value="local" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="io.tragepro.api.Application" />
+    <module name="tragepro-api.main" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,15 @@
+meta {
+  name: Deactivate account
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/account/:identifier
+  body: none
+  auth: inherit
+}
+
+params:path {
+  identifier: 
+}

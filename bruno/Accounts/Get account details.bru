@@ -1,0 +1,15 @@
+meta {
+  name: Get account details
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/account/:identifier
+  body: none
+  auth: inherit
+}
+
+params:path {
+  identifier: 
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Update account details
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/api/v1/account/:identifier
+  body: json
+  auth: inherit
+}
+
+params:path {
+  identifier: 
+}
+
+body:json {
+  {
+    "name": "",
+    "email": "",
+    "identifier": "",
+    "phoneNumber": 0,
+    "isActive": false
+  }
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Update auth details
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/api/v1/auth/update/:userName
+  body: json
+  auth: inherit
+}
+
+params:path {
+  userName: 
+}
+
+body:json {
+  {
+    "email": "",
+    "userName": "",
+    "password": "",
+    "role": "",
+    "isActive": false
+  }
+}

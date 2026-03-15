@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "tragepro",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

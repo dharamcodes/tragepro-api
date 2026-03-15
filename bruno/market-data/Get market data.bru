@@ -1,0 +1,17 @@
+meta {
+  name: Get market data
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/market/data/symbol/:symbol/exchange/:exchange/daysBack/:daysBack
+  body: none
+  auth: inherit
+}
+
+params:path {
+  symbol: 
+  exchange: 
+  daysBack: 
+}
