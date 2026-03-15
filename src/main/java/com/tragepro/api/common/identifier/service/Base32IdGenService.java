@@ -1,0 +1,5 @@
+package com.tragepro.api.common.identifier.service;
+
+public interface Base32IdGenService {
+    long getNextSequence(String key);
+}

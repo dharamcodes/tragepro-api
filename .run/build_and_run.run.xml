@@ -5,7 +5,7 @@
     <envs>
       <env name="spring.profiles.active" value="local" />
     </envs>
-    <option name="MAIN_CLASS_NAME" value="io.tragepro.api.Application" />
+    <option name="MAIN_CLASS_NAME" value="com.tragepro.api.Application" />
     <module name="tragepro-api.main" />
     <method v="2">
       <option name="Make" enabled="true" />

@@ -1,4 +1,4 @@
-package io.tragepro.api.exception.constant;
+package com.tragepro.api.exception.constant;
 
 import lombok.Getter;
 import lombok.NonNull;

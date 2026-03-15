@@ -11,17 +11,30 @@ import com.tragepro.api.security.model.response.LoginResponse;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mongodb.MongoDBContainer;
 
 @Testcontainers
-public abstract class APITestSetup {
+public abstract class BaseApiTestSetup {
+
+    @Container
+    @ServiceConnection
+    static MongoDBContainer mongoDBContainer = MongoContainer.getInstance();
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     @Autowired
     protected MockMvc mockMvc;
 
-    @Autowired
     protected ObjectMapper objectMapper;
 
     protected String authToken;
@@ -29,6 +42,7 @@ public abstract class APITestSetup {
 
     @BeforeEach
     void setupUserAndAuth() throws Exception {
+        objectMapper = new ObjectMapper();
         uuid = UUID.randomUUID().toString();
         AuthenticationRequest signupRequest = AuthenticationRequest.builder()
                 .userName(uuid)

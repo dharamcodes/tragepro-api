@@ -1,4 +1,4 @@
-package io.tragepro.api.common.config;
+package com.tragepro.api.common.config;
 
 import java.util.Optional;
 import org.springframework.context.annotation.Bean;

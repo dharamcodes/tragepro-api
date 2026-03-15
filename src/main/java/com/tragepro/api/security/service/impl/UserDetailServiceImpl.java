@@ -1,8 +1,8 @@
-package io.tragepro.api.application.service.impl;
+package com.tragepro.api.security.service.impl;
 
-import io.tragepro.api.application.service.UserDetailService;
-import io.tragepro.api.security.constant.RoleType;
-import io.tragepro.api.security.repository.AuthenticationRepository;
+import com.tragepro.api.security.constant.RoleType;
+import com.tragepro.api.security.repository.AuthenticationRepository;
+import com.tragepro.api.security.service.UserDetailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;

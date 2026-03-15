@@ -1,11 +1,11 @@
-package io.tragepro.api.application.controller;
+package com.tragepro.api.security.web;
 
-import io.tragepro.api.application.service.AuthenticationService;
-import io.tragepro.api.security.model.request.AuthenticationRequest;
-import io.tragepro.api.security.model.request.LoginRequest;
-import io.tragepro.api.security.model.request.ResetPasswordRequest;
-import io.tragepro.api.security.model.response.AuthenticationResponse;
-import io.tragepro.api.security.model.response.LoginResponse;
+import com.tragepro.api.security.model.request.AuthenticationRequest;
+import com.tragepro.api.security.model.request.LoginRequest;
+import com.tragepro.api.security.model.request.ResetPasswordRequest;
+import com.tragepro.api.security.model.response.AuthenticationResponse;
+import com.tragepro.api.security.model.response.LoginResponse;
+import com.tragepro.api.security.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

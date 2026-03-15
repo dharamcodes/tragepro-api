@@ -1,10 +1,12 @@
-package io.tragepro.api.security.model.response;
+package com.tragepro.api.security.model.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class AccountDetailResponse {
     private String name;
     private String email;

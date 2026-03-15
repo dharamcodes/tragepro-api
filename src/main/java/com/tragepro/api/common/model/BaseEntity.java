@@ -1,4 +1,4 @@
-package io.tragepro.api.common.model.entity;
+package com.tragepro.api.common.model;
 
 import java.time.Instant;
 import lombok.Data;

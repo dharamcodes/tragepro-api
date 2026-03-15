@@ -1,8 +1,8 @@
-package io.tragepro.api.application.controller;
+package com.tragepro.api.security.web;
 
-import io.tragepro.api.application.service.AccountDetailService;
-import io.tragepro.api.security.model.request.AccountDetailRequest;
-import io.tragepro.api.security.model.response.AccountDetailResponse;
+import com.tragepro.api.security.model.request.AccountDetailRequest;
+import com.tragepro.api.security.model.response.AccountDetailResponse;
+import com.tragepro.api.security.service.AccountDetailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

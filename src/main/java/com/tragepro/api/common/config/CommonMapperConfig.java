@@ -1,5 +1,6 @@
-package io.tragepro.api.common.config;
+package com.tragepro.api.common.config;
 
+import org.mapstruct.Builder;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.Mapping;
@@ -13,7 +14,8 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.WARN,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
-        mappingInheritanceStrategy = MappingInheritanceStrategy.AUTO_INHERIT_FROM_CONFIG)
+        mappingInheritanceStrategy = MappingInheritanceStrategy.AUTO_INHERIT_FROM_CONFIG,
+        builder = @Builder(disableBuilder = false))
 public interface CommonMapperConfig {
 
     @Mapping(target = "id", ignore = true)

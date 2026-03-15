@@ -1,7 +1,7 @@
-package io.tragepro.api.common.config;
+package com.tragepro.api.common.config;
 
-import io.tragepro.api.common.mapper.BaseMapper;
-import io.tragepro.api.common.mapper.MapperType;
+import com.tragepro.api.common.mapper.BaseMapper;
+import com.tragepro.api.common.mapper.MapperType;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.context.annotation.Bean;

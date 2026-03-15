@@ -1,11 +1,11 @@
-package io.tragepro.api.application.service.mapper;
+package com.tragepro.api.security.service.mapper;
 
-import io.tragepro.api.common.config.CommonMapperConfig;
-import io.tragepro.api.common.mapper.BaseMapper;
-import io.tragepro.api.common.mapper.MapperType;
-import io.tragepro.api.security.model.entity.AccountDetailEntity;
-import io.tragepro.api.security.model.request.AccountDetailRequest;
-import io.tragepro.api.security.model.response.AccountDetailResponse;
+import com.tragepro.api.common.config.CommonMapperConfig;
+import com.tragepro.api.common.mapper.BaseMapper;
+import com.tragepro.api.common.mapper.MapperType;
+import com.tragepro.api.security.model.entity.AccountDetailEntity;
+import com.tragepro.api.security.model.request.AccountDetailRequest;
+import com.tragepro.api.security.model.response.AccountDetailResponse;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

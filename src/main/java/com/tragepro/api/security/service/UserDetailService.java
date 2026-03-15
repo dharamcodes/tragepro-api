@@ -1,4 +1,4 @@
-package io.tragepro.api.application.service;
+package com.tragepro.api.security.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 

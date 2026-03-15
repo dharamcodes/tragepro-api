@@ -1,13 +1,18 @@
 package com.tragepro.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.modulith.core.ApplicationModules;
 
-@Import(TestcontainersConfiguration.class)
+@Slf4j
 @SpringBootTest
-class ApplicationTests {
+class ApplicationTest {
 
     @Test
-    void contextLoads() {}
+    void contextLoads() {
+        ApplicationModules modules = ApplicationModules.of(Application.class);
+        modules.forEach(module -> log.info(module.getDisplayName()));
+        modules.verify();
+    }
 }

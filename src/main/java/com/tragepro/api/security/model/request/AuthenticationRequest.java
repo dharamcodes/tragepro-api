@@ -1,15 +1,18 @@
-package io.tragepro.api.security.model.request;
+package com.tragepro.api.security.model.request;
 
-import io.tragepro.api.security.constant.RoleType;
+import com.tragepro.api.security.constant.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
+// @NoArgsConstructor
 public class AuthenticationRequest {
 
     @Email(message = "Invalid email format")

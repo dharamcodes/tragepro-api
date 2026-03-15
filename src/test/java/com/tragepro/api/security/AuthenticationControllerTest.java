@@ -1,27 +1,27 @@
-package io.tragepro.api.application.controller;
+package com.tragepro.api.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.tragepro.api.common.APITestSetup;
-import io.tragepro.api.security.constant.RoleType;
-import io.tragepro.api.security.helper.JwtTokenHelper;
-import io.tragepro.api.security.model.request.AuthenticationRequest;
-import io.tragepro.api.security.model.request.LoginRequest;
-import io.tragepro.api.security.model.request.ResetPasswordRequest;
-import io.tragepro.api.security.model.response.AuthenticationResponse;
+import com.tragepro.api.common.BaseApiTestSetup;
+import com.tragepro.api.security.constant.RoleType;
+import com.tragepro.api.security.helper.JwtTokenHelper;
+import com.tragepro.api.security.model.request.AuthenticationRequest;
+import com.tragepro.api.security.model.request.LoginRequest;
+import com.tragepro.api.security.model.request.ResetPasswordRequest;
+import com.tragepro.api.security.model.response.AuthenticationResponse;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthenticationControllerTest extends APITestSetup {
+class AuthenticationControllerTest extends BaseApiTestSetup {
 
     private static final String PASSWORD_RESET_CLAIM = "PASSWORD_RESET_CLAIM";
 

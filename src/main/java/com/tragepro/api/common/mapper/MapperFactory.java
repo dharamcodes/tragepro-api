@@ -1,4 +1,4 @@
-package io.tragepro.api.common.mapper;
+package com.tragepro.api.common.mapper;
 
 import java.util.List;
 import java.util.Map;

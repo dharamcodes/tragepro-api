@@ -1,10 +1,10 @@
-package io.tragepro.api.application.service;
+package com.tragepro.api.security.service;
 
-import io.tragepro.api.security.model.request.AuthenticationRequest;
-import io.tragepro.api.security.model.request.LoginRequest;
-import io.tragepro.api.security.model.request.ResetPasswordRequest;
-import io.tragepro.api.security.model.response.AuthenticationResponse;
-import io.tragepro.api.security.model.response.LoginResponse;
+import com.tragepro.api.security.model.request.AuthenticationRequest;
+import com.tragepro.api.security.model.request.LoginRequest;
+import com.tragepro.api.security.model.request.ResetPasswordRequest;
+import com.tragepro.api.security.model.response.AuthenticationResponse;
+import com.tragepro.api.security.model.response.LoginResponse;
 
 public interface AuthenticationService {
 

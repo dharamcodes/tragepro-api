@@ -1,4 +1,4 @@
-package io.tragepro.api.security.constant;
+package com.tragepro.api.security.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

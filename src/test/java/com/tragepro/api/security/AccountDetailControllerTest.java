@@ -1,24 +1,24 @@
-package io.tragepro.api.application.controller;
+package com.tragepro.api.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.tragepro.api.common.APITestSetup;
-import io.tragepro.api.security.helper.JwtTokenHelper;
-import io.tragepro.api.security.model.request.AccountDetailRequest;
-import io.tragepro.api.security.model.response.AccountDetailResponse;
+import com.tragepro.api.common.BaseApiTestSetup;
+import com.tragepro.api.security.helper.JwtTokenHelper;
+import com.tragepro.api.security.model.request.AccountDetailRequest;
+import com.tragepro.api.security.model.response.AccountDetailResponse;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AccountDetailControllerTest extends APITestSetup {
+class AccountDetailControllerTest extends BaseApiTestSetup {
 
     private AccountDetailRequest accountDetailRequest;
 
@@ -28,7 +28,7 @@ class AccountDetailControllerTest extends APITestSetup {
                 .name("Test Account")
                 .email("testacc@example.com")
                 .identifier("testAccount")
-                .phoneNumber(1234567890L)
+                .phoneNumber(9555318046L)
                 .isActive(true)
                 .build();
     }

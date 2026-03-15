@@ -1,4 +1,4 @@
-package io.tragepro.api.security.model.request;
+package com.tragepro.api.security.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

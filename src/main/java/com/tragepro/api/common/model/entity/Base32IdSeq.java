@@ -1,4 +1,4 @@
-package io.tragepro.api.common.model.entity;
+package com.tragepro.api.common.model.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

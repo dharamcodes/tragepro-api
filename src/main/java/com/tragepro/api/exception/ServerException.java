@@ -1,6 +1,6 @@
-package io.tragepro.api.exception.impl;
+package com.tragepro.api.exception;
 
-import io.tragepro.api.exception.constant.ErrorType;
+import com.tragepro.api.exception.constant.ErrorType;
 import lombok.Getter;
 
 @Getter

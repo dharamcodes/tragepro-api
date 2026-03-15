@@ -1,8 +1,8 @@
-package io.tragepro.api.security.model.entity;
+package com.tragepro.api.security.model.entity;
 
-import io.tragepro.api.common.identifier.annotation.Base32IdGen;
-import io.tragepro.api.common.identifier.annotation.Identifier;
-import io.tragepro.api.common.model.entity.BaseEntity;
+import com.tragepro.api.common.identifier.annotation.Base32IdGen;
+import com.tragepro.api.common.identifier.annotation.Identifier;
+import com.tragepro.api.common.model.BaseEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,10 +13,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.modulith.NamedInterface;
 
 @Data
 @Builder
 @Base32IdGen
+@NamedInterface
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "accountDetail")
 public class AccountDetailEntity extends BaseEntity {

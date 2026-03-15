@@ -1,13 +1,13 @@
-package io.tragepro.api.security.helper;
+package com.tragepro.api.security.helper;
 
+import com.tragepro.api.exception.AppException;
+import com.tragepro.api.exception.constant.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import io.tragepro.api.exception.constant.ErrorType;
-import io.tragepro.api.exception.impl.AppException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;

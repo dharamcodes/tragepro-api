@@ -1,11 +1,11 @@
-package io.tragepro.api.security.filter;
+package com.tragepro.api.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.tragepro.api.application.service.UserDetailService;
-import io.tragepro.api.exception.constant.ErrorType;
-import io.tragepro.api.exception.impl.AppException;
-import io.tragepro.api.security.constant.RoleType;
-import io.tragepro.api.security.helper.JwtTokenHelper;
+import com.tragepro.api.exception.AppException;
+import com.tragepro.api.exception.constant.ErrorType;
+import com.tragepro.api.security.constant.RoleType;
+import com.tragepro.api.security.helper.JwtTokenHelper;
+import com.tragepro.api.security.service.UserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

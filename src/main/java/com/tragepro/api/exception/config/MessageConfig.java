@@ -1,4 +1,4 @@
-package io.tragepro.api.exception.config;
+package com.tragepro.api.exception.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

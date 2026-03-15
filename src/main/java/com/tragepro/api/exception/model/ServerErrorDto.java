@@ -1,4 +1,4 @@
-package io.tragepro.api.exception.dto;
+package com.tragepro.api.exception.model;
 
 import java.time.LocalDateTime;
 import lombok.Builder;

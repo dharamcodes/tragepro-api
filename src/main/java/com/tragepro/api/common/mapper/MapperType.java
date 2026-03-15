@@ -1,4 +1,4 @@
-package io.tragepro.api.common.mapper;
+package com.tragepro.api.common.mapper;
 
 public enum MapperType {
     AUTHENTICATION_MAPPER,

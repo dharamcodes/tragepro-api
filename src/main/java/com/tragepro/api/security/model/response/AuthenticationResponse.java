@@ -1,6 +1,6 @@
-package io.tragepro.api.security.model.response;
+package com.tragepro.api.security.model.response;
 
-import io.tragepro.api.security.constant.RoleType;
+import com.tragepro.api.security.constant.RoleType;
 import lombok.Builder;
 import lombok.Data;
 

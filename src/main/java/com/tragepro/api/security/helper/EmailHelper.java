@@ -1,4 +1,4 @@
-package io.tragepro.api.security.helper;
+package com.tragepro.api.security.helper;
 
 import lombok.experimental.UtilityClass;
 

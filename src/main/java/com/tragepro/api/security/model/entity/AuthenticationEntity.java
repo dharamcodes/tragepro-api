@@ -1,12 +1,11 @@
-package io.tragepro.api.security.model.entity;
+package com.tragepro.api.security.model.entity;
 
-import io.tragepro.api.common.model.entity.BaseEntity;
-import io.tragepro.api.security.constant.RoleType;
+import com.tragepro.api.common.model.BaseEntity;
+import com.tragepro.api.security.constant.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Builder
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "authDetailData")
 public class AuthenticationEntity extends BaseEntity {

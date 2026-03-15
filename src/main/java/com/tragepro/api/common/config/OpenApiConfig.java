@@ -1,4 +1,4 @@
-package io.tragepro.api.common.config;
+package com.tragepro.api.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

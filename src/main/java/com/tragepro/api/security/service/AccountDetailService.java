@@ -1,7 +1,7 @@
-package io.tragepro.api.application.service;
+package com.tragepro.api.security.service;
 
-import io.tragepro.api.security.model.request.AccountDetailRequest;
-import io.tragepro.api.security.model.response.AccountDetailResponse;
+import com.tragepro.api.security.model.request.AccountDetailRequest;
+import com.tragepro.api.security.model.response.AccountDetailResponse;
 
 public interface AccountDetailService {
     AccountDetailResponse createAccount(AccountDetailRequest accountDetailRequest);

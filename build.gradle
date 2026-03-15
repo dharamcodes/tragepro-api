@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.diffplug.spotless' version "7.0.2"
+    id 'jacoco'
 }
 
 group = 'com.tragepro.api'
@@ -25,7 +27,12 @@ repositories {
 }
 
 ext {
-    set('springModulithVersion', "2.0.3")
+    jwtVersion = "0.13.0"
+    springAiVersion="1.0.0-RC1"
+    testContainer = "2.0.3"
+    openApi = "2.8.13"
+    mapStruct = "1.5.5.Final"
+    springModulithVersion = "2.0.3"
 }
 
 dependencies {
@@ -36,16 +43,29 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
     implementation 'org.springframework.modulith:spring-modulith-starter-core'
     implementation 'org.springframework.modulith:spring-modulith-starter-mongodb'
+    implementation "org.mapstruct:mapstruct:$mapStruct"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApi"
+    implementation "io.jsonwebtoken:jjwt-api:$jwtVersion"
+    implementation 'org.projectlombok:lombok'
+
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jwtVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jwtVersion"
     compileOnly 'org.projectlombok:lombok'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+
     runtimeOnly 'org.springframework.modulith:spring-modulith-actuator'
     runtimeOnly 'org.springframework.modulith:spring-modulith-observability'
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStruct"
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-batch-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb-test'
@@ -57,6 +77,7 @@ dependencies {
     testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-mongodb'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -66,6 +87,73 @@ dependencyManagement {
     }
 }
 
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+        importOrder()
+        removeUnusedImports()
+        leadingTabsToSpaces(4)
+        trimTrailingWhitespace()
+        palantirJavaFormat()
+    }
+}
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+
+def jacocoExcludes = [
+        'com/tragepro/api/Application*',
+        'com/tragepro/api/application/service/mapper/**',
+        'com/tragepro/api/security/**',
+        'com.tragepro.api.config.**',
+        'com/tragepro/api/common/**',
+        'com/tragepro/api/exception/**',
+        "com/tragepro/api/core/strategy/**"
+]
+
+jacocoTestReport {
+    dependsOn test, compileJava, processResources
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacoco/test/html')
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: jacocoExcludes)
+                })
+        )
+    }
+}
+
+tasks.named('jacocoTestCoverageVerification') {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            element = 'BUNDLE'
+            excludes = jacocoExcludes
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.95
+            }
+        }
+    }
+    classDirectories.setFrom(
+            files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: jacocoExcludes)
+            })
+    )
+}
+
+tasks.check {
+    dependsOn(tasks.named("jacocoTestCoverageVerification"))
 }

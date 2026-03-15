@@ -1,6 +1,6 @@
-package io.tragepro.api.security.config;
+package com.tragepro.api.security.config;
 
-import io.tragepro.api.security.filter.JWTAuthFilter;
+import com.tragepro.api.security.filter.JWTAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
-package io.tragepro.api.security.repository;
+package com.tragepro.api.security.repository;
 
-import io.tragepro.api.security.model.entity.AuthenticationEntity;
+import com.tragepro.api.security.model.entity.AuthenticationEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface AuthenticationRepository extends MongoRepository<AuthenticationEntity, String> {
