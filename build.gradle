@@ -22,15 +22,10 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 ext {
     jwtVersion = "0.13.0"
     springAiVersion="1.0.0-RC1"
-//    testContainer = "2.0.3"
-    openApi = "2.8.13"
+    openApi = "3.0.2"
     mapStruct = "1.5.5.Final"
     springModulithVersion = "2.0.3"
 }
