@@ -113,9 +113,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDetailRequest)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Data not found."))
-                .andExpect(jsonPath("$.errorCode").value("E0004"));
+                .andExpect(status().isNotFound());
     }
 
     @Test

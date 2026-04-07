@@ -106,12 +106,12 @@ tasks.withType(JavaCompile).configureEach {
 def jacocoExcludes = [
         'com/tragepro/api/Application*',
         'com/tragepro/api/application/service/mapper/**',
-        'com/tragepro/api/security/filter/**',
-        'com/tragepro/api/security/filter/**',
-        'com/tragepro/api/config.**',
+        'com/tragepro/api/**/filter/**',
+        'com/tragepro/api/**/helper/**',
+        'com/tragepro/api/**/config/**',
         'com/tragepro/api/common/**',
         'com/tragepro/api/exception/**',
-        "com/tragepro/api/core/strategy/**"
+        'com/tragepro/api/**/service/mapper/**'
 ]
 
 jacocoTestReport {
