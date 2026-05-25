@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: tragepro-config
+  profiles:
+    active: local
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - config/dhan-ohlc-data.yml
+
+springdoc:
+  api-docs:
+    path: /config-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method

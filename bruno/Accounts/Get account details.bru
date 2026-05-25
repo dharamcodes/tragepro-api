@@ -11,5 +11,12 @@ get {
 }
 
 params:path {
-  identifier: 
+  identifier: {{accountIdentifier}}
+}
+
+script:post-response {
+  const body = res.body;
+  if (res.status === 200 && body) {
+    setAccountVars(body);
+  }
 }

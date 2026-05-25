@@ -1,0 +1,22 @@
+meta {
+  name: Delete candle
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/candle/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: {{candleId}}
+}
+
+script:post-response {
+  assertOk();
+  if (res.status === 200) {
+    resetCandleVars();
+  }
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Get latest OHLCV per symbol
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/v1/ohlcvdata/symbols/latest
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  assertOk();
+  test('Latest response is an array', () => {
+    expect(res.body).to.be.an('array');
+  });
+  if (res.status === 200 && Array.isArray(res.body) && res.body.length > 0) {
+    const first = res.body[0];
+    test('Latest has symbolId',   () => { expect(first).to.have.property('symbolId'); });
+    test('Latest has timestamp',  () => { expect(first).to.have.property('timestamp'); });
+    test('Latest has close',      () => { expect(first).to.have.property('close'); });
+    setOhlcvVarsFromList(res.body);
+  }
+}

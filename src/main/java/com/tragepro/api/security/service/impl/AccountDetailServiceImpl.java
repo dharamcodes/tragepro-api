@@ -4,7 +4,6 @@ import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
 import com.tragepro.api.exception.AppException;
 import com.tragepro.api.exception.constant.ErrorType;
-import com.tragepro.api.security.helper.JwtTokenHelper;
 import com.tragepro.api.security.model.request.AccountDetailRequest;
 import com.tragepro.api.security.model.response.AccountDetailResponse;
 import com.tragepro.api.security.repository.AccountDetailRepository;
@@ -17,17 +16,15 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class AccountDetailServiceImpl implements AccountDetailService {
 
-    private static final String AUTHORIZATION = "Authorization";
     private final AccountDetailRepository accountDetailRepository;
     private final AuthenticationRepository authenticationRepository;
     private final MapperFactory<AccountDetailMapper> mapperFactory;
@@ -43,8 +40,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         }
         var accountEntity = accountDetailRepository.save(mapper.requestToEntity(accountDetailRequest));
         log.info("Created account with identifier '{}'", accountEntity.getIdentifier());
-        String token = extractBearerTokenFromRequest();
-        String username = JwtTokenHelper.extractUsername(token);
+        String username = getCurrentUsername();
         var authDetails = authenticationRepository.findByUserNameAndIsActive(username, true);
         var identifiers = Optional.ofNullable(authDetails.getIdentifiers()).orElseGet(HashSet::new);
         identifiers.add(accountEntity.getIdentifier());
@@ -57,12 +53,12 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     public AccountDetailResponse getAccount(String identifier) {
         var mapper = mapperFactory.getMapper(MapperType.ACCOUNT_DETAIL_MAPPER);
         if (Strings.isBlank(identifier)) {
-            log.error("Identifier can not be null {}", identifier);
+            log.error("Identifier can not be blank");
             throw new AppException(ErrorType.INVALID_PARAMETER);
         }
         var accountEntity = accountDetailRepository.findByIdentifier(identifier);
         if (Objects.isNull(accountEntity)) {
-            log.error("Account not foundfor identifier {}", identifier);
+            log.error("Account not found for identifier {}", identifier);
             throw new AppException(ErrorType.DATA_NOT_FOUND);
         }
         return mapper.entityToResponse(accountEntity);
@@ -73,7 +69,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         var mapper = mapperFactory.getMapper(MapperType.ACCOUNT_DETAIL_MAPPER);
         var accountDetailsEntity = accountDetailRepository.findByIdentifier(identifier);
         if (ObjectUtils.isEmpty(accountDetailsEntity)) {
-            log.error("User with given userName not exists {}", accountDetailRequest.getIdentifier());
+            log.error("Account with identifier '{}' does not exist", identifier);
             throw new AppException(ErrorType.DATA_NOT_FOUND);
         }
         mapper.merge(accountDetailRequest, accountDetailsEntity);
@@ -82,11 +78,11 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     }
 
     @Override
-    public void deactivateAccount(String identiFier) {
+    public void deactivateAccount(String identifier) {
         var mapper = mapperFactory.getMapper(MapperType.ACCOUNT_DETAIL_MAPPER);
-        var accountDetailsEntity = accountDetailRepository.findByIdentifier(identiFier);
+        var accountDetailsEntity = accountDetailRepository.findByIdentifier(identifier);
         if (ObjectUtils.isEmpty(accountDetailsEntity)) {
-            log.error("Account with given identifier does not exists {}", identiFier);
+            log.error("Account with given identifier does not exist {}", identifier);
             throw new AppException(ErrorType.DATA_NOT_FOUND);
         }
         var mergeRequest = AccountDetailRequest.builder().isActive(false).build();
@@ -94,10 +90,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         accountDetailRepository.save(accountDetailsEntity);
     }
 
-    private String extractBearerTokenFromRequest() {
-        var requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        var request = Objects.requireNonNull(requestAttributes).getRequest();
-        String header = request.getHeader(AUTHORIZATION);
-        return header.substring(7);
+    private String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

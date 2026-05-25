@@ -48,7 +48,7 @@ public abstract class ApiTestSetup extends ContainerConfig {
                 .isActive(true)
                 .build();
 
-        mockMvc.perform(post("/api/v1/auth/signup")
+        mockMvc.perform(post("/config/v1/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signupRequest)))
                 .andExpect(status().isOk());
@@ -58,7 +58,7 @@ public abstract class ApiTestSetup extends ContainerConfig {
                 .password("TestPassword123")
                 .build();
 
-        String loginResponse = mockMvc.perform(post("/api/v1/auth/login")
+        String loginResponse = mockMvc.perform(post("/config/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())

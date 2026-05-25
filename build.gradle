@@ -38,12 +38,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.modulith:spring-modulith-starter-core'
     implementation 'org.springframework.modulith:spring-modulith-starter-mongodb'
     implementation "org.mapstruct:mapstruct:$mapStruct"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApi"
     implementation "io.jsonwebtoken:jjwt-api:$jwtVersion"
     implementation 'org.projectlombok:lombok'
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jwtVersion"

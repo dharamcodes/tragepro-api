@@ -1,0 +1,14 @@
+server:
+  port: 8082
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/
+      database: tragepro
+      auto-index-creation: true
+
+jwt:
+  secret: UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=
+  expiry-minutes: 7200
+  reset-expiry-minutes: 15

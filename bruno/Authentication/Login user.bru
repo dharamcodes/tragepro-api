@@ -18,7 +18,9 @@ body:json {
 }
 
 script:post-response {
-   const jsonData = res.body;
-  
-  bru.setVar("authToken", jsonData.token);
+  const body = res.body;
+  if (res.status === 200 && body) {
+    setAuthToken(body);
+    if (body.userName) bru.setVar(VARS.AUTH_USERNAME, body.userName);
+  }
 }

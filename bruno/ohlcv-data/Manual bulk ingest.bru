@@ -1,0 +1,38 @@
+meta {
+  name: Manual bulk ingest
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/v1/ohlcvdata/ingest
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+    {
+      "symbol": {
+        "id": "{{symbolId}}",
+        "name": "{{symbolName}}"
+      },
+      "ohlcvData": {
+        "timestamp": 1700000000000,
+        "open": 100.0,
+        "high": 105.0,
+        "low": 98.5,
+        "close": 103.2,
+        "volume": 150000.0
+      }
+    }
+  ]
+}
+
+script:post-response {
+  assertOk();
+  test('Bulk ingest returns affected count as number', () => {
+    expect(res.body).to.be.a('number');
+    expect(res.body).to.be.at.least(0);
+  });
+}

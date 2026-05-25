@@ -11,15 +11,22 @@ put {
 }
 
 params:path {
-  identifier: 
+  identifier: {{accountIdentifier}}
 }
 
 body:json {
   {
-    "name": "",
-    "email": "",
-    "identifier": "",
-    "phoneNumber": 0,
-    "isActive": false
+    "name": "Admin Account Updated",
+    "email": "admin.updated@email.com",
+    "identifier": "{{accountIdentifier}}",
+    "phoneNumber": 9454318045,
+    "isActive": true
+  }
+}
+
+script:post-response {
+  const body = res.body;
+  if (res.status === 200 && body) {
+    setAccountVars(body);
   }
 }

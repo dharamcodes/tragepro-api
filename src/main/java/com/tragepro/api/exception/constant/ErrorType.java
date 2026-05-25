@@ -19,7 +19,7 @@ public enum ErrorType {
     SESSION_EXPIRED(401, "E0010", "error.message.SESSION_EXPIRED"),
     PASSWORD_MISMATCH(400, "E0011", "error.message.PASSWORD_MISMATCH"),
     USER_NOT_FOUND(404, "E0012", "error.message.USER_NOT_FOUND"),
-    USER_NOT_ACTIVE(401, "E0012", "error.message.USER_NOT_ACTIVE"),
+    USER_NOT_ACTIVE(401, "E0033", "error.message.USER_NOT_ACTIVE"),
     INVALID_TOKEN(401, "E0013", "error.message.INVALID_TOKEN"),
     TOO_MANY_REQUESTS(429, "E0014", "error.message.TOO_MANY_REQUESTS"),
     MAX_RETRY_ATTEMPTS_EXCEEDED(429, "E0015", "error.message.MAX_RETRY_ATTEMPTS_EXCEEDED"),

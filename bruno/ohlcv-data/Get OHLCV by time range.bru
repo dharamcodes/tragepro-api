@@ -1,0 +1,30 @@
+meta {
+  name: Get OHLCV by time range
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/ohlcvdata/symbol/{{symbolId}}/range
+  body: none
+  auth: inherit
+}
+
+params:query {
+  from: 1700000000000
+  to: 1800000000000
+}
+
+script:post-response {
+  assertOk();
+  test('Time-range response is an array', () => {
+    expect(res.body).to.be.an('array');
+  });
+  if (res.status === 200 && Array.isArray(res.body) && res.body.length > 0) {
+    const first = res.body[0];
+    test('Summary has symbolId',   () => { expect(first).to.have.property('symbolId'); });
+    test('Summary has timestamp',  () => { expect(first).to.have.property('timestamp'); });
+    test('Summary has close',      () => { expect(first).to.have.property('close'); });
+    setOhlcvVarsFromList(res.body);
+  }
+}

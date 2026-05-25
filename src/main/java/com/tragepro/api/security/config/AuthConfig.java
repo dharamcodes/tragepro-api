@@ -29,11 +29,11 @@ public class AuthConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/api-docs/**",
+                                "/config-docs/**",
                                 "/docs/openapi.json",
                                 "/docs/openapi.json/swagger-config")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/**")
+                        .requestMatchers(HttpMethod.POST, "/config/v1/auth/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

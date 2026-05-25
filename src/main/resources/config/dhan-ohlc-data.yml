@@ -1,0 +1,25 @@
+data-provider:
+  fetch-cron: "0 * * * * *"
+  interval: "1m"
+  clients:
+    binance:
+      base-url: "https://api.binance.com"
+      data-url: "/config/v3/klines?symbol={symbols}&interval={interval}"
+      api-key: "${BINANCE_API_KEY:dev-key-replace-me}"
+      symbols:
+        - BTCUSDT
+        - ETHUSDT
+      timeout-seconds: 30
+      batch-size: 100
+      method: "GET"
+      body: ""
+    kraken:
+      base-url: "https://api.kraken.com"
+      data-url: "/0/public/OHLC?pair={symbols}&interval={interval}"
+      api-key: "${KRAKEN_API_KEY:dev-key-replace-me}"
+      symbols:
+        - XBTUSD
+      timeout-seconds: 30
+      batch-size: 100
+      method: "GET"
+      body: ""

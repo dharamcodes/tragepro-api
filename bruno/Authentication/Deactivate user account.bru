@@ -11,5 +11,11 @@ delete {
 }
 
 params:path {
-  userName: admin
+  userName: admin01
+}
+
+script:post-response {
+  if (res.status === 202) {
+    resetAuthVars();
+  }
 }

@@ -1,0 +1,24 @@
+meta {
+  name: Get OHLCV data by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/ohlcvdata/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: {{ohlcvId}}
+}
+
+script:post-response {
+  assertOk();
+  assertBodyHasKey('symbol');
+  assertBodyHasKey('ohlcvData');
+  if (res.status === 200 && res.body) {
+    setOhlcvVars(res.body);
+  }
+}

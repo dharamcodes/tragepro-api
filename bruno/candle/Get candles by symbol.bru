@@ -1,0 +1,30 @@
+meta {
+  name: Get candles by symbol
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/candle/symbol/{{symbolId}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 0
+  size: 50
+  sort: candle.timestamp,desc
+}
+
+script:post-response {
+  assertOk();
+  assertPageStructure();
+  if (res.status === 200 && res.body && res.body.content.length > 0) {
+    const first = res.body.content[0];
+    test('Summary response has symbolId', () => { expect(first).to.have.property('symbolId'); });
+    test('Summary response has timestamp', () => { expect(first).to.have.property('timestamp'); });
+    test('Summary response has close',     () => { expect(first).to.have.property('close'); });
+    test('Summary response has volume',    () => { expect(first).to.have.property('volume'); });
+    setCandleVarsFromPage(res.body);
+  }
+}

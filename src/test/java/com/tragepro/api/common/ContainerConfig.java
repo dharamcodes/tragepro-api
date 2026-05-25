@@ -9,7 +9,7 @@ public class ContainerConfig {
 
     @Container
     @ServiceConnection
-    protected static MongoDBContainer mongo = new MongoDBContainer("mongo:latest").withReuse(true);
+    protected static MongoDBContainer mongo = new MongoDBContainer("mongo:6.0").withReuse(true);
 
     @BeforeAll
     static void init() {

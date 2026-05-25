@@ -42,8 +42,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private static final String ROLE = "role";
     private static final String ROLE_PREFIX = "ROLE_";
     private static final String PASSWORD_RESET_CLAIM = "passwordReset";
+    private static final String RESET_PASSWORD_PATH = "/config/v1/auth/password";
 
     private final UserDetailService userDetailService;
+    private final JwtTokenHelper jwtTokenHelper;
 
     @Override
     protected void doFilterInternal(
@@ -63,21 +65,20 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 return;
             }
             String token = authHeader.substring(7);
-            String username = JwtTokenHelper.extractUsername(token);
+            String username = jwtTokenHelper.extractUsername(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 authenticateUser(request, token, username);
             }
-            var claims = JwtTokenHelper.getTokenBody(token);
-            var passwordRestClaim = claims.get(PASSWORD_RESET_CLAIM, String.class);
-            if (request.getRequestURI().equals("/api/v1/reset-password")
-                    && !passwordRestClaim.equals(RoleType.PASSWORD_RESET_CLAIM.getValue())) {
-                throw new AppException(ErrorType.ACCESS_DENIED);
+
+            if (uri.startsWith(RESET_PASSWORD_PATH)) {
+                var claims = jwtTokenHelper.getTokenBody(token);
+                String passwordResetClaim = claims.get(PASSWORD_RESET_CLAIM, String.class);
+                if (!RoleType.PASSWORD_RESET_CLAIM.getValue().equals(passwordResetClaim)) {
+                    throw new AppException(ErrorType.ACCESS_DENIED);
+                }
             }
-            if (request.getRequestURI().equals("/api/v1/reset-password")
-                    && !passwordRestClaim.equals(RoleType.PASSWORD_RESET_CLAIM.getValue())) {
-                throw new AppException(ErrorType.ACCESS_DENIED);
-            }
+
             filterChain.doFilter(request, response);
         } catch (RuntimeException ex) {
             sendJsonResponse(request, response, HttpStatus.UNAUTHORIZED, "Invalid or expired token");
@@ -103,13 +104,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private void authenticateUser(HttpServletRequest request, String token, String username) {
         UserDetails userDetails = userDetailService.loadUserByUsername(username);
-        var claim = JwtTokenHelper.getTokenBody(token);
+        var claim = jwtTokenHelper.getTokenBody(token);
         var role = claim.get(ROLE, String.class);
         var roles = prepareRoles(RoleType.valueOf(role)).stream()
                 .map(roleType -> new SimpleGrantedAuthority(
                         ROLE_PREFIX + roleType.getValue().toUpperCase()))
                 .toList();
-        if (JwtTokenHelper.validateToken(token, userDetails)) {
+        if (jwtTokenHelper.validateToken(token, userDetails)) {
             var authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, roles);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -128,11 +129,11 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private boolean isPublicEndpoint(String uri) {
         return uri.startsWith("/swagger-ui")
-                || uri.startsWith("/swagger-ui.html")
-                || uri.startsWith("/v3/api-docs")
+                || uri.startsWith("/v3/config-docs")
                 || uri.startsWith("/swagger-resources")
                 || uri.startsWith("/webjars")
-                || uri.contains("/login")
-                || uri.contains("/signup");
+                || uri.equals("/config/v1/auth/login")
+                || uri.equals("/config/v1/auth/signup")
+                || uri.startsWith("/config-docs");
     }
 }

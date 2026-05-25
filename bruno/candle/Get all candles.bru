@@ -1,0 +1,24 @@
+meta {
+  name: Get all candles
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/candle
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 0
+  size: 20
+}
+
+script:post-response {
+  assertOk();
+  assertPageStructure();
+  if (res.status === 200 && res.body) {
+    setCandleVarsFromPage(res.body);
+  }
+}

@@ -1,7 +1,7 @@
 meta {
   name: Get user by username
   type: http
-  seq: 6
+  seq: 3
 }
 
 get {
@@ -11,5 +11,12 @@ get {
 }
 
 params:path {
-  userName: admin
+  userName: admin01
+}
+
+script:post-response {
+  const body = res.body;
+  if (res.status === 200 && body) {
+    setAuthUserVars(body);
+  }
 }

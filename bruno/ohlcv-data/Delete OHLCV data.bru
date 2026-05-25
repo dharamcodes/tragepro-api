@@ -1,0 +1,22 @@
+meta {
+  name: Delete OHLCV data
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/ohlcvdata/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: {{ohlcvId}}
+}
+
+script:post-response {
+  assertOk();
+  if (res.status === 200) {
+    resetOhlcvVars();
+  }
+}

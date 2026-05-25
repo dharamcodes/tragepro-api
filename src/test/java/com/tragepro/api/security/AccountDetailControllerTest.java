@@ -10,9 +10,13 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 class AccountDetailControllerTest extends ApiTestSetup {
+
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
 
     private AccountDetailRequest accountDetailRequest;
 
@@ -29,7 +33,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testCreateAccount_Success() throws Exception {
-        mockMvc.perform(post("/api/v1/account")
+        mockMvc.perform(post("/config/v1/account")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDetailRequest)))
@@ -41,28 +45,28 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testCreateAccount_Exception() throws Exception {
-        mockMvc.perform(post("/api/v1/account")).andExpect(status().is4xxClientError());
+        mockMvc.perform(post("/config/v1/account")).andExpect(status().is4xxClientError());
 
-        mockMvc.perform(post("/api/v1/account")
+        mockMvc.perform(post("/config/v1/account")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDetailRequest)))
                 .andExpect(status().isConflict());
 
-        mockMvc.perform(post("/api/v1/account")
+        mockMvc.perform(post("/config/v1/account")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is5xxServerError());
 
-        mockMvc.perform(post("/api/v1/account")
+        mockMvc.perform(post("/config/v1/account")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 AccountDetailRequest.builder().build())))
                 .andExpect(status().isBadRequest());
 
-        var token = JwtTokenHelper.generateToken(UUID.randomUUID().toString(), Map.of());
-        mockMvc.perform(post("/api/v1/account")
+        var token = jwtTokenHelper.generateToken(UUID.randomUUID().toString(), Map.of());
+        mockMvc.perform(post("/config/v1/account")
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
@@ -73,7 +77,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
     @Test
     void testGetAccount_Success() throws Exception {
 
-        mockMvc.perform(get("/api/v1/account/{identifier}", accountDetailRequest.getIdentifier())
+        mockMvc.perform(get("/config/v1/account/{identifier}", accountDetailRequest.getIdentifier())
                         .header("Authorization", authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Account"))
@@ -83,12 +87,12 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testGetAccount_Exception() throws Exception {
-        mockMvc.perform(get("/api/v1/account/{identifier}", " ").header("Authorization", authToken))
+        mockMvc.perform(get("/config/v1/account/{identifier}", " ").header("Authorization", authToken))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Invalid parameter."))
                 .andExpect(jsonPath("$.errorCode").value("E0001"));
 
-        mockMvc.perform(get("/api/v1/account/{identifier}", "test").header("Authorization", authToken))
+        mockMvc.perform(get("/config/v1/account/{identifier}", "test").header("Authorization", authToken))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Data not found."))
                 .andExpect(jsonPath("$.errorCode").value("E0004"));
@@ -97,7 +101,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
     @Test
     void testUpdateAccount_Success() throws Exception {
         accountDetailRequest.setEmail("updateduser@example.com");
-        mockMvc.perform(put("/api/v1/account/{identifier}", "testAccount")
+        mockMvc.perform(put("/config/v1/account/{identifier}", "testAccount")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDetailRequest)))
@@ -109,7 +113,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testUpdateAccount_Exception() throws Exception {
-        mockMvc.perform(put("/api/v1/account/{identifier}", " ")
+        mockMvc.perform(put("/config/v1/account/{identifier}", " ")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountDetailRequest)))
@@ -118,10 +122,10 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testDeactivateAccount_Success() throws Exception {
-        mockMvc.perform(delete("/api/v1/account/{identifier}", "testAccount").header("Authorization", authToken))
+        mockMvc.perform(delete("/config/v1/account/{identifier}", "testAccount").header("Authorization", authToken))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/api/v1/account/{identifier}", "testAccount").header("Authorization", authToken))
+        mockMvc.perform(get("/config/v1/account/{identifier}", "testAccount").header("Authorization", authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Account"))
                 .andExpect(jsonPath("$.identifier").value("testAccount"))
@@ -131,7 +135,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testDeactivateAccount_Exception() throws Exception {
-        mockMvc.perform(delete("/api/v1/account/{identifier}", " ").header("Authorization", authToken))
+        mockMvc.perform(delete("/config/v1/account/{identifier}", " ").header("Authorization", authToken))
                 .andExpect(status().isNotFound());
     }
 }

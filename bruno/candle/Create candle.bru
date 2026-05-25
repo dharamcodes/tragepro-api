@@ -1,0 +1,37 @@
+meta {
+  name: Create candle
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/candle
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "symbol": {
+      "id": "NIFTY50",
+      "name": "NIFTY 50 Index"
+    },
+    "candle": {
+      "timestamp": 1716441600000,
+      "open": 22450.50,
+      "high": 22785.25,
+      "low": 22380.10,
+      "close": 22703.80,
+      "volume": 1250000.0
+    }
+  }
+}
+
+script:post-response {
+  assertOk();
+  assertBodyHasKey('symbol');
+  assertBodyHasKey('candle');
+  if (res.status === 200 && res.body) {
+    setCandleVars(res.body);
+  }
+}

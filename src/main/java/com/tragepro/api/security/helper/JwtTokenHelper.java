@@ -4,33 +4,38 @@ import com.tragepro.api.exception.AppException;
 import com.tragepro.api.exception.constant.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
-import lombok.experimental.UtilityClass;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
-@UtilityClass
+@Component
 public class JwtTokenHelper {
 
-    private final SecretKey SECRET_KEY =
-            Keys.hmacShaKeyFor(Decoders.BASE64.decode("UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ="));
-    private final Instant EXPIRY_MINUTE = Instant.now().plus(7200, ChronoUnit.MINUTES);
-    private final Instant EXPIRY_MINUTE_RESET_PASSWORD = Instant.now().plus(15, ChronoUnit.MINUTES);
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiry-minutes:7200}")
+    private long expiryMinutes;
+
+    @Value("${jwt.reset-expiry-minutes:15}")
+    private long resetExpiryMinutes;
 
     public String generateToken(String userName, Map<String, String> claims) {
         return Jwts.builder()
                 .subject(userName)
                 .issuedAt(Date.from(Instant.now()))
                 .claims(claims)
-                .expiration(Date.from(EXPIRY_MINUTE))
-                .signWith(SECRET_KEY)
+                .expiration(Date.from(Instant.now().plus(expiryMinutes, ChronoUnit.MINUTES)))
+                .signWith(getSecretKey())
                 .compact();
     }
 
@@ -39,8 +44,8 @@ public class JwtTokenHelper {
                 .subject(userName)
                 .issuedAt(Date.from(Instant.now()))
                 .claims(claims)
-                .expiration(Date.from(EXPIRY_MINUTE_RESET_PASSWORD))
-                .signWith(SECRET_KEY)
+                .expiration(Date.from(Instant.now().plus(resetExpiryMinutes, ChronoUnit.MINUTES)))
+                .signWith(getSecretKey())
                 .compact();
     }
 
@@ -56,17 +61,22 @@ public class JwtTokenHelper {
     public Claims getTokenBody(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(SECRET_KEY)
+                    .verifyWith(getSecretKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-        } catch (SignatureException | ExpiredJwtException e) {
-            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        } catch (ExpiredJwtException e) {
+            throw new AppException(ErrorType.SESSION_EXPIRED);
+        } catch (JwtException e) {
+            throw new AppException(ErrorType.INVALID_TOKEN);
         }
     }
 
     private boolean isTokenExpired(String token) {
-        Claims claims = getTokenBody(token);
-        return claims.getExpiration().before(new Date());
+        return getTokenBody(token).getExpiration().before(new Date());
+    }
+
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 }

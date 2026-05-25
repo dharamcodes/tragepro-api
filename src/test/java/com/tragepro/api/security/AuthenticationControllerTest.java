@@ -13,11 +13,15 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 class AuthenticationControllerTest extends ApiTestSetup {
 
     private static final String PASSWORD_RESET_CLAIM = "PASSWORD_RESET_CLAIM";
+
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
 
     private AuthenticationRequest authenticationRequest;
     private LoginRequest loginRequest;
@@ -29,6 +33,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                 .email(uuid + "@example.com")
                 .password("TestPassword123")
                 .role(RoleType.APP_USER)
+                .isActive(true)
                 .build();
         loginRequest = LoginRequest.builder()
                 .userName(uuid)
@@ -39,35 +44,36 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testSignup_Success() throws Exception {
         authenticationRequest.setUserName("");
-        mockMvc.perform(post("/api/v1/auth/signup")
+        mockMvc.perform(post("/config/v1/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authenticationRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userName").value(authenticationRequest.getUserName()))
+                .andExpect(jsonPath("$.userName").value(authenticationRequest.getEmail()))
                 .andExpect(jsonPath("$.isActive").value(authenticationRequest.getIsActive()));
     }
 
     @Test
     void testSignup_Exception() throws Exception {
-        mockMvc.perform(post("/api/v1/auth/signup")
+        mockMvc.perform(post("/config/v1/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authenticationRequest)))
                 .andExpect(status().isConflict());
 
-        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/config/v1/auth/signup").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is5xxServerError());
     }
 
     @Test
     void testGetByUserName_Success() throws Exception {
-        mockMvc.perform(get("/api/v1/auth/find/{userName}", uuid).header("Authorization", authToken))
+        mockMvc.perform(get("/config/v1/auth/find/{userName}", uuid).header("Authorization", authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userName").value(uuid));
     }
 
     @Test
     void testGetByUserName_NotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/auth/find/{userName}", "nonexistentUser").header("Authorization", authToken))
+        mockMvc.perform(get("/config/v1/auth/find/{userName}", "nonexistentUser")
+                        .header("Authorization", authToken))
                 .andExpect(status().isNotFound());
     }
 
@@ -79,7 +85,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                 .isActive(true)
                 .build();
 
-        mockMvc.perform(put("/api/v1/auth/update/{userName}", uuid)
+        mockMvc.perform(put("/config/v1/auth/update/{userName}", uuid)
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedRequest)))
@@ -96,7 +102,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                 .isActive(false)
                 .build();
 
-        mockMvc.perform(put("/api/v1/auth/update/{userName}", "nonexistentUser")
+        mockMvc.perform(put("/config/v1/auth/update/{userName}", "nonexistentUser")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedRequest)))
@@ -105,7 +111,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testLogin_Success() throws Exception {
-        var loginResponse = mockMvc.perform(post("/api/v1/auth/login")
+        var loginResponse = mockMvc.perform(post("/config/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk());
@@ -114,13 +120,13 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testLogin_Exception() throws Exception {
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post("/config/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 AuthenticationRequest.builder().build())))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post("/config/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(AuthenticationRequest.builder()
                                 .userName(uuid)
@@ -131,7 +137,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testResetPassword_Success() throws Exception {
-        mockMvc.perform(post("/api/v1/auth/reset-password/{userName}", loginRequest.getUserName())
+        mockMvc.perform(post("/config/v1/auth/reset-password/{userName}", loginRequest.getUserName())
                         .header("Authorization", authToken))
                 .andExpect(status().isAccepted());
     }
@@ -139,7 +145,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testResetPassword_Exception() throws Exception {
         mockMvc.perform(post(
-                                "/api/v1/auth/reset-password/{userName}",
+                                "/config/v1/auth/reset-password/{userName}",
                                 UUID.randomUUID().toString())
                         .header("Authorization", authToken))
                 .andExpect(status().isNotFound());
@@ -148,7 +154,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testChangePassword_Success() throws Exception {
         var passwordResetToken = "Bearer "
-                + JwtTokenHelper.generateResetPasswordToken(
+                + jwtTokenHelper.generateResetPasswordToken(
                         uuid,
                         Map.of(
                                 "passwordReset",
@@ -161,7 +167,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                 .confirmPassword("NewPassword123!")
                 .build();
 
-        mockMvc.perform(put("/api/v1/auth/password", uuid)
+        mockMvc.perform(put("/config/v1/auth/password", uuid)
                         .header("Authorization", passwordResetToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(resetPasswordRequest)))
@@ -171,7 +177,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testChangePassword_Exception() throws Exception {
         var passwordResetToken = "Bearer "
-                + JwtTokenHelper.generateResetPasswordToken(
+                + jwtTokenHelper.generateResetPasswordToken(
                         uuid,
                         Map.of(
                                 "passwordReset",
@@ -184,7 +190,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                 .confirmPassword("NewPassword123")
                 .build();
 
-        mockMvc.perform(put("/api/v1/auth/password", uuid)
+        mockMvc.perform(put("/config/v1/auth/password", uuid)
                         .header("Authorization", passwordResetToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(resetPasswordRequest)))
@@ -195,7 +201,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                 .password("NewPassword123!")
                 .confirmPassword("NewPassword123!")
                 .build();
-        mockMvc.perform(put("/api/v1/auth/password", UUID.randomUUID().toString())
+        mockMvc.perform(put("/config/v1/auth/password", UUID.randomUUID().toString())
                         .header("Authorization", passwordResetToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(resetPasswordRequestInactive)))
@@ -204,10 +210,10 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testDeactivateUser_Success() throws Exception {
-        mockMvc.perform(delete("/api/v1/auth/deactivate/{userName}", authenticationRequest.getUserName())
+        mockMvc.perform(delete("/config/v1/auth/deactivate/{userName}", authenticationRequest.getUserName())
                         .header("Authorization", authToken))
                 .andExpect(status().isAccepted());
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post("/config/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().is4xxClientError());
@@ -215,7 +221,8 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testDeactivateUser_Exception() throws Exception {
-        mockMvc.perform(delete("/api/v1/auth/deactivate/{userName}", "userName").header("Authorization", authToken))
+        mockMvc.perform(delete("/config/v1/auth/deactivate/{userName}", "userName")
+                        .header("Authorization", authToken))
                 .andExpect(status().isNotFound());
     }
 }

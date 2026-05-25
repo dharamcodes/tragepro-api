@@ -1,0 +1,41 @@
+meta {
+  name: Update candle
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{baseUrl}}/api/v1/candle/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: {{candleId}}
+}
+
+body:json {
+  {
+    "symbol": {
+      "id": "NIFTY50",
+      "name": "NIFTY 50 Index - Updated"
+    },
+    "candle": {
+      "timestamp": 1716441600000,
+      "open": 22500.00,
+      "high": 22900.00,
+      "low": 22400.00,
+      "close": 22800.00,
+      "volume": 1500000.0
+    }
+  }
+}
+
+script:post-response {
+  assertOk();
+  assertBodyHasKey('symbol');
+  assertBodyHasKey('candle');
+  if (res.status === 200 && res.body) {
+    setCandleVars(res.body);
+  }
+}
