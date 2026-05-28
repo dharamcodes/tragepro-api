@@ -1,0 +1,38 @@
+integration/01-Auth/01-POST-auth-signup-200-Success (200 ) - 94 ms
+integration/01-Auth/02-POST-auth-signup-400-Err-MissingFields (403 ) - 5 ms
+integration/01-Auth/03-POST-auth-signup-400-Err-InvalidData (403 ) - 3 ms
+integration/01-Auth/04-POST-auth-login-200-Success (200 ) - 126 ms
+integration/01-Auth/05-POST-auth-login-400-Err-MissingFields (404 ) - 6 ms
+integration/01-Auth/06-POST-auth-login-401-Err-BadPassword (403 ) - 65 ms
+integration/01-Auth/07-GET-auth-find-200-Success (200 ) - 9 ms
+integration/01-Auth/08-PUT-auth-update-200-Success (200 ) - 11 ms
+integration/01-Auth/09-PUT-auth-password-200-Success (202 ) - 73 ms
+integration/01-Auth/10-PUT-auth-password-400-Err-InvalidPassword (403 ) - 7 ms
+integration/02-Account/01-POST-account-200-Success (200 ) - 19 ms
+integration/02-Account/02-POST-account-400-Err-MissingFields (403 ) - 11 ms
+integration/02-Account/03-POST-account-400-Err-InvalidData (403 ) - 7 ms
+integration/02-Account/04-GET-account-200-Success (200 ) - 13 ms
+integration/02-Account/05-PUT-account-200-Success (200 ) - 10 ms
+integration/02-Account/06-DELETE-account-200-Success (200 ) - 10 ms
+integration/03-Candle/01-POST-candles-200-Success (200 ) - 9 ms
+integration/03-Candle/02-POST-candles-400-Err-MissingFields (403 ) - 7 ms
+integration/03-Candle/03-GET-candles-200-Success (200 ) - 16 ms
+integration/03-Candle/04-GET-candles-id-200-Success (200 ) - 9 ms
+integration/03-Candle/05-PUT-candles-id-200-Success (200 ) - 13 ms
+integration/03-Candle/06-DELETE-candles-id-200-Success (200 ) - 9 ms
+integration/04-Cleanup/01-DELETE-auth-delete-200-Success (202 ) - 10 ms
+
+📊 Execution Summary
+┌───────────────┬────────────────┐
+│ Metric        │     Result     │
+├───────────────┼────────────────┤
+│ Status        │     ✓ PASS     │
+├───────────────┼────────────────┤
+│ Requests      │ 23 (23 Passed) │
+├───────────────┼────────────────┤
+│ Tests         │      0/0       │
+├───────────────┼────────────────┤
+│ Assertions    │      0/0       │
+├───────────────┼────────────────┤
+│ Duration (ms) │      1659      │
+└───────────────┴────────────────┘

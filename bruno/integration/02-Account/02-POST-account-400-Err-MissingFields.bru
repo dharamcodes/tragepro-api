@@ -1,0 +1,23 @@
+meta {
+  name: 02-POST-account-400-Err-MissingFields
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/account
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "",
+    "email": "",
+    "phoneNumber": null
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.be.within(400, 499);
+}

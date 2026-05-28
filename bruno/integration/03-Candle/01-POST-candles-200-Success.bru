@@ -1,0 +1,33 @@
+meta {
+  name: 01-POST-candles-200-Success
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/candles
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "symbolData": {
+        "id": "AAPL",
+        "name": "Apple Inc."
+    },
+    "candleData": {
+        "timestamp": 1609459200000,
+        "open": 130.0,
+        "high": 135.0,
+        "low": 128.0,
+        "close": 133.0,
+        "volume": 100000
+    }
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  bru.setVar("testCandleId", res.body.id); 
+}

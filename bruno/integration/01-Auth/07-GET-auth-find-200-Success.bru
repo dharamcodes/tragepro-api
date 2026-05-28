@@ -1,0 +1,16 @@
+meta {
+  name: 07-GET-auth-find-200-Success
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/v1/auth/find/{{testUserName}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.userName).to.equal(bru.getVar("testUserName"));
+}

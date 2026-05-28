@@ -1,0 +1,22 @@
+meta {
+  name: 05-POST-auth-login-400-Err-MissingFields
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userName": "",
+    "password": ""
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.be.within(400, 499);
+}

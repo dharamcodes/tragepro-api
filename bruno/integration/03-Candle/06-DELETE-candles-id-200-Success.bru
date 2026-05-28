@@ -1,0 +1,15 @@
+meta {
+  name: 06-DELETE-candles-id-200-Success
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/candles/{{testCandleId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+}

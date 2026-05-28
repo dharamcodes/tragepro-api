@@ -1,0 +1,40 @@
+meta {
+  name: 01-POST-auth-signup-200-Success
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/signup
+  body: json
+  auth: none
+}
+
+script:pre-request {
+  function makeid(length) {
+      let result = '';
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const charactersLength = characters.length;
+      for (let i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+  }
+  bru.setVar("testUserName", "user_" + makeid(8));
+  bru.setVar("testEmail", "user_" + makeid(5) + "@test.com");
+  bru.setVar("testPassword", "Pass" + makeid(4) + "!");
+}
+
+body:json {
+  {
+    "email": "{{testEmail}}",
+    "userName": "{{testUserName}}",
+    "password": "{{testPassword}}",
+    "role": "SUPER_USER",
+    "isActive": true
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+}

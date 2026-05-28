@@ -1,0 +1,15 @@
+meta {
+  name: 04-GET-candles-id-200-Success
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/candles/{{testCandleId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+}

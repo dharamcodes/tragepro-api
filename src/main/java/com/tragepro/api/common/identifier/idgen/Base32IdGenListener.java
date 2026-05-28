@@ -1,9 +1,9 @@
 package com.tragepro.api.common.identifier.idgen;
 
+import com.tragepro.api.common.exception.AppException;
+import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.identifier.annotation.Base32IdGen;
 import com.tragepro.api.common.identifier.annotation.Identifier;
-import com.tragepro.api.exception.AppException;
-import com.tragepro.api.exception.constant.ErrorType;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Optional;

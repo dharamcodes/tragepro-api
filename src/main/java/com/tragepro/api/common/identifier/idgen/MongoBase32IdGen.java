@@ -1,8 +1,8 @@
 package com.tragepro.api.common.identifier.idgen;
 
+import com.tragepro.api.common.exception.AppException;
+import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.identifier.service.Base32IdGenService;
-import com.tragepro.api.exception.AppException;
-import com.tragepro.api.exception.constant.ErrorType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
