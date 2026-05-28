@@ -1,7 +1,8 @@
 feed:
   provider: dhanhq
-  dhanhq:
-    client-id: "YOUR_CLIENT_ID"
-    access-token: "YOUR_ACCESS_TOKEN"
-    rest-url: "https://api.dhan.co/v2"
-    websocket-url: "wss://api-feed.dhan.co"
+  vendors:
+    dhanhq:
+      client-id: "YOUR_CLIENT_ID"
+      access-token: "YOUR_ACCESS_TOKEN"
+      rest-url: "https://api.dhan.co/v2"
+      websocket-url: "wss://api-feed.dhan.co"

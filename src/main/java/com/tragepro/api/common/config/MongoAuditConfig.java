@@ -1,5 +1,6 @@
 package com.tragepro.api.common.config;
 
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ public class MongoAuditConfig {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null
                     || !authentication.isAuthenticated()
-                    || authentication.getPrincipal().equals("anonymousUser")) {
+                    || Objects.requireNonNull(authentication.getPrincipal()).equals("anonymousUser")) {
                 return Optional.of("system");
             }
             return Optional.ofNullable(authentication.getName());
