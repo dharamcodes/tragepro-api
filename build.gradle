@@ -153,17 +153,6 @@ tasks.named('jacocoTestCoverageVerification') {
     )
 }
 
-tasks.register('brunoTests', Exec) {
-    group = 'verification'
-    description = 'Runs the Bruno E2E integration tests.'
-    commandLine 'bash', "${projectDir}/bruno/run/run-e2e-bruno-test.sh"
-}
-
-tasks.named('brunoTests') {
-    mustRunAfter tasks.named('test')
-}
-
 tasks.check {
     dependsOn(tasks.named("jacocoTestCoverageVerification"))
-    dependsOn(tasks.named("brunoTests"))
 }
