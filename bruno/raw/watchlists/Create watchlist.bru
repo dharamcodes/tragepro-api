@@ -1,0 +1,28 @@
+meta {
+  name: Create watchlist
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/watchlists
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Tech Giants",
+    "description": "Technology stock watchlist",
+    "stocks": [
+      {
+        "id": "AAPL",
+        "name": "Apple Inc."
+      },
+      {
+        "id": "MSFT",
+        "name": "Microsoft Corp."
+      }
+    ]
+  }
+}

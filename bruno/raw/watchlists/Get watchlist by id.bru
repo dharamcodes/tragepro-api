@@ -1,0 +1,11 @@
+meta {
+  name: Get watchlist by id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/watchlists/{{watchlistId}}
+  body: none
+  auth: inherit
+}

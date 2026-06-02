@@ -1,0 +1,15 @@
+meta {
+  name: 07-DELETE-watchlists-id-200-Success
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/watchlists/{{testWatchlistId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Update watchlist
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/watchlists/{{watchlistId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Updated Tech Giants",
+    "description": "Updated Technology stock watchlist",
+    "stocks": [
+      {
+        "id": "AAPL",
+        "name": "Apple Inc."
+      },
+      {
+        "id": "GOOGL",
+        "name": "Alphabet Inc."
+      }
+    ]
+  }
+}

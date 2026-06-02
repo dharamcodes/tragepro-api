@@ -1,0 +1,18 @@
+meta {
+  name: Patch watchlist
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/watchlists/{{watchlistId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Patched Watchlist Name",
+    "description": "Patched description"
+  }
+}
