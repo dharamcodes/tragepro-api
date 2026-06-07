@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      MONGO_INIT_DATABASE: tragepro
+      MONGO_INIT_PASSWORD: admin
+      MONGO_INIT_USERNAME: admin
 
     steps:
       - uses: actions/checkout@v4
