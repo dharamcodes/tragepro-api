@@ -26,7 +26,7 @@ ext {
     jwtVersion = "0.13.0"
     springAiVersion="1.0.0-RC1"
     openApi = "3.0.3"
-    mapStruct = "1.5.5.Final"
+    mapStruct = "1.6.3"
     springModulithVersion = "2.0.7"
 }
 
