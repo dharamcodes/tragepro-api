@@ -27,7 +27,7 @@ ext {
     springAiVersion="1.0.0-RC1"
     openApi = "3.0.3"
     mapStruct = "1.5.5.Final"
-    springModulithVersion = "2.0.7"
+    springModulithVersion = "2.1.0"
 }
 
 dependencies {
