@@ -39,20 +39,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        var userDetails = authenticationRepository.findByUserNameAndIsActive(loginRequest.getUserName(), true);
+        var userDetails = authenticationRepository.findByUserNameAndIsActive(loginRequest.userName(), true);
         if (ObjectUtils.isEmpty(userDetails)) {
-            log.error("User with userName {} does not exist", loginRequest.getUserName());
+            log.error("User with userName {} does not exist", loginRequest.userName());
             throw new AppException(ErrorType.DATA_NOT_FOUND);
-        } else if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
-            log.error("Invalid userName :: {}", loginRequest.getUserName());
+        } else if (!bCryptPasswordEncoder.matches(loginRequest.password(), userDetails.getPassword())) {
+            log.error("Invalid userName :: {}", loginRequest.userName());
             throw new AppException(ErrorType.ACCESS_DENIED);
         }
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.userName(), loginRequest.password()));
         var token = JwtTokenHelper.generateToken(
-                loginRequest.getUserName(), Map.of(ROLE, userDetails.getRole().getValue()));
+                loginRequest.userName(), Map.of(ROLE, userDetails.getRole().getValue()));
         return LoginResponse.builder()
-                .userName(loginRequest.getUserName())
+                .userName(loginRequest.userName())
                 .token(token)
                 .build();
     }
@@ -60,16 +60,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse signup(AuthenticationRequest authenticationRequest) {
         var mapper = mapperFactory.getMapper(MapperType.AUTHENTICATION_MAPPER);
-        if (!ObjectUtils.isEmpty(authenticationRepository.findByUserName(authenticationRequest.getUserName()))) {
-            log.error("User with given userName already exists {}", authenticationRequest.getUserName());
+        if (!ObjectUtils.isEmpty(authenticationRepository.findByUserName(authenticationRequest.userName()))) {
+            log.error("User with given userName already exists {}", authenticationRequest.userName());
             throw new AppException(ErrorType.DATA_EXISTS);
         }
-        var encodedPassword = bCryptPasswordEncoder.encode(authenticationRequest.getPassword());
+        var encodedPassword = bCryptPasswordEncoder.encode(authenticationRequest.password());
         var userEntity = mapper.requestToEntity(authenticationRequest);
         userEntity.setPassword(encodedPassword);
-        if (authenticationRequest.getUserName().isBlank()) {
-            authenticationRequest.setUserName(authenticationRequest.getEmail());
+
+        String userName = authenticationRequest.userName();
+        if (userName == null || userName.isBlank()) {
+            userName = authenticationRequest.email();
         }
+        userEntity.setUserName(userName);
+
         var userResponse = authenticationRepository.save(userEntity);
         return mapper.entityToResponse(userResponse);
     }
@@ -91,7 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var mapper = mapperFactory.getMapper(MapperType.AUTHENTICATION_MAPPER);
         var authenticationDetails = authenticationRepository.findByUserName(userName);
         if (ObjectUtils.isEmpty(authenticationDetails)) {
-            log.error("User with given userName not exists {}", authenticationRequest.getUserName());
+            log.error("User with given userName not exists {}", authenticationRequest.userName());
             throw new AppException(ErrorType.USER_NOT_FOUND);
         }
         mapper.merge(authenticationRequest, authenticationDetails);
@@ -102,12 +106,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void changePassword(ResetPasswordRequest resetPasswordRequest) {
-        var userName = resetPasswordRequest.getUserName();
-        if (!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+        var userName = resetPasswordRequest.userName();
+        if (!resetPasswordRequest.password().equals(resetPasswordRequest.confirmPassword())) {
             log.error("Password mismatch while resetting password for userName:: {} ", userName);
             throw new AppException(ErrorType.PASSWORD_MISMATCH);
         }
-        var password = resetPasswordRequest.getPassword();
+        var password = resetPasswordRequest.password();
         var mapper = mapperFactory.getMapper(MapperType.AUTHENTICATION_MAPPER);
         var authDetails = authenticationRepository.findByUserNameAndIsActive(userName, true);
         if (ObjectUtils.isEmpty(authDetails)) {

@@ -2,15 +2,11 @@ package com.tragepro.api.data.model.response;
 
 import com.tragepro.api.data.model.CandleData;
 import com.tragepro.api.data.model.SymbolData;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CandleResponse {
-    private String id;
-    private SymbolData symbolData;
-    private CandleData candleData;
+@Builder
+public record CandleResponse(String id, SymbolData symbolData, CandleData candleData) {
+    public CandleResponse() {
+        this(null, null, null);
+    }
 }

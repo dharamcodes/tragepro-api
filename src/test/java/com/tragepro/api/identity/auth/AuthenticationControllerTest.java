@@ -49,8 +49,8 @@ class AuthenticationControllerTest extends ApiTestSetup {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newSignup)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userName").value(newSignup.getUserName()))
-                .andExpect(jsonPath("$.isActive").value(newSignup.getIsActive()));
+                .andExpect(jsonPath("$.userName").value(newSignup.userName()))
+                .andExpect(jsonPath("$.isActive").value(newSignup.isActive()));
     }
 
     @Test
@@ -81,7 +81,9 @@ class AuthenticationControllerTest extends ApiTestSetup {
     void testUpdateAuthenticationDetails_Success() throws Exception {
         AuthenticationRequest updatedRequest = AuthenticationRequest.builder()
                 .userName(uuid)
+                .email(uuid + "@example.com")
                 .password("newPassword123")
+                .role(RoleType.APP_USER)
                 .isActive(true)
                 .build();
 
@@ -98,7 +100,9 @@ class AuthenticationControllerTest extends ApiTestSetup {
     void testUpdateAuthenticationDetails_Exception() throws Exception {
         AuthenticationRequest updatedRequest = AuthenticationRequest.builder()
                 .userName("nonexistentUser")
+                .email("nonexistent@example.com")
                 .password("irrelevant")
+                .role(RoleType.APP_USER)
                 .isActive(false)
                 .build();
 
@@ -120,24 +124,26 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testLogin_Exception() throws Exception {
+        LoginRequest nonexistentRequest = LoginRequest.builder()
+                .userName("nonexistentUser")
+                .password("somePassword123")
+                .build();
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                AuthenticationRequest.builder().build())))
+                        .content(objectMapper.writeValueAsString(nonexistentRequest)))
                 .andExpect(status().isNotFound());
 
+        LoginRequest wrongPasswordRequest =
+                LoginRequest.builder().userName(uuid).password("wrongpass").build();
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(AuthenticationRequest.builder()
-                                .userName(uuid)
-                                .password("wrongpass")
-                                .build())))
+                        .content(objectMapper.writeValueAsString(wrongPasswordRequest)))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void testResetPassword_Success() throws Exception {
-        mockMvc.perform(post("/api/v1/auth/reset-password/{userName}", loginRequest.getUserName())
+        mockMvc.perform(post("/api/v1/auth/reset-password/{userName}", loginRequest.userName())
                         .header("Authorization", authToken))
                 .andExpect(status().isAccepted());
     }
@@ -210,7 +216,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testDeactivateUser_Success() throws Exception {
-        mockMvc.perform(delete("/api/v1/auth/deactivate/{userName}", authenticationRequest.getUserName())
+        mockMvc.perform(delete("/api/v1/auth/deactivate/{userName}", authenticationRequest.userName())
                         .header("Authorization", authToken))
                 .andExpect(status().isAccepted());
         mockMvc.perform(post("/api/v1/auth/login")
@@ -227,7 +233,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testDeleteUser_Success() throws Exception {
-        mockMvc.perform(delete("/api/v1/auth/delete/{userName}", authenticationRequest.getUserName())
+        mockMvc.perform(delete("/api/v1/auth/delete/{userName}", authenticationRequest.userName())
                         .header("Authorization", authToken))
                 .andExpect(status().isAccepted());
     }

@@ -3,17 +3,12 @@ package com.tragepro.api.data.model.request;
 import com.tragepro.api.data.model.CandleData;
 import com.tragepro.api.data.model.SymbolData;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CandleRequest {
-    @NotNull
-    private SymbolData symbolData;
-
-    @NotNull
-    private CandleData candleData;
+@Builder
+public record CandleRequest(
+        @NotNull SymbolData symbolData, @NotNull CandleData candleData) {
+    public CandleRequest() {
+        this(null, null);
+    }
 }

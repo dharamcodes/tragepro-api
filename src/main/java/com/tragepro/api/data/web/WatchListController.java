@@ -51,7 +51,7 @@ public class WatchListController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<WatchListResponse> patch(
-            @NotNull @PathVariable String id, @RequestBody WatchListRequest request) {
+            @NotNull @PathVariable String id, @Valid @RequestBody WatchListRequest request) {
         return ResponseEntity.ok().body(watchListService.patch(id, request));
     }
 }

@@ -5,28 +5,18 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 
-@Data
 @Builder
-@AllArgsConstructor
-public class AuthenticationRequest {
+public record AuthenticationRequest(
+        @Email(message = "Invalid email format") @NotBlank(message = "Email cannot be blank")
+        String email,
 
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email cannot be blank")
-    private String email;
+        @NotBlank(message = "User name cannot be blank") String userName,
 
-    @NotBlank(message = "User name cannot be blank")
-    private String userName;
+        @NotBlank(message = "Password cannot be blank")
+        @Size(min = 8, message = "Password must be at least 8 characters long")
+        String password,
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    private String password;
-
-    @NotNull(message = "Role cannot be null")
-    private RoleType role;
-
-    private Boolean isActive;
-}
+        @NotNull(message = "Role cannot be null") RoleType role,
+        Boolean isActive) {}

@@ -1,15 +1,10 @@
 package com.tragepro.api.data.model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
-@Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-public class WebSocketRequest {
-    private String id;
-    private String action;
+@Builder
+public record WebSocketRequest(String id, String action) {
+    public WebSocketRequest() {
+        this(null, null);
+    }
 }

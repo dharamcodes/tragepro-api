@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
@@ -18,7 +19,11 @@ public class HttpExchangeConfig {
 
     @Bean
     public DataFeedClient dataFeedClient() {
-        RestClient.Builder builder = RestClient.builder();
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(clientConfig.getConnectTimeout());
+        requestFactory.setReadTimeout(clientConfig.getReadTimeout());
+
+        RestClient.Builder builder = RestClient.builder().requestFactory(requestFactory);
         builder.baseUrl(clientConfig.getUrl());
 
         String authHeaderPrefix = clientConfig.getAuthHeaderPrefix();

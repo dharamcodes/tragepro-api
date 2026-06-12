@@ -67,6 +67,6 @@ public abstract class ApiTestSetup extends ContainerConfig {
                 .getContentAsString();
 
         LoginResponse response = objectMapper.readValue(loginResponse, LoginResponse.class);
-        this.authToken = "Bearer " + response.getToken();
+        this.authToken = "Bearer " + response.token();
     }
 }

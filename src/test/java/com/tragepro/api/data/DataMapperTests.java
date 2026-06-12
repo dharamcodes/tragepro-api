@@ -45,7 +45,7 @@ class DataMapperTests {
 
         CandleResponse response = mapper.entityToResponse(entity);
         assertNotNull(response);
-        assertEquals("AAPL", response.getSymbolData().id());
+        assertEquals("AAPL", response.symbolData().id());
 
         CandleEntity merged = new CandleEntity();
         mapper.merge(request, merged);
@@ -73,7 +73,7 @@ class DataMapperTests {
 
         WatchListResponse response = mapper.entityToResponse(entity);
         assertNotNull(response);
-        assertEquals("name", response.getName());
+        assertEquals("name", response.name());
 
         WatchListEntity merged = new WatchListEntity();
         mapper.merge(request, merged);

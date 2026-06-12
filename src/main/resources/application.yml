@@ -17,6 +17,8 @@ data:
   rest:
     authHeaderPrefix: "Bearer "
     clientIdHeader: "Client-Id"
+    connectTimeout: 5000
+    readTimeout: 10000
   socket:
     maxReconnectAttempts: 5
     initialReconnectDelay: 1000

@@ -129,7 +129,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 || uri.startsWith("/v3/api-docs")
                 || uri.startsWith("/swagger-resources")
                 || uri.startsWith("/webjars")
-                || uri.contains("/login")
-                || uri.contains("/signup");
+                || uri.equals("/api/v1/auth/login")
+                || uri.equals("/api/v1/auth/signup");
     }
 }
