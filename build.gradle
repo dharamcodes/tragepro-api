@@ -20,6 +20,14 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    configureEach {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'org.webjars' && details.requested.name == 'swagger-ui') {
+                details.useVersion swaggerUiVersion
+                details.because 'Pin to latest patched swagger-ui to resolve CVE in bundled version'
+            }
+        }
+    }
 }
 
 ext {
@@ -28,6 +36,7 @@ ext {
     openApi = "3.0.3"
     mapStruct = "1.5.5.Final"
     springModulithVersion = "2.0.7"
+    swaggerUiVersion = "5.32.6"
 }
 
 dependencies {
