@@ -1,8 +1,17 @@
-feed:
-  provider: dhanhq
-  vendors:
-    dhanhq:
-      client-id: "YOUR_CLIENT_ID"
-      access-token: "YOUR_ACCESS_TOKEN"
-      rest-url: "https://api.dhan.co/v2"
-      websocket-url: "wss://api-feed.dhan.co"
+data:
+  rest:
+    name: dhanhq
+    url: https://api.example.com
+    token: abc123
+    clientId: my-client-id
+    headers:
+      - name: X-Custom-Header
+        value: customValue
+      - name: Another-Header
+        value: anotherValue
+  socket:
+    url: wss://api-feed.dhan.co
+    token: abc123
+    clientId: my-client-id
+    reconnect: true
+    urlPattern: "%s?version=2&token=%s&clientId=%s&authType=2"
