@@ -44,6 +44,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private static final String PASSWORD_RESET_CLAIM = "passwordReset";
 
     private final UserDetailService userDetailService;
+    private final JwtTokenHelper jwtTokenHelper;
 
     @Override
     protected void doFilterInternal(
@@ -63,12 +64,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 return;
             }
             String token = authHeader.substring(7);
-            String username = JwtTokenHelper.extractUsername(token);
+            String username = jwtTokenHelper.extractUsername(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 authenticateUser(request, token, username);
             }
-            var claims = JwtTokenHelper.getTokenBody(token);
+            var claims = jwtTokenHelper.getTokenBody(token);
             var passwordRestClaim = claims.get(PASSWORD_RESET_CLAIM, String.class);
             if (request.getRequestURI().equals("/api/v1/reset-password")
                     && !passwordRestClaim.equals(RoleType.PASSWORD_RESET_CLAIM.getValue())) {
@@ -99,13 +100,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private void authenticateUser(HttpServletRequest request, String token, String username) {
         UserDetails userDetails = userDetailService.loadUserByUsername(username);
-        var claim = JwtTokenHelper.getTokenBody(token);
+        var claim = jwtTokenHelper.getTokenBody(token);
         var role = claim.get(ROLE, String.class);
         var roles = prepareRoles(RoleType.valueOf(role)).stream()
                 .map(roleType -> new SimpleGrantedAuthority(
                         ROLE_PREFIX + roleType.getValue().toUpperCase()))
                 .toList();
-        boolean isValid = JwtTokenHelper.validateToken(token, userDetails);
+        boolean isValid = jwtTokenHelper.validateToken(token, userDetails);
         if (isValid) {
             var authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, roles);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

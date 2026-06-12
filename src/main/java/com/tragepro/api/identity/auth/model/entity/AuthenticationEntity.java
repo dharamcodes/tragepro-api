@@ -22,6 +22,7 @@ public class AuthenticationEntity extends BaseEntity {
     @Id
     private String id;
 
+    @Indexed(unique = true)
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email cannot be blank")
     private String email;

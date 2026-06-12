@@ -3,7 +3,7 @@ server:
 
 spring:
   mongodb:
-    uri: mongodb://admin:admin@localhost:27017/
+    uri: ${MONGODB_URI:mongodb://admin:admin@localhost:27017/tragepro}
     database: tragepro
 logging:
   level:

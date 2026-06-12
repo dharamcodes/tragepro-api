@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.tragepro.api.common.ApiTestSetup;
 import com.tragepro.api.identity.account.model.request.AccountDetailRequest;
-import com.tragepro.api.identity.auth.helper.JwtTokenHelper;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +60,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
                                 AccountDetailRequest.builder().build())))
                 .andExpect(status().isBadRequest());
 
-        var token = JwtTokenHelper.generateToken(UUID.randomUUID().toString(), Map.of());
+        var token = jwtTokenHelper.generateToken(UUID.randomUUID().toString(), Map.of());
         mockMvc.perform(post("/api/v1/account")
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)

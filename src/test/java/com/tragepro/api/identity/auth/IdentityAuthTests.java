@@ -43,22 +43,13 @@ class IdentityAuthTests {
 
     private JWTAuthFilter jwtAuthFilter;
 
+    private JwtTokenHelper jwtTokenHelper;
+
     @BeforeEach
     void setUp() {
-        jwtAuthFilter = new JWTAuthFilter(userDetailService);
+        jwtTokenHelper = new JwtTokenHelper("UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=", 7200, 15);
+        jwtAuthFilter = new JWTAuthFilter(userDetailService, jwtTokenHelper);
         SecurityContextHolder.clearContext();
-    }
-
-    @Test
-    void testJwtTokenHelperPrivateConstructor() throws Exception {
-        Constructor<JwtTokenHelper> constructor = JwtTokenHelper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        try {
-            constructor.newInstance();
-            fail("Expected InvocationTargetException");
-        } catch (InvocationTargetException e) {
-            assertTrue(e.getTargetException() instanceof UnsupportedOperationException);
-        }
     }
 
     @Test
@@ -84,19 +75,19 @@ class IdentityAuthTests {
         String username = "testUser";
         Map<String, String> claims = Map.of("role", "APP_USER");
 
-        String token = JwtTokenHelper.generateToken(username, claims);
+        String token = jwtTokenHelper.generateToken(username, claims);
         assertNotNull(token);
-        assertEquals(username, JwtTokenHelper.extractUsername(token));
+        assertEquals(username, jwtTokenHelper.extractUsername(token));
 
         UserDetails userDetails = new User(username, "password", new ArrayList<>());
-        assertTrue(JwtTokenHelper.validateToken(token, userDetails));
+        assertTrue(jwtTokenHelper.validateToken(token, userDetails));
 
-        String resetToken = JwtTokenHelper.generateResetPasswordToken(username, claims);
+        String resetToken = jwtTokenHelper.generateResetPasswordToken(username, claims);
         assertNotNull(resetToken);
-        assertEquals(username, JwtTokenHelper.extractUsername(resetToken));
+        assertEquals(username, jwtTokenHelper.extractUsername(resetToken));
 
         String invalidToken = token + "modifiedSignature";
-        AppException exception = assertThrows(AppException.class, () -> JwtTokenHelper.getTokenBody(invalidToken));
+        AppException exception = assertThrows(AppException.class, () -> jwtTokenHelper.getTokenBody(invalidToken));
         assertEquals(ErrorType.DATA_NOT_FOUND, exception.getErrorType());
     }
 
@@ -143,7 +134,7 @@ class IdentityAuthTests {
 
         for (RoleType role : roles) {
             SecurityContextHolder.clearContext();
-            String token = JwtTokenHelper.generateToken("testUser", Map.of("role", role.name()));
+            String token = jwtTokenHelper.generateToken("testUser", Map.of("role", role.name()));
 
             MockHttpServletRequest request = new MockHttpServletRequest();
             request.setRequestURI("/api/v1/candles");
@@ -162,7 +153,7 @@ class IdentityAuthTests {
 
     @Test
     void testJWTAuthFilterResetPasswordSuccess() throws Exception {
-        String token = JwtTokenHelper.generateResetPasswordToken(
+        String token = jwtTokenHelper.generateResetPasswordToken(
                 "testUser",
                 Map.of(
                         "role", RoleType.APP_USER.name(),
@@ -183,7 +174,7 @@ class IdentityAuthTests {
 
     @Test
     void testJWTAuthFilterResetPasswordDenied() throws Exception {
-        String token = JwtTokenHelper.generateResetPasswordToken(
+        String token = jwtTokenHelper.generateResetPasswordToken(
                 "testUser", Map.of("role", RoleType.APP_USER.name(), "passwordReset", "INVALID_CLAIM_VALUE"));
 
         MockHttpServletRequest request = new MockHttpServletRequest();

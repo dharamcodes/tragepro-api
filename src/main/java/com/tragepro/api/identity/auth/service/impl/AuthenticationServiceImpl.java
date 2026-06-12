@@ -36,6 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationRepository authenticationRepository;
     private final MapperFactory<AuthenticationMapper> mapperFactory;
+    private final JwtTokenHelper jwtTokenHelper;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
@@ -49,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.userName(), loginRequest.password()));
-        var token = JwtTokenHelper.generateToken(
+        var token = jwtTokenHelper.generateToken(
                 loginRequest.userName(), Map.of(ROLE, userDetails.getRole().getValue()));
         return LoginResponse.builder()
                 .userName(loginRequest.userName())
@@ -147,7 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AppException(ErrorType.USER_NOT_FOUND);
         }
         Map<String, String> claims = Map.of(PASSWORD_RESET_CLAIM, RoleType.PASSWORD_RESET_CLAIM.getValue());
-        var token = JwtTokenHelper.generateResetPasswordToken(userName, claims);
+        var token = jwtTokenHelper.generateResetPasswordToken(userName, claims);
         EmailHelper.sendPasswordResetEmail(userDetails.getEmail(), token);
     }
 

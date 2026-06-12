@@ -13,38 +13,47 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
-import lombok.experimental.UtilityClass;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
-@UtilityClass
+@Component
 public class JwtTokenHelper {
 
-    private final SecretKey SECRET_KEY =
-            Keys.hmacShaKeyFor(Decoders.BASE64.decode("UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ="));
-    private final long EXPIRY_MINUTES = 7200;
-    private final long EXPIRY_MINUTES_RESET_PASSWORD = 15;
+    private final SecretKey secretKey;
+    private final long expiryMinutes;
+    private final long resetPasswordExpiryMinutes;
+
+    public JwtTokenHelper(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expirationMinutes:7200}") long expiryMinutes,
+            @Value("${jwt.resetPasswordExpirationMinutes:15}") long resetPasswordExpiryMinutes) {
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        this.expiryMinutes = expiryMinutes;
+        this.resetPasswordExpiryMinutes = resetPasswordExpiryMinutes;
+    }
 
     public String generateToken(String userName, Map<String, String> claims) {
         Instant now = Instant.now();
-        Instant expiration = now.plus(EXPIRY_MINUTES, ChronoUnit.MINUTES);
+        Instant expiration = now.plus(expiryMinutes, ChronoUnit.MINUTES);
         return Jwts.builder()
                 .subject(userName)
                 .issuedAt(Date.from(now))
                 .claims(claims)
                 .expiration(Date.from(expiration))
-                .signWith(SECRET_KEY)
+                .signWith(secretKey)
                 .compact();
     }
 
     public String generateResetPasswordToken(String userName, Map<String, String> claims) {
         Instant now = Instant.now();
-        Instant expiration = now.plus(EXPIRY_MINUTES_RESET_PASSWORD, ChronoUnit.MINUTES);
+        Instant expiration = now.plus(resetPasswordExpiryMinutes, ChronoUnit.MINUTES);
         return Jwts.builder()
                 .subject(userName)
                 .issuedAt(Date.from(now))
                 .claims(claims)
                 .expiration(Date.from(expiration))
-                .signWith(SECRET_KEY)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -60,7 +69,7 @@ public class JwtTokenHelper {
     public Claims getTokenBody(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(SECRET_KEY)
+                    .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();

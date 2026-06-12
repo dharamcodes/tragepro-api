@@ -23,3 +23,8 @@ data:
     maxReconnectAttempts: 5
     initialReconnectDelay: 1000
     maxReconnectDelay: 30000
+
+jwt:
+  secret: ${JWT_SECRET:UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=}
+  expirationMinutes: ${JWT_EXPIRATION_MINUTES:7200}
+  resetPasswordExpirationMinutes: ${JWT_RESET_PASSWORD_EXPIRATION_MINUTES:15}

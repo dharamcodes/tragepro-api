@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -29,10 +30,12 @@ public class AccountDetailEntity extends BaseEntity {
     @NotBlank(message = "User name cannot be blank")
     private String name;
 
+    @Indexed(unique = true)
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email cannot be blank")
     private String email;
 
+    @Indexed(unique = true)
     @Identifier
     private String identifier;
 

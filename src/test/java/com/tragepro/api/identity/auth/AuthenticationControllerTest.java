@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.tragepro.api.common.ApiTestSetup;
 import com.tragepro.api.identity.auth.constant.RoleType;
-import com.tragepro.api.identity.auth.helper.JwtTokenHelper;
 import com.tragepro.api.identity.auth.model.request.AuthenticationRequest;
 import com.tragepro.api.identity.auth.model.request.LoginRequest;
 import com.tragepro.api.identity.auth.model.request.ResetPasswordRequest;
@@ -160,7 +159,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testChangePassword_Success() throws Exception {
         var passwordResetToken = "Bearer "
-                + JwtTokenHelper.generateResetPasswordToken(
+                + jwtTokenHelper.generateResetPasswordToken(
                         uuid,
                         Map.of(
                                 "passwordReset",
@@ -183,7 +182,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testChangePassword_Exception() throws Exception {
         var passwordResetToken = "Bearer "
-                + JwtTokenHelper.generateResetPasswordToken(
+                + jwtTokenHelper.generateResetPasswordToken(
                         uuid,
                         Map.of(
                                 "passwordReset",

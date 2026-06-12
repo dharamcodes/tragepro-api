@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.tragepro.api.identity.auth.constant.RoleType;
+import com.tragepro.api.identity.auth.helper.JwtTokenHelper;
 import com.tragepro.api.identity.auth.model.request.AuthenticationRequest;
 import com.tragepro.api.identity.auth.model.request.LoginRequest;
 import com.tragepro.api.identity.auth.model.response.LoginResponse;
@@ -27,6 +28,9 @@ public abstract class ApiTestSetup extends ContainerConfig {
 
     @Autowired
     protected MockMvc mockMvc;
+
+    @Autowired
+    protected JwtTokenHelper jwtTokenHelper;
 
     protected ObjectMapper objectMapper;
 

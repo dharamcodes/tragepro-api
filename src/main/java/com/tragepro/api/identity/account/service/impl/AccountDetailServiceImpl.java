@@ -31,6 +31,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     private final AccountDetailRepository accountDetailRepository;
     private final AuthenticationRepository authenticationRepository;
     private final MapperFactory<AccountDetailMapper> mapperFactory;
+    private final JwtTokenHelper jwtTokenHelper;
 
     @Override
     public AccountDetailResponse createAccount(AccountDetailRequest accountDetailRequest) {
@@ -44,7 +45,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         var accountEntity = accountDetailRepository.save(mapper.requestToEntity(accountDetailRequest));
         log.info("Created account with identifier '{}'", accountEntity.getIdentifier());
         String token = extractBearerTokenFromRequest();
-        String username = JwtTokenHelper.extractUsername(token);
+        String username = jwtTokenHelper.extractUsername(token);
         var authDetails = authenticationRepository.findByUserNameAndIsActive(username, true);
         var identifiers = Optional.ofNullable(authDetails.getIdentifiers()).orElseGet(HashSet::new);
         identifiers.add(accountEntity.getIdentifier());
