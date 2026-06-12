@@ -117,8 +117,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         return switch (roleType) {
             case APP_MANAGER -> List.of(RoleType.APP_USER, RoleType.APP_MANAGER);
             case APP_ADMIN -> List.of(RoleType.APP_USER, RoleType.APP_MANAGER, RoleType.APP_ADMIN);
-            case SUPER_USER -> List.of(
-                    RoleType.APP_USER, RoleType.APP_MANAGER, RoleType.APP_ADMIN, RoleType.SUPER_USER);
+            case SUPER_USER ->
+                List.of(RoleType.APP_USER, RoleType.APP_MANAGER, RoleType.APP_ADMIN, RoleType.SUPER_USER);
             default -> List.of(RoleType.APP_USER);
         };
     }

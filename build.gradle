@@ -1,8 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.7'
+    id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.diffplug.spotless' version "7.0.2"
+    id 'com.diffplug.spotless' version "8.6.0"
     id 'jacoco'
 }
 
@@ -34,7 +34,7 @@ ext {
     jwtVersion = "0.13.0"
     springAiVersion="1.0.0-RC1"
     openApi = "3.0.3"
-    mapStruct = "1.5.5.Final"
+    mapStruct = "1.6.3"
     springModulithVersion = "2.0.7"
     swaggerUiVersion = "5.32.6"
 }
