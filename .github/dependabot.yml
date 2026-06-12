@@ -1,0 +1,35 @@
+version: 2
+
+updates:
+  # Keep Gradle dependencies up to date
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "security"
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework.boot:*"
+          - "org.springframework:*"
+          - "org.springframework.security:*"
+          - "org.springframework.modulith:*"
+          - "org.springframework.batch:*"
+      jackson:
+        patterns:
+          - "tools.jackson*:*"
+          - "com.fasterxml.jackson*:*"
+
+  # Keep GitHub Actions up to date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "github-actions"
