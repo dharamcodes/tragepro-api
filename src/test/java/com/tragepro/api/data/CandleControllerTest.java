@@ -29,8 +29,8 @@ class CandleControllerTest extends ApiTestSetup {
                 new CandleData(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000.0));
 
         CandleEntity entity = new CandleEntity();
-        entity.setSymbolData(candleRequest.getSymbolData());
-        entity.setCandleData(candleRequest.getCandleData());
+        entity.setSymbolData(candleRequest.symbolData());
+        entity.setCandleData(candleRequest.candleData());
 
         CandleEntity savedEntity = candleRepository.save(entity);
         savedId = savedEntity.getId();

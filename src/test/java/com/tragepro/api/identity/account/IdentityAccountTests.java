@@ -29,7 +29,7 @@ class IdentityAccountTests {
 
         AccountDetailResponse response = mapper.entityToResponse(entity);
         assertNotNull(response);
-        assertEquals("name", response.getName());
+        assertEquals("name", response.name());
 
         AccountDetailEntity merged = AccountDetailEntity.builder().build();
         mapper.merge(request, merged);

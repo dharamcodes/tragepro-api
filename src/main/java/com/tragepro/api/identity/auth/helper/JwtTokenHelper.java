@@ -21,25 +21,29 @@ public class JwtTokenHelper {
 
     private final SecretKey SECRET_KEY =
             Keys.hmacShaKeyFor(Decoders.BASE64.decode("UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ="));
-    private final Instant EXPIRY_MINUTE = Instant.now().plus(7200, ChronoUnit.MINUTES);
-    private final Instant EXPIRY_MINUTE_RESET_PASSWORD = Instant.now().plus(15, ChronoUnit.MINUTES);
+    private final long EXPIRY_MINUTES = 7200;
+    private final long EXPIRY_MINUTES_RESET_PASSWORD = 15;
 
     public String generateToken(String userName, Map<String, String> claims) {
+        Instant now = Instant.now();
+        Instant expiration = now.plus(EXPIRY_MINUTES, ChronoUnit.MINUTES);
         return Jwts.builder()
                 .subject(userName)
-                .issuedAt(Date.from(Instant.now()))
+                .issuedAt(Date.from(now))
                 .claims(claims)
-                .expiration(Date.from(EXPIRY_MINUTE))
+                .expiration(Date.from(expiration))
                 .signWith(SECRET_KEY)
                 .compact();
     }
 
     public String generateResetPasswordToken(String userName, Map<String, String> claims) {
+        Instant now = Instant.now();
+        Instant expiration = now.plus(EXPIRY_MINUTES_RESET_PASSWORD, ChronoUnit.MINUTES);
         return Jwts.builder()
                 .subject(userName)
-                .issuedAt(Date.from(Instant.now()))
+                .issuedAt(Date.from(now))
                 .claims(claims)
-                .expiration(Date.from(EXPIRY_MINUTE_RESET_PASSWORD))
+                .expiration(Date.from(expiration))
                 .signWith(SECRET_KEY)
                 .compact();
     }

@@ -1,15 +1,6 @@
 package com.tragepro.api.identity.auth.model.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class LoginResponse {
-    private String userName;
-    private String token;
-}
+public record LoginResponse(String userName, String token) {}

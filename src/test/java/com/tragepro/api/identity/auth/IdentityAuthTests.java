@@ -233,7 +233,7 @@ class IdentityAuthTests {
 
         AuthenticationResponse response = mapper.entityToResponse(entity);
         assertNotNull(response);
-        assertEquals("username", response.getUserName());
+        assertEquals("username", response.userName());
 
         AuthenticationEntity merged = new AuthenticationEntity(null, null, null, null, null, null, null);
         mapper.merge(request, merged);

@@ -36,9 +36,9 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     public AccountDetailResponse createAccount(AccountDetailRequest accountDetailRequest) {
         var mapper = mapperFactory.getMapper(MapperType.ACCOUNT_DETAIL_MAPPER);
         boolean accountExists =
-                accountDetailRepository.findByEmailAndIsActive(accountDetailRequest.getEmail(), true) != null;
+                accountDetailRepository.findByEmailAndIsActive(accountDetailRequest.email(), true) != null;
         if (accountExists) {
-            log.error("Account with email '{}' already exists", accountDetailRequest.getEmail());
+            log.error("Account with email '{}' already exists", accountDetailRequest.email());
             throw new AppException(ErrorType.DATA_EXISTS);
         }
         var accountEntity = accountDetailRepository.save(mapper.requestToEntity(accountDetailRequest));
@@ -73,7 +73,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         var mapper = mapperFactory.getMapper(MapperType.ACCOUNT_DETAIL_MAPPER);
         var accountDetailsEntity = accountDetailRepository.findByIdentifier(identifier);
         if (ObjectUtils.isEmpty(accountDetailsEntity)) {
-            log.error("User with given userName not exists {}", accountDetailRequest.getIdentifier());
+            log.error("User with given userName not exists {}", accountDetailRequest.identifier());
             throw new AppException(ErrorType.DATA_NOT_FOUND);
         }
         mapper.merge(accountDetailRequest, accountDetailsEntity);

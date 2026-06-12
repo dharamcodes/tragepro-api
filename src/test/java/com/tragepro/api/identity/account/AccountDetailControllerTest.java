@@ -73,7 +73,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
     @Test
     void testGetAccount_Success() throws Exception {
 
-        mockMvc.perform(get("/api/v1/account/{identifier}", accountDetailRequest.getIdentifier())
+        mockMvc.perform(get("/api/v1/account/{identifier}", accountDetailRequest.identifier())
                         .header("Authorization", authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Account"))
@@ -96,7 +96,13 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
     @Test
     void testUpdateAccount_Success() throws Exception {
-        accountDetailRequest.setEmail("updateduser@example.com");
+        accountDetailRequest = AccountDetailRequest.builder()
+                .name(accountDetailRequest.name())
+                .email("updateduser@example.com")
+                .identifier(accountDetailRequest.identifier())
+                .phoneNumber(accountDetailRequest.phoneNumber())
+                .isActive(accountDetailRequest.isActive())
+                .build();
         mockMvc.perform(put("/api/v1/account/{identifier}", "testAccount")
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)

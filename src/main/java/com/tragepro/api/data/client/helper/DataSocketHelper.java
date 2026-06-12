@@ -104,6 +104,11 @@ public class DataSocketHelper {
         }
 
         long delay = calculateBackoffDelay(attempt);
+        if (delay > 0) {
+            // Add random jitter of ±15%
+            double jitter = (Math.random() - 0.5) * 2 * 0.15 * delay;
+            delay = Math.max(0, delay + (long) jitter);
+        }
         log.info("Reconnecting in {} ms (attempt {}/{})", delay, attempt, maxAttempts);
 
         scheduler.schedule(

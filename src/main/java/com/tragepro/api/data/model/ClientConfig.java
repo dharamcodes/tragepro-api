@@ -16,4 +16,6 @@ public class ClientConfig {
     private Set<Header> headers;
     private String authHeaderPrefix;
     private String clientIdHeader;
+    private int connectTimeout = 5000;
+    private int readTimeout = 10000;
 }

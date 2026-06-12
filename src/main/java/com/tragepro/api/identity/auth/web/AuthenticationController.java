@@ -19,7 +19,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok().body(authenticationService.login(loginRequest));
     }
 
@@ -36,7 +36,7 @@ public class AuthenticationController {
 
     @PutMapping("/update/{userName}")
     public ResponseEntity<AuthenticationResponse> update(
-            @PathVariable String userName, @RequestBody AuthenticationRequest authenticationRequest) {
+            @PathVariable String userName, @Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok()
                 .body(authenticationService.updateAuthenticationDetails(userName, authenticationRequest));
     }

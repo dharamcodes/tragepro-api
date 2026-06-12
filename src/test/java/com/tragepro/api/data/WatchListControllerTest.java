@@ -34,9 +34,9 @@ class WatchListControllerTest extends ApiTestSetup {
         watchListRequest = new WatchListRequest("My Watchlist", "Tech stocks", stocks);
 
         WatchListEntity entity = new WatchListEntity();
-        entity.setName(watchListRequest.getName());
-        entity.setDescription(watchListRequest.getDescription());
-        entity.setStocks(watchListRequest.getStocks());
+        entity.setName(watchListRequest.name());
+        entity.setDescription(watchListRequest.description());
+        entity.setStocks(watchListRequest.stocks());
 
         WatchListEntity savedEntity = watchListRepository.save(entity);
         savedId = savedEntity.getId();
@@ -131,7 +131,7 @@ class WatchListControllerTest extends ApiTestSetup {
     @Test
     void testPatch_AddStock_Success() throws Exception {
         SymbolData newStock = new SymbolData("GOOGL", "Alphabet Inc.");
-        Set<SymbolData> stocks = new HashSet<>(watchListRequest.getStocks());
+        Set<SymbolData> stocks = new HashSet<>(watchListRequest.stocks());
         stocks.add(newStock);
         WatchListRequest patchRequest =
                 WatchListRequest.builder().stocks(stocks).build();
