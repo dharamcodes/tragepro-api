@@ -1,0 +1,26 @@
+meta {
+  name: generate-compressed
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/api/llm/generate
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "prompt": "Explain the concept of neural networks in simple terms using a bakery analogy.",
+    "directCall": false
+  }
+}
+
+settings {
+  encodeUrl: false
+}

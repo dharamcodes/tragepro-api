@@ -26,8 +26,8 @@ ext {
     jwtVersion = "0.13.0"
     springAiVersion="1.0.0-RC1"
     openApi = "3.0.3"
-    mapStruct = "1.5.5.Final"
-    springModulithVersion = "2.1.0"
+    mapStruct = "1.6.3"
+    springModulithVersion = "2.0.7"
 }
 
 dependencies {
@@ -93,6 +93,20 @@ spotless {
         trimTrailingWhitespace()
         palantirJavaFormat()
     }
+    format 'misc', {
+        target '**/*.gradle', '**/*.md', '.gitignore'
+        targetExclude 'build/**'
+        leadingTabsToSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'yaml', {
+        target '**/*.yml', '**/*.yaml'
+        targetExclude 'build/**'
+        leadingTabsToSpaces(2)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 tasks.named('test') {
@@ -105,15 +119,10 @@ tasks.withType(JavaCompile).configureEach {
     options.annotationProcessorPath = configurations.annotationProcessor
 }
 
-def jacocoExcludes = [
-        'com/tragepro/api/Application*',
-        'com/tragepro/api/application/service/mapper/**',
-        'com/tragepro/api/**/filter/**',
-        'com/tragepro/api/**/helper/**',
+    def jacocoExcludes = [
+        'com/tragepro/api/**/model/**',
         'com/tragepro/api/**/config/**',
-        'com/tragepro/api/common/**',
-        'com/tragepro/api/exception/**',
-        'com/tragepro/api/**/service/mapper/**'
+        'com/tragepro/api/common/**'
 ]
 
 jacocoTestReport {

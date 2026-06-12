@@ -152,4 +152,32 @@ class WatchListControllerTest extends ApiTestSetup {
         mockMvc.perform(get("/api/v1/watchlists/{id}", savedId).header("Authorization", authToken))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void testUpdate_NotFound() throws Exception {
+        WatchListRequest updateRequest =
+                WatchListRequest.builder().name("Non-existent").build();
+        mockMvc.perform(put("/api/v1/watchlists/{id}", "nonExistentId")
+                        .header("Authorization", authToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testDelete_NotFound() throws Exception {
+        mockMvc.perform(delete("/api/v1/watchlists/{id}", "nonExistentId").header("Authorization", authToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testPatch_NotFound() throws Exception {
+        WatchListRequest patchRequest =
+                WatchListRequest.builder().name("Non-existent").build();
+        mockMvc.perform(patch("/api/v1/watchlists/{id}", "nonExistentId")
+                        .header("Authorization", authToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(patchRequest)))
+                .andExpect(status().isNotFound());
+    }
 }
