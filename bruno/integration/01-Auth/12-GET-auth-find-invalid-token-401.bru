@@ -1,0 +1,19 @@
+meta {
+  name: 12-GET-auth-find-invalid-token-401
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/api/v1/auth/find/nonexistentuser
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer invalidtoken123
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(401);
+}

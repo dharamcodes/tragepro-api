@@ -29,5 +29,9 @@ body:json {
 
 script:post-response {
   expect(res.getStatus()).to.equal(200);
+  expect(res.body.id).to.not.be.empty;
+  expect(res.body.symbolData.id).to.equal("AAPL");
+  expect(res.body.candleData.open).to.equal(130.0);
+  expect(res.body.candleData.close).to.equal(133.0);
   bru.setVar("testCandleId", res.body.id); 
 }

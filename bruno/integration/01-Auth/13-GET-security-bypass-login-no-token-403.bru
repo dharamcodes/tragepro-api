@@ -1,0 +1,15 @@
+meta {
+  name: 13-GET-security-bypass-login-no-token-403
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/api/v1/account/login
+  body: none
+  auth: none
+}
+
+script:post-response {
+  expect(res.getStatus()).to.be.oneOf([401, 403]);
+}

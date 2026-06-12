@@ -21,5 +21,10 @@ body:json {
 
 script:post-response {
   expect(res.getStatus()).to.be.oneOf([200, 201]);
+  expect(res.body.name).to.equal(bru.getVar("testUserName"));
+  expect(res.body.email).to.equal(bru.getVar("testEmail"));
+  expect(res.body.phoneNumber).to.equal(9876543210);
+  expect(res.body.isActive).to.be.true;
+  expect(res.body.identifier || res.body.id).to.not.be.empty;
   bru.setVar("testAccountId", res.body.identifier || res.body.id);
 }

@@ -29,4 +29,8 @@ body:json {
 
 script:post-response {
   expect(res.getStatus()).to.equal(200);
+  expect(res.body.id).to.equal(bru.getVar("testWatchlistId"));
+  expect(res.body.name).to.equal("Updated Integration Tech Giants");
+  expect(res.body.description).to.equal("Updated description");
+  expect(res.body.stocks).to.be.an('array').with.lengthOf(2);
 }

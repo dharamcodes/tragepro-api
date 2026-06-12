@@ -1,0 +1,19 @@
+meta {
+  name: 14-GET-security-bypass-login-invalid-token-401
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/api/v1/account/login
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer invalidtoken123
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(401);
+}

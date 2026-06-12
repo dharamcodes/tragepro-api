@@ -19,5 +19,7 @@ body:json {
 
 script:post-response {
   expect(res.getStatus()).to.equal(200);
+  expect(res.body.userName).to.equal(bru.getVar("testUserName"));
+  expect(res.body.token).to.not.be.empty;
   bru.setVar("authToken", res.body.token);
 }
