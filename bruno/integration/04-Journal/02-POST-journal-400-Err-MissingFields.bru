@@ -1,0 +1,22 @@
+meta {
+  name: 02-POST-journal-400-Err-MissingFields
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/journal
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "accountId": "{{testAccountId}}",
+    "tradeType": "LONG"
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.be.within(400, 599);
+}

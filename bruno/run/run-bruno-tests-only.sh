@@ -1,36 +1,30 @@
 #!/bin/bash
 # Bruno CLI Executor for tragepro-api
 
-# Color codes
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 YELLOW='\033[0;33m'
+BOLD='\033[1m'
 NC='\033[0m' # No Color
 
-# Ensure PATH has Brew/Node binaries
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 if ! command -v npx &> /dev/null; then
-    echo -e "${RED}Error: npx/node is not installed or not in PATH.${NC}"
-    echo "Please install Node.js to run Bruno CLI tests."
+    echo -e "${RED}❌ Error: npx/node is not installed or not in PATH${NC}"
     exit 1
 fi
 
-# Get the script directory and navigate to the bruno collection root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.." || exit 1
 
-# Setup reports directory
 REPORTS_DIR="$SCRIPT_DIR/reports"
 mkdir -p "$REPORTS_DIR"
 
-# Defaults
 REPORTER_FLAGS=""
 FORMAT=""
 OUTPUT_FILE=""
 
-# Parse arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --html) 
@@ -52,33 +46,34 @@ while [[ "$#" -gt 0 ]]; do
             shift 
             ;;
         *) 
-            echo -e "${RED}Unknown option: $1${NC}"
+            echo -e "${RED}❌ Unknown option: $1${NC}"
             echo "Usage: ./run-bruno-tests.sh [--html | --json | --junit]"
             exit 1 
             ;;
     esac
 done
 
-echo -e "${BLUE}=============================================${NC}"
-echo -e "${BLUE}       Running Bruno Integration Tests       ${NC}"
-echo -e "${BLUE}=============================================${NC}"
+echo -e "${YELLOW}[6/6] 🧪 Executing Bruno Integration Tests suite${NC}\n"
 
-# Execute the run command
-npx --yes @usebruno/cli run integration -r --env local $REPORTER_FLAGS
-
-# Capture exit code
+# Capture the raw CLI output
+npx --yes @usebruno/cli run integration -r --env local $REPORTER_FLAGS > "$REPORTS_DIR/bruno-stdout.log"
 EXIT_CODE=$?
 
-echo -e "${BLUE}=============================================${NC}"
 if [ $EXIT_CODE -eq 0 ]; then
-    echo -e "${GREEN}✓ All Bruno Integration Tests Passed Successfully!${NC}"
+    # On success, just show the summary table
+    sed -n '/📊 Execution Summary/,$p' "$REPORTS_DIR/bruno-stdout.log"
+    echo -e "\n${BOLD}=============================================${NC}"
+    echo -e "${GREEN}✅ All Bruno Integration Tests Passed Successfully!${NC}"
 else
-    echo -e "${RED}✗ Some Bruno Integration Tests Failed. Please check the summary above.${NC}"
+    # On failure, dump the full log so errors can be debugged
+    cat "$REPORTS_DIR/bruno-stdout.log"
+    echo -e "\n${BOLD}=============================================${NC}"
+    echo -e "${RED}❌ Some Bruno Integration Tests Failed${NC}"
 fi
 
 if [ ! -z "$FORMAT" ]; then
-    echo -e "${YELLOW}Report saved to: $OUTPUT_FILE (${FORMAT} format)${NC}"
+    echo -e "${BLUE}📝 Report saved to: $OUTPUT_FILE (${FORMAT} format)${NC}"
 fi
-echo -e "${BLUE}=============================================${NC}"
+echo -e "${BOLD}=============================================${NC}\n"
 
 exit $EXIT_CODE

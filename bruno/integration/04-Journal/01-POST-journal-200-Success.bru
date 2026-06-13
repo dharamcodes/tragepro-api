@@ -1,0 +1,32 @@
+meta {
+  name: 01-POST-journal-200-Success
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/journal
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "accountId": "{{testAccountId}}",
+    "symbol": "AAPL",
+    "tradeType": "LONG",
+    "status": "OPEN",
+    "entryPrice": 150.0,
+    "quantity": 10.0,
+    "entryTime": "2026-06-13T10:00:00Z"
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.id).to.not.be.empty;
+  expect(res.body.symbol).to.equal("AAPL");
+  expect(res.body.tradeType).to.equal("LONG");
+  expect(res.body.status).to.equal("OPEN");
+  bru.setVar("testJournalId", res.body.id); 
+}

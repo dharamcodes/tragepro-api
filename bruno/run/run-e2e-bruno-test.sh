@@ -5,74 +5,71 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 YELLOW='\033[0;33m'
+BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$ROOT_DIR" || exit 1
 
-# Setup build directory if not exists
 mkdir -p build
 
-echo -e "${BLUE}=============================================${NC}"
-echo -e "${BLUE}       Preparing Test Environment            ${NC}"
-echo -e "${BLUE}=============================================${NC}"
+echo -e "\n${BOLD}${BLUE}🚀 Starting Bruno E2E Test Suite${NC}\n"
 
-# 1. Clean up existing processes on port 8082
-EXISTING_PID=$(lsof -t -i :8082)
+# 1. Clean up existing processes
+echo -ne "${YELLOW}[1/6] 🧹 Terminating existing processes on port 8082\t${NC}"
+EXISTING_PID=$(lsof -t -i :8082 2>/dev/null)
 if [ ! -z "$EXISTING_PID" ]; then
-    echo -e "${YELLOW}Killing existing process on port 8082 (PID: $EXISTING_PID)...${NC}"
     kill -9 "$EXISTING_PID" >/dev/null 2>&1
     sleep 1
 fi
+echo -e "${GREEN}Done${NC}"
 
-# 2. Stop database and clean volumes to avoid stale credentials/data
-echo -e "${YELLOW}Stopping database container and pruning stale volumes...${NC}"
+# 2. Stop and prune Docker containers
+echo -ne "${YELLOW}[2/6] 🐳 Stopping existing MongoDB containers and pruning volumes\t${NC}"
 docker compose down -v >/dev/null 2>&1
 docker volume prune -f >/dev/null 2>&1
+echo -e "${GREEN}Done${NC}"
 
-# 3. Start clean MongoDB container
-echo -e "${YELLOW}Starting MongoDB container...${NC}"
-docker compose up -d
+# 3. Start fresh MongoDB container
+echo -ne "${YELLOW}[3/6] 🐳 Starting fresh MongoDB container\t\t\t${NC}"
+docker compose up -d >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Error: Failed to start MongoDB container.${NC}"
+    echo -e "\n${RED}❌ Error: Failed to start MongoDB container${NC}"
     exit 1
 fi
+echo -e "${GREEN}Done${NC}"
 
 # 4. Boot Spring Boot Application in the background
-echo -e "${YELLOW}Starting Spring Boot Application via bootRun...${NC}"
+echo -ne "${YELLOW}[4/6] ☕ Booting Spring Boot Application via bootRun\t\t${NC}"
 ./gradlew bootRun --no-daemon > build/bootRun.log 2>&1 &
 BOOT_PID=$!
+echo -e "${GREEN}Started (PID: $BOOT_PID)${NC}"
 
 # Register cleanup function to run on script exit/interruption
 cleanup() {
-    echo -e "\n${BLUE}=============================================${NC}"
-    echo -e "${BLUE}       Cleaning Up Test Environment          ${NC}"
-    echo -e "${BLUE}=============================================${NC}"
-    
+    echo -e "\n${YELLOW}🧹 Commencing Teardown of Test Environment${NC}"
     if ps -p "$BOOT_PID" > /dev/null; then
-        echo -e "${YELLOW}Stopping Spring Boot Application (PID: $BOOT_PID)...${NC}"
+        echo -e "${YELLOW}   Stopping Spring Boot Application${NC}"
         kill "$BOOT_PID" >/dev/null 2>&1
-        # Wait a bit for it to shutdown cleanly
         sleep 2
     fi
-    
-    echo -e "${YELLOW}Stopping MongoDB container and removing volumes...${NC}"
+    echo -e "${YELLOW}   Shutting down MongoDB and removing volumes${NC}"
     docker compose down -v >/dev/null 2>&1
-    echo -e "${GREEN}Cleanup complete.${NC}"
+    echo -e "${GREEN}✨ Teardown complete. Goodbye!${NC}\n"
 }
 trap cleanup EXIT
 
 # 5. Wait for Spring Boot to be fully ready
-echo -e "${YELLOW}Waiting for application to be ready on port 8082...${NC}"
+echo -e "${YELLOW}[5/6] ⏳ Polling health check endpoint until API is online${NC}"
 TIMEOUT=60
 ELAPSED=0
 STARTED=false
 
 while [ $ELAPSED -lt $TIMEOUT ]; do
     if ! ps -p "$BOOT_PID" > /dev/null; then
-        echo -e "${RED}Error: Spring Boot application terminated unexpectedly.${NC}"
-        echo "Check build/bootRun.log for details."
+        echo -e "\n${RED}❌ Error: Spring Boot application terminated unexpectedly${NC}"
+        echo -e "${RED}Check build/bootRun.log for details${NC}"
         exit 1
     fi
     
@@ -88,20 +85,15 @@ while [ $ELAPSED -lt $TIMEOUT ]; do
 done
 
 if [ "$STARTED" = false ]; then
-    echo -e "${RED}Error: Application failed to start within $TIMEOUT seconds.${NC}"
-    echo "Check build/bootRun.log for details."
+    echo -e "\n${RED}❌ Error: Application failed to start within $TIMEOUT seconds${NC}"
+    echo -e "${RED}Check build/bootRun.log for details${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}✓ Application is up and running!${NC}"
+echo -e "      ${GREEN}✓ API is Online and accepting requests!${NC}\n"
 
-# 6. Execute Bruno Integration Tests
-echo -e "${BLUE}=============================================${NC}"
-echo -e "${BLUE}       Running Bruno Integration Tests       ${NC}"
-echo -e "${BLUE}=============================================${NC}"
-
+# Execute Bruno Integration Tests
 ./bruno/run/run-bruno-tests-only.sh "$@"
 TEST_EXIT_CODE=$?
 
-# Cleanup will be automatically executed by the trap on exit
 exit $TEST_EXIT_CODE

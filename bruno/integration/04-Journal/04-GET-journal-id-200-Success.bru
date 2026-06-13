@@ -1,0 +1,17 @@
+meta {
+  name: 04-GET-journal-id-200-Success
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/journal/{{testJournalId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.id).to.equal(bru.getVar("testJournalId"));
+  expect(res.body.symbol).to.equal("AAPL");
+}
