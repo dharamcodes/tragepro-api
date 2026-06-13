@@ -5,8 +5,4 @@ import java.util.Set;
 import lombok.Builder;
 
 @Builder
-public record WatchListRequest(String name, String description, Set<SymbolData> stocks) {
-    public WatchListRequest() {
-        this(null, null, null);
-    }
-}
+public record WatchListRequest(String name, String description, Set<SymbolData> stocks) {}
