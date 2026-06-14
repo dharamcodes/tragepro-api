@@ -1,10 +1,17 @@
 spring:
+  threads:
+    virtual:
+      enabled: true
   application:
     name: tragepro-api
   profiles:
     active: local
   config:
     import: "optional:file:.env[.properties],optional:classpath:application-feed.yml"
+
+copper:
+  engine:
+    thread-count: 50
 
 springdoc:
   api-docs:

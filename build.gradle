@@ -37,6 +37,8 @@ ext {
     mapStruct = "1.6.3"
     springModulithVersion = "2.0.7"
     swaggerUiVersion = "5.32.6"
+    copperVersion = "7.0.0"
+    lombokMapstruct = "0.2.0"
 }
 
 dependencies {
@@ -55,6 +57,8 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApi"
     implementation "io.jsonwebtoken:jjwt-api:$jwtVersion"
     implementation 'org.projectlombok:lombok'
+    implementation "org.copper-engine:copper-coreengine:$copperVersion"
+    implementation "org.copper-engine:copper-spring:$copperVersion"
 
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jwtVersion"
@@ -69,8 +73,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapStruct"
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:$lombokMapstruct"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-batch-test'
