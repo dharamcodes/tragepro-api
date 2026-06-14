@@ -47,22 +47,22 @@ flowchart TD
 
     StartScan([Start Scan])
     EndScan([End Scan])
-    
+
     subgraph Pipeline [Scan & Evaluate]
         direction TD
         FetchData[Fetch Market Data for Universe]
         ApplyFilters[Apply Technical / Fundamental Filters]
         EvaluateStrategy[Evaluate Strategy Conditions]
         Decision{Setup Found?}
-        
+
         FetchData --> ApplyFilters --> EvaluateStrategy --> Decision
     end
-    
+
     StartScan --> FetchData
-    
+
     Decision -- " Yes " --> AddWatchlist[Add Stock to Watchlist]
     Decision -- " No " --> NextStock[Check Next Stock]
-    
+
     NextStock -.->|Loop| FetchData
     AddWatchlist --> EndScan
 
@@ -86,7 +86,7 @@ flowchart TD
     StartObs([Start Observation])
     WaitTick[Wait for Next Tick]
     TriggerTrade[Trigger Trade Execution]
-    
+
     subgraph Pipeline [Monitor & Validate]
         direction TD
         MonitorNode[Monitor Watchlist Stocks]
@@ -94,14 +94,14 @@ flowchart TD
         CheckRange{Price in Target Zone?}
         ValidateNode[Validate Trigger Conditions]
         ConfirmNode{Conditions Met?}
-        
+
         MonitorNode --> FetchPrice --> CheckRange
         CheckRange -- " Yes " --> ValidateNode --> ConfirmNode
     end
 
     StartObs --> MonitorNode
     ConfirmNode -- " Yes " --> TriggerTrade
-    
+
     CheckRange -- " No " --> WaitTick
     ConfirmNode -- " No " --> WaitTick
     WaitTick -.->|Loop| MonitorNode
@@ -118,33 +118,33 @@ The sequence of events from the moment a setup is triggered to the order being p
 ```mermaid
 sequenceDiagram
     autonumber
-    
+
     box rgba(2, 136, 209, 0.05) Internal Trading System
     participant SE as Strategy Executor
     participant TM as Trade Manager
     participant J as Trade Journal
     end
-    
+
     box rgba(56, 142, 60, 0.05) External Integration
     participant B as Broker API
     end
 
     SE->>TM: Send Execution Signal (Buy/Sell)
     activate TM
-    
+
     TM->>B: Place Order (Limit/Market)
     activate B
     B-->>TM: Order Placed Acknowledgment
     deactivate B
-    
+
     TM->>J: Log Pending Trade Entry
-    
+
     Note over TM,B: Active Order Monitoring Loop
     loop Monitor Order Status
         TM->>B: Check Order Status
         B-->>TM: Status (Filled / Partial / Rejected)
     end
-    
+
     TM->>J: Update Journal with Execution Price
     TM-->>SE: Notify Execution Complete
     deactivate TM

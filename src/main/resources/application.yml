@@ -11,7 +11,7 @@ spring:
 
 copper:
   engine:
-    thread-count: 50
+    thread-count: 10
 
 springdoc:
   api-docs:
@@ -19,17 +19,13 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     operationsSorter: method
-
 data:
-  rest:
-    authHeaderPrefix: "Bearer "
-    clientIdHeader: "Client-Id"
-    connectTimeout: 5000
-    readTimeout: 10000
-  socket:
-    maxReconnectAttempts: 5
-    initialReconnectDelay: 1000
-    maxReconnectDelay: 30000
+  watchlist:
+    identifiers: 6a2ebec538bb66a3fe795919
+  scheduler:
+    fromDateDays: 90
+    enableHistorical: false
+    enableIntraday: true
 
 jwt:
   secret: ${JWT_SECRET:UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=}

@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TradeStatus {
-    OPEN("Open"),
-    CLOSED("Closed"),
-    CANCELLED("Cancelled");
+  OPEN("Open"),
+  CLOSED("Closed"),
+  CANCELLED("Cancelled");
 
-    private final String value;
+  private final String value;
 }

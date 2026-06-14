@@ -18,27 +18,30 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class AuthConfig {
 
-    private final JWTAuthFilter jwtAuthFilter;
+  private final JWTAuthFilter jwtAuthFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
-            throws Exception {
-        return http.cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers(
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/api-docs/**",
-                                "/docs/openapi.json",
-                                "/docs/openapi.json/swagger-config")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .authenticationManager(authenticationManager)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    return http.cors(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/api-docs/**",
+                        "/docs/openapi.json",
+                        "/docs/openapi.json/swagger-config")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/auth/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .authenticationManager(authenticationManager)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
+  }
 }

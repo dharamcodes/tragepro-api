@@ -18,41 +18,41 @@ import org.mapstruct.MappingTarget;
 @Mapper(config = CommonMapperConfig.class)
 public interface CandleMapper extends BaseMapper<CandleEntity, CandleRequest, CandleResponse> {
 
-    @Override
-    @InheritConfiguration(name = "toEntity")
-    CandleEntity requestToEntity(CandleRequest candleRequest);
+  @Override
+  @InheritConfiguration(name = "toEntity")
+  CandleEntity requestToEntity(CandleRequest candleRequest);
 
-    @Override
-    @org.mapstruct.Mapping(source = "id", target = "id")
-    CandleResponse entityToResponse(CandleEntity candleEntity);
+  @Override
+  @org.mapstruct.Mapping(source = "id", target = "id")
+  CandleResponse entityToResponse(CandleEntity candleEntity);
 
-    @Override
-    @InheritConfiguration(name = "toEntity")
-    void merge(CandleRequest source, @MappingTarget CandleEntity target);
+  @Override
+  @InheritConfiguration(name = "toEntity")
+  void merge(CandleRequest source, @MappingTarget CandleEntity target);
 
-    default CandleData mapCandleData(CandleData source) {
-        if (ObjectUtils.isEmpty(source)) {
-            throw new ServerException(ErrorType.INTERNAL_ERROR);
-        }
-        return CandleData.builder()
-                .timestamp(source.timestamp())
-                .open(source.open())
-                .high(source.high())
-                .low(source.low())
-                .close(source.close())
-                .volume(source.volume())
-                .build();
+  default CandleData mapCandleData(CandleData source) {
+    if (ObjectUtils.isEmpty(source)) {
+      throw new ServerException(ErrorType.INTERNAL_ERROR);
     }
+    return CandleData.builder()
+        .timestamp(source.timestamp())
+        .open(source.open())
+        .high(source.high())
+        .low(source.low())
+        .close(source.close())
+        .volume(source.volume())
+        .build();
+  }
 
-    default SymbolData mapSymbolData(SymbolData source) {
-        if (ObjectUtils.isEmpty(source)) {
-            throw new ServerException(ErrorType.INTERNAL_ERROR);
-        }
-        return SymbolData.builder().id(source.id()).name(source.name()).build();
+  default SymbolData mapSymbolData(SymbolData source) {
+    if (ObjectUtils.isEmpty(source)) {
+      throw new ServerException(ErrorType.INTERNAL_ERROR);
     }
+    return SymbolData.builder().symbol(source.symbol()).name(source.name()).build();
+  }
 
-    @Override
-    default MapperType getType() {
-        return MapperType.CANDLE_DATA_MAPPER;
-    }
+  @Override
+  default MapperType getType() {
+    return MapperType.CANDLE_DATA_MAPPER;
+  }
 }

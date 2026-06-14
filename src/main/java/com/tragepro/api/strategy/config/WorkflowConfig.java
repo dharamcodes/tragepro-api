@@ -18,48 +18,50 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class WorkflowConfig {
 
-    @Bean
-    public SpringDependencyInjector springDependencyInjector() {
-        return new SpringDependencyInjector();
-    }
+  @Bean
+  public SpringDependencyInjector springDependencyInjector() {
+    return new SpringDependencyInjector();
+  }
 
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public FileBasedWorkflowRepository fileBasedWorkflowRepository() {
-        FileBasedWorkflowRepository repository = new FileBasedWorkflowRepository();
-        repository.setSourceDirs(Collections.singletonList("src/main/java"));
-        repository.setTargetDir("build/copper-compiled-workflows");
-        return repository;
-    }
+  @Bean(initMethod = "start", destroyMethod = "shutdown")
+  public FileBasedWorkflowRepository fileBasedWorkflowRepository() {
+    FileBasedWorkflowRepository repository = new FileBasedWorkflowRepository();
+    repository.setSourceDirs(Collections.singletonList("src/main/java"));
+    repository.setTargetDir("build/copper-compiled-workflows");
+    return repository;
+  }
 
-    @Bean(initMethod = "startup", destroyMethod = "shutdown")
-    public TransientScottyEngine copperEngine(
-            FileBasedWorkflowRepository repository,
-            SpringDependencyInjector dependencyInjector,
-            @Value("${copper.engine.thread-count:4}") int threadCount) {
-        TransientScottyEngine engine = new TransientScottyEngine();
-        engine.setWfRepository(repository);
-        engine.setDependencyInjector(dependencyInjector);
-        engine.setIdFactory(new JdkRandomUUIDFactory());
+  @Bean(initMethod = "startup", destroyMethod = "shutdown")
+  public TransientScottyEngine copperEngine(
+      FileBasedWorkflowRepository repository,
+      SpringDependencyInjector dependencyInjector,
+      @Value("${copper.engine.thread-count:4}") int threadCount) {
+    TransientScottyEngine engine = new TransientScottyEngine();
+    engine.setWfRepository(repository);
+    engine.setDependencyInjector(dependencyInjector);
+    engine.setIdFactory(new JdkRandomUUIDFactory());
 
-        DefaultTimeoutManager timeoutManager = new DefaultTimeoutManager();
-        timeoutManager.setEngine(engine);
-        engine.setTimeoutManager(timeoutManager);
+    DefaultTimeoutManager timeoutManager = new DefaultTimeoutManager();
+    timeoutManager.setEngine(engine);
+    engine.setTimeoutManager(timeoutManager);
 
-        DefaultEarlyResponseContainer earlyResponseContainer = new DefaultEarlyResponseContainer();
-        engine.setEarlyResponseContainer(earlyResponseContainer);
+    DefaultEarlyResponseContainer earlyResponseContainer = new DefaultEarlyResponseContainer();
+    engine.setEarlyResponseContainer(earlyResponseContainer);
 
-        DefaultTicketPoolManager ticketPoolManager = new DefaultTicketPoolManager();
-        engine.setTicketPoolManager(ticketPoolManager);
+    DefaultTicketPoolManager ticketPoolManager = new DefaultTicketPoolManager();
+    engine.setTicketPoolManager(ticketPoolManager);
 
-        DefaultProcessorPoolManager<TransientProcessorPool> poolManager = new DefaultProcessorPoolManager<>();
-        poolManager.setEngine(engine);
+    DefaultProcessorPoolManager<TransientProcessorPool> poolManager =
+        new DefaultProcessorPoolManager<>();
+    poolManager.setEngine(engine);
 
-        TransientPriorityProcessorPool pool =
-                new TransientPriorityProcessorPool(TransientPriorityProcessorPool.DEFAULT_POOL_ID, threadCount);
-        poolManager.setProcessorPools(Collections.singletonList(pool));
+    TransientPriorityProcessorPool pool =
+        new TransientPriorityProcessorPool(
+            TransientPriorityProcessorPool.DEFAULT_POOL_ID, threadCount);
+    poolManager.setProcessorPools(Collections.singletonList(pool));
 
-        engine.setPoolManager(poolManager);
+    engine.setPoolManager(poolManager);
 
-        return engine;
-    }
+    return engine;
+  }
 }

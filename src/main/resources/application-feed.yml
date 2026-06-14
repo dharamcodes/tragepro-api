@@ -1,17 +1,13 @@
 data:
   rest:
-    name: dhanhq
-    url: https://api.example.com
-    token: abc123
-    clientId: my-client-id
-    headers:
-      - name: X-Custom-Header
-        value: customValue
-      - name: Another-Header
-        value: anotherValue
-  socket:
-    url: wss://api-feed.dhan.co
-    token: abc123
-    clientId: my-client-id
-    reconnect: true
-    urlPattern: "%s?version=2&token=%s&clientId=%s&authType=2"
+    clientName: DhanHq
+    baseUrl: https://api.dhan.co/v2
+    conTimeout: 5000
+    readTimeout: 10000
+    clientHeaders:
+      - name: Accept
+        value: application/json
+      - name: Content-Type
+        value: application/json
+      - name: access-token
+        value: ${ACCESS_TOKEN_DHANHQ}

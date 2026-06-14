@@ -1,21 +1,29 @@
 package com.tragepro.api.data.model;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 @Data
-@Component
+@Validated
+@Configuration
 @ConfigurationProperties(prefix = "data.rest")
 public class ClientConfig {
-    private String name;
-    private String url;
-    private String token;
-    private String clientId;
-    private Set<Header> headers;
-    private String authHeaderPrefix;
-    private String clientIdHeader;
-    private int connectTimeout = 5000;
-    private int readTimeout = 10000;
+
+  private String clientName;
+
+  @NotNull(message = "Base URL must not be null")
+  private String baseUrl;
+
+  @NotNull(message = "Connection timeout must not be null")
+  private Integer conTimeout;
+
+  @NotNull(message = "Read timeout must not be null")
+  private Integer readTimeout;
+
+  @NotNull(message = "Headers must not be null")
+  private Set<ClientHeader> clientHeaders;
 }

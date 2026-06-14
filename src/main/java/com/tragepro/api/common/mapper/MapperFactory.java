@@ -8,18 +8,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class MapperFactory<T> {
 
-    private final Map<MapperType, BaseMapper<?, ?, ?>> mappers;
+  private final Map<MapperType, BaseMapper<?, ?, ?>> mappers;
 
-    @Autowired
-    public MapperFactory(List<BaseMapper<?, ?, ?>> mapperList, Map<MapperType, BaseMapper<?, ?, ?>> mappers) {
-        this.mappers = mappers;
-        for (BaseMapper<?, ?, ?> mapper : mapperList) {
-            mappers.put(mapper.getType(), mapper);
-        }
+  @Autowired
+  public MapperFactory(
+      List<BaseMapper<?, ?, ?>> mapperList, Map<MapperType, BaseMapper<?, ?, ?>> mappers) {
+    this.mappers = mappers;
+    for (BaseMapper<?, ?, ?> mapper : mapperList) {
+      mappers.put(mapper.getType(), mapper);
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    public T getMapper(MapperType mapperType) {
-        return (T) mappers.get(mapperType);
-    }
+  @SuppressWarnings("unchecked")
+  public T getMapper(MapperType mapperType) {
+    return (T) mappers.get(mapperType);
+  }
 }

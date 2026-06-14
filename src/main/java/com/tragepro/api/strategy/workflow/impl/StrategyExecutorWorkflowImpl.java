@@ -1,15 +1,19 @@
 package com.tragepro.api.strategy.workflow.impl;
 
 import com.tragepro.api.strategy.model.request.StrategyWorkflowRequest;
-import com.tragepro.api.strategy.workflow.AbstractStrategyWorkflow;
+import com.tragepro.api.strategy.workflow.StrategyWorkflow;
 import org.copperengine.core.Interrupt;
 import org.copperengine.core.Workflow;
 import org.copperengine.core.WorkflowDescription;
 
-@WorkflowDescription(alias = "StrategyExecutorWorkflowImpl", majorVersion = 1, minorVersion = 0, patchLevelVersion = 0)
+@WorkflowDescription(
+    alias = "StrategyExecutorWorkflowImpl",
+    majorVersion = 1,
+    minorVersion = 0,
+    patchLevelVersion = 0)
 public class StrategyExecutorWorkflowImpl extends Workflow<StrategyWorkflowRequest>
-        implements AbstractStrategyWorkflow {
+    implements StrategyWorkflow {
 
-    @Override
-    public void main() throws Interrupt {}
+  @Override
+  public void main() throws Interrupt {}
 }

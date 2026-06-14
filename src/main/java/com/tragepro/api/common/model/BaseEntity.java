@@ -10,15 +10,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Data
 public class BaseEntity {
 
-    @CreatedBy
-    private String createdBy;
+  @CreatedBy private String createdBy;
 
-    @CreatedDate
-    private Instant createdAt;
+  @CreatedDate private Instant createdAt;
 
-    @LastModifiedBy
-    private String updatedBy;
+  @LastModifiedBy private String updatedBy;
 
-    @LastModifiedDate
-    private Instant updatedAt;
+  @LastModifiedDate private Instant updatedAt;
 }

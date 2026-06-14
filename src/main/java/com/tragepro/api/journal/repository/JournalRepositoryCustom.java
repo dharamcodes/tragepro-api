@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface JournalRepositoryCustom {
-    Page<JournalEntity> findWithFilters(TradeFilter filter, Pageable pageable);
+  Page<JournalEntity> findWithFilters(TradeFilter filter, Pageable pageable);
 }

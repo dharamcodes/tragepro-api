@@ -8,11 +8,11 @@ import org.springframework.data.domain.Pageable;
 
 public interface JournalService {
 
-    JournalResponse createJournal(JournalRequest request);
+  JournalResponse createJournal(JournalRequest request);
 
-    JournalResponse getJournalById(String id);
+  JournalResponse getJournalById(String id);
 
-    Page<JournalResponse> getAllJournals(TradeFilter filter, Pageable pageable);
+  Page<JournalResponse> getAllJournals(TradeFilter filter, Pageable pageable);
 
-    JournalResponse updateJournal(String id, JournalRequest request);
+  JournalResponse updateJournal(String id, JournalRequest request);
 }

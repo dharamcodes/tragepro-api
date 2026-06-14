@@ -16,10 +16,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "watchList")
 public class WatchListEntity extends BaseEntity {
-    @Id
-    private String id;
+  @Id private String id;
 
-    private String name;
-    private String description;
-    private Set<SymbolData> stocks;
+  private String name;
+  private String description;
+  private Set<SymbolData> stocks;
 }

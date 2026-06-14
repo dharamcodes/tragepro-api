@@ -16,32 +16,32 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Base32IdGenListener extends AbstractMongoEventListener<Object> {
 
-    private final MongoBase32IdGen mongoBase32IdGen;
+  private final MongoBase32IdGen mongoBase32IdGen;
 
-    @Override
-    public void onBeforeConvert(BeforeConvertEvent<Object> event) {
-        Object entity = event.getSource();
-        if (!entity.getClass().isAnnotationPresent(Base32IdGen.class)) {
-            return;
-        }
-
-        findIdField(entity.getClass()).ifPresent(field -> assignIdIfNull(field, entity));
+  @Override
+  public void onBeforeConvert(BeforeConvertEvent<Object> event) {
+    Object entity = event.getSource();
+    if (!entity.getClass().isAnnotationPresent(Base32IdGen.class)) {
+      return;
     }
 
-    private Optional<Field> findIdField(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Identifier.class))
-                .findFirst();
-    }
+    findIdField(entity.getClass()).ifPresent(field -> assignIdIfNull(field, entity));
+  }
 
-    private void assignIdIfNull(Field field, Object entity) {
-        try {
-            field.setAccessible(true);
-            if (field.get(entity) == null) {
-                field.set(entity, mongoBase32IdGen.generateId());
-            }
-        } catch (IllegalAccessException e) {
-            throw new AppException(ErrorType.INTERNAL_ERROR);
-        }
+  private Optional<Field> findIdField(Class<?> clazz) {
+    return Arrays.stream(clazz.getDeclaredFields())
+        .filter(field -> field.isAnnotationPresent(Identifier.class))
+        .findFirst();
+  }
+
+  private void assignIdIfNull(Field field, Object entity) {
+    try {
+      field.setAccessible(true);
+      if (field.get(entity) == null) {
+        field.set(entity, mongoBase32IdGen.generateId());
+      }
+    } catch (IllegalAccessException e) {
+      throw new AppException(ErrorType.INTERNAL_ERROR);
     }
+  }
 }

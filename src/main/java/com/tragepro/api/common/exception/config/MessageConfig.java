@@ -8,11 +8,11 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 @Configuration
 public class MessageConfig {
 
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages/message");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
+  @Bean
+  public MessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasename("messages/message");
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
+  }
 }
