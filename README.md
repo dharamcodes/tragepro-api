@@ -45,26 +45,31 @@ flowchart TD
     classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
 
-    StartScan([Start Scan]) ::: trigger
-    EndScan([End Scan]) ::: trigger
+    StartScan([Start Scan])
+    EndScan([End Scan])
     
     subgraph Pipeline [Scan & Evaluate]
         direction TD
-        FetchData[Fetch Market Data for Universe] ::: process
-        ApplyFilters[Apply Technical / Fundamental Filters] ::: process
-        EvaluateStrategy[Evaluate Strategy Conditions] ::: process
-        Decision{Setup Found?} ::: decision
+        FetchData[Fetch Market Data for Universe]
+        ApplyFilters[Apply Technical / Fundamental Filters]
+        EvaluateStrategy[Evaluate Strategy Conditions]
+        Decision{Setup Found?}
         
         FetchData --> ApplyFilters --> EvaluateStrategy --> Decision
     end
     
     StartScan --> FetchData
     
-    Decision -- " Yes " --> AddWatchlist[Add Stock to Watchlist] ::: action
-    Decision -- " No " --> NextStock[Check Next Stock] ::: process
+    Decision -- " Yes " --> AddWatchlist[Add Stock to Watchlist]
+    Decision -- " No " --> NextStock[Check Next Stock]
     
     NextStock -.->|Loop| FetchData
     AddWatchlist --> EndScan
+
+    class StartScan,EndScan trigger;
+    class FetchData,ApplyFilters,EvaluateStrategy,NextStock process;
+    class Decision decision;
+    class AddWatchlist action;
 ```
 
 ### 2. Observing for Correct Price Range
@@ -78,17 +83,17 @@ flowchart TD
     classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
 
-    StartObs([Start Observation]) ::: trigger
-    WaitTick[Wait for Next Tick] ::: process
-    TriggerTrade[Trigger Trade Execution] ::: action
+    StartObs([Start Observation])
+    WaitTick[Wait for Next Tick]
+    TriggerTrade[Trigger Trade Execution]
     
     subgraph Pipeline [Monitor & Validate]
         direction TD
-        MonitorNode[Monitor Watchlist Stocks] ::: process
-        FetchPrice[Fetch Real-Time Price/Candles] ::: process
-        CheckRange{Price in Target Zone?} ::: decision
-        ValidateNode[Validate Trigger Conditions] ::: process
-        ConfirmNode{Conditions Met?} ::: decision
+        MonitorNode[Monitor Watchlist Stocks]
+        FetchPrice[Fetch Real-Time Price/Candles]
+        CheckRange{Price in Target Zone?}
+        ValidateNode[Validate Trigger Conditions]
+        ConfirmNode{Conditions Met?}
         
         MonitorNode --> FetchPrice --> CheckRange
         CheckRange -- " Yes " --> ValidateNode --> ConfirmNode
@@ -100,6 +105,11 @@ flowchart TD
     CheckRange -- " No " --> WaitTick
     ConfirmNode -- " No " --> WaitTick
     WaitTick -.->|Loop| MonitorNode
+
+    class StartObs trigger;
+    class WaitTick,MonitorNode,FetchPrice,ValidateNode process;
+    class CheckRange,ConfirmNode decision;
+    class TriggerTrade action;
 ```
 
 ### 3. Trade Execution Flow
