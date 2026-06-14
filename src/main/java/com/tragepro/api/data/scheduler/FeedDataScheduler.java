@@ -42,7 +42,7 @@ public class FeedDataScheduler {
 
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-  @Scheduled(cron = "*/10 * * * * *")
+  @Scheduled(cron = "${data.scheduler.jobs.morning}")
   public void scheduleHistorical() {
     if (!enableHistorical) return;
     WatchListResponse watchList =
@@ -73,7 +73,7 @@ public class FeedDataScheduler {
     requestList.forEach(feedDataHandler::handleHistoricalData);
   }
 
-  @Scheduled(cron = "*/10 * * * * *")
+  @Scheduled(cron = "${data.scheduler.jobs.evening}")
   public void scheduleIntraday() {
     if (!enableIntraday) return;
     WatchListResponse watchList =

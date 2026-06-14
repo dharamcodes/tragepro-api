@@ -92,10 +92,38 @@ class FeedDataHandlerTest {
   }
 
   @Test
-  void processCandle_InvalidCandle() {
-    CandleRequest invalidCandle = CandleRequest.builder().build();
-    when(feedClientAdaptor.historicalDataAdaptor(any())).thenReturn(List.of(invalidCandle));
+  void processCandle_InternalError() {
+    when(feedClientAdaptor.historicalDataAdaptor(any())).thenReturn(List.of(validCandleRequest));
+    when(candleService.isCandleExists("Apple Inc.", 1609459200000L)).thenReturn(false);
+    when(candleService.create(any())).thenReturn(null);
 
     assertThrows(AppException.class, () -> feedDataHandler.handleHistoricalData(feedClientRequest));
+  }
+
+  @Test
+  void processCandle_InvalidCandleScenarios() {
+    // null symbolData
+    CandleRequest invalid1 =
+        CandleRequest.builder()
+            .candleData(new CandleData(1609459200000L, 100.0, 110.0, 90.0, 105.0, 1000.0))
+            .build();
+    // blank symbol name
+    CandleRequest invalid2 =
+        CandleRequest.builder()
+            .symbolData(new SymbolData("AAPL", ""))
+            .candleData(new CandleData(1609459200000L, 100.0, 110.0, 90.0, 105.0, 1000.0))
+            .build();
+    // null candleData
+    CandleRequest invalid3 =
+        CandleRequest.builder().symbolData(new SymbolData("AAPL", "Apple Inc.")).build();
+
+    List<CandleRequest> invalidRequests = java.util.Arrays.asList(invalid1, invalid2, invalid3);
+
+    for (CandleRequest req : invalidRequests) {
+      when(feedClientAdaptor.historicalDataAdaptor(any()))
+          .thenReturn(Collections.singletonList(req));
+      assertThrows(
+          AppException.class, () -> feedDataHandler.handleHistoricalData(feedClientRequest));
+    }
   }
 }

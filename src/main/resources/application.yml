@@ -26,6 +26,9 @@ data:
     fromDateDays: 90
     enableHistorical: false
     enableIntraday: true
+    jobs:
+      morning: "0 0 8 * * ?"
+      evening: "0 0 16 * * ?"
 
 jwt:
   secret: ${JWT_SECRET:UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=}
