@@ -45,8 +45,8 @@ flowchart TD
     classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
 
-    Start([Start Scan]) ::: trigger
-    End([End Scan]) ::: trigger
+    StartScan([Start Scan]) ::: trigger
+    EndScan([End Scan]) ::: trigger
     
     subgraph Pipeline [Scan & Evaluate]
         direction TD
@@ -58,13 +58,13 @@ flowchart TD
         FetchData --> ApplyFilters --> EvaluateStrategy --> Decision
     end
     
-    Start --> FetchData
+    StartScan --> FetchData
     
     Decision -- " Yes " --> AddWatchlist[Add Stock to Watchlist] ::: action
     Decision -- " No " --> NextStock[Check Next Stock] ::: process
     
     NextStock -.->|Loop| FetchData
-    AddWatchlist --> End
+    AddWatchlist --> EndScan
 ```
 
 ### 2. Observing for Correct Price Range
@@ -78,28 +78,28 @@ flowchart TD
     classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
 
-    Start([Start Observation]) ::: trigger
-    Wait[Wait for Next Tick] ::: process
+    StartObs([Start Observation]) ::: trigger
+    WaitTick[Wait for Next Tick] ::: process
     TriggerTrade[Trigger Trade Execution] ::: action
     
     subgraph Pipeline [Monitor & Validate]
         direction TD
-        Monitor[Monitor Watchlist Stocks] ::: process
+        MonitorNode[Monitor Watchlist Stocks] ::: process
         FetchPrice[Fetch Real-Time Price/Candles] ::: process
         CheckRange{Price in Target Zone?} ::: decision
-        Validate[Validate Trigger Conditions] ::: process
-        Confirm{Conditions Met?} ::: decision
+        ValidateNode[Validate Trigger Conditions] ::: process
+        ConfirmNode{Conditions Met?} ::: decision
         
-        Monitor --> FetchPrice --> CheckRange
-        CheckRange -- " Yes " --> Validate --> Confirm
+        MonitorNode --> FetchPrice --> CheckRange
+        CheckRange -- " Yes " --> ValidateNode --> ConfirmNode
     end
 
-    Start --> Monitor
-    Confirm -- " Yes " --> TriggerTrade
+    StartObs --> MonitorNode
+    ConfirmNode -- " Yes " --> TriggerTrade
     
-    CheckRange -- " No " --> Wait
-    Confirm -- " No " --> Wait
-    Wait -.->|Loop| Monitor
+    CheckRange -- " No " --> WaitTick
+    ConfirmNode -- " No " --> WaitTick
+    WaitTick -.->|Loop| MonitorNode
 ```
 
 ### 3. Trade Execution Flow
