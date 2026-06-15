@@ -35,7 +35,7 @@ ext {
     springAiVersion="1.0.0-RC1"
     openApi = "3.0.3"
     mapStruct = "1.6.3"
-    springModulithVersion = "2.0.7"
+    springModulithVersion = "2.1.0"
     swaggerUiVersion = "5.32.6"
     copperVersion = "7.0.0"
     lombokMapstruct = "0.2.0"
