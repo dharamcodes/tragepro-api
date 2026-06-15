@@ -21,62 +21,62 @@ import org.junit.jupiter.api.Test;
 
 class DataMapperTests {
 
-    @Test
-    void testCandleMapper() {
-        CandleMapper mapper = new CandleMapperImpl();
-        assertNull(mapper.requestToEntity(null));
-        assertNull(mapper.entityToResponse(null));
+  @Test
+  void testCandleMapper() {
+    CandleMapper mapper = new CandleMapperImpl();
+    assertNull(mapper.requestToEntity(null));
+    assertNull(mapper.entityToResponse(null));
 
-        CandleEntity target = new CandleEntity();
-        mapper.merge(null, target);
+    CandleEntity target = new CandleEntity();
+    mapper.merge(null, target);
 
-        // Test custom default methods exception path
-        assertThrows(ServerException.class, () -> mapper.mapCandleData(null));
-        assertThrows(ServerException.class, () -> mapper.mapSymbolData(null));
+    // Test custom default methods exception path
+    assertThrows(ServerException.class, () -> mapper.mapCandleData(null));
+    assertThrows(ServerException.class, () -> mapper.mapSymbolData(null));
 
-        // Test normal paths
-        CandleData candleData = new CandleData(1600000000L, 10.0f, 12.0f, 9.0f, 11.0f, 1000L);
-        SymbolData symbolData = new SymbolData("AAPL", "Apple");
-        CandleRequest request = new CandleRequest(symbolData, candleData);
+    // Test normal paths
+    CandleData candleData = new CandleData(1600000000L, 10.0f, 12.0f, 9.0f, 11.0f, 1000L);
+    SymbolData symbolData = new SymbolData("AAPL", "Apple");
+    CandleRequest request = new CandleRequest(symbolData, candleData);
 
-        CandleEntity entity = mapper.requestToEntity(request);
-        assertNotNull(entity);
-        assertEquals("AAPL", entity.getSymbolData().id());
+    CandleEntity entity = mapper.requestToEntity(request);
+    assertNotNull(entity);
+    assertEquals("AAPL", entity.getSymbolData().symbol());
 
-        CandleResponse response = mapper.entityToResponse(entity);
-        assertNotNull(response);
-        assertEquals("AAPL", response.symbolData().id());
+    CandleResponse response = mapper.entityToResponse(entity);
+    assertNotNull(response);
+    assertEquals("AAPL", response.symbolData().symbol());
 
-        CandleEntity merged = new CandleEntity();
-        mapper.merge(request, merged);
-        assertEquals("AAPL", merged.getSymbolData().id());
-    }
+    CandleEntity merged = new CandleEntity();
+    mapper.merge(request, merged);
+    assertEquals("AAPL", merged.getSymbolData().symbol());
+  }
 
-    @Test
-    void testWatchListMapper() {
-        WatchListMapper mapper = new WatchListMapperImpl();
-        assertNull(mapper.requestToEntity(null));
-        assertNull(mapper.entityToResponse(null));
+  @Test
+  void testWatchListMapper() {
+    WatchListMapper mapper = new WatchListMapperImpl();
+    assertNull(mapper.requestToEntity(null));
+    assertNull(mapper.entityToResponse(null));
 
-        WatchListEntity target = new WatchListEntity();
-        mapper.merge(null, target);
+    WatchListEntity target = new WatchListEntity();
+    mapper.merge(null, target);
 
-        assertThrows(ServerException.class, () -> mapper.mapSymbolData(null));
+    assertThrows(ServerException.class, () -> mapper.mapSymbolData(null));
 
-        Set<SymbolData> stocks = new HashSet<>();
-        stocks.add(new SymbolData("AAPL", "Apple"));
-        WatchListRequest request = new WatchListRequest("name", "desc", stocks);
+    Set<SymbolData> stocks = new HashSet<>();
+    stocks.add(new SymbolData("AAPL", "Apple"));
+    WatchListRequest request = new WatchListRequest("name", "desc", stocks);
 
-        WatchListEntity entity = mapper.requestToEntity(request);
-        assertNotNull(entity);
-        assertEquals("name", entity.getName());
+    WatchListEntity entity = mapper.requestToEntity(request);
+    assertNotNull(entity);
+    assertEquals("name", entity.getName());
 
-        WatchListResponse response = mapper.entityToResponse(entity);
-        assertNotNull(response);
-        assertEquals("name", response.name());
+    WatchListResponse response = mapper.entityToResponse(entity);
+    assertNotNull(response);
+    assertEquals("name", response.name());
 
-        WatchListEntity merged = new WatchListEntity();
-        mapper.merge(request, merged);
-        assertEquals("name", merged.getName());
-    }
+    WatchListEntity merged = new WatchListEntity();
+    mapper.merge(request, merged);
+    assertEquals("name", merged.getName());
+  }
 }

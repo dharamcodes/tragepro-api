@@ -25,28 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/journal")
 public class JournalController {
 
-    private final JournalService journalService;
+  private final JournalService journalService;
 
-    @PostMapping
-    public ResponseEntity<JournalResponse> createJournal(@Valid @RequestBody JournalRequest request) {
-        return ResponseEntity.ok(journalService.createJournal(request));
-    }
+  @PostMapping
+  public ResponseEntity<JournalResponse> createJournal(@Valid @RequestBody JournalRequest request) {
+    return ResponseEntity.ok(journalService.createJournal(request));
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<JournalResponse> getJournalById(@PathVariable String id) {
-        return ResponseEntity.ok(journalService.getJournalById(id));
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<JournalResponse> getJournalById(@PathVariable String id) {
+    return ResponseEntity.ok(journalService.getJournalById(id));
+  }
 
-    @GetMapping
-    public ResponseEntity<Page<JournalResponse>> getAllJournals(
-            @ModelAttribute TradeFilter filter,
-            @PageableDefault(sort = "entryTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(journalService.getAllJournals(filter, pageable));
-    }
+  @GetMapping
+  public ResponseEntity<Page<JournalResponse>> getAllJournals(
+      @ModelAttribute TradeFilter filter,
+      @PageableDefault(sort = "entryTime", direction = Sort.Direction.DESC) Pageable pageable) {
+    return ResponseEntity.ok(journalService.getAllJournals(filter, pageable));
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<JournalResponse> updateJournal(
-            @PathVariable String id, @Valid @RequestBody JournalRequest request) {
-        return ResponseEntity.ok(journalService.updateJournal(id, request));
-    }
+  @PutMapping("/{id}")
+  public ResponseEntity<JournalResponse> updateJournal(
+      @PathVariable String id, @Valid @RequestBody JournalRequest request) {
+    return ResponseEntity.ok(journalService.updateJournal(id, request));
+  }
 }

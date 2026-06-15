@@ -8,19 +8,20 @@ import com.tragepro.api.identity.auth.model.response.LoginResponse;
 
 public interface AuthenticationService {
 
-    LoginResponse login(LoginRequest loginRequest);
+  LoginResponse login(LoginRequest loginRequest);
 
-    AuthenticationResponse signup(AuthenticationRequest authenticationRequest);
+  AuthenticationResponse signup(AuthenticationRequest authenticationRequest);
 
-    AuthenticationResponse getByUserName(String userName);
+  AuthenticationResponse getByUserName(String userName);
 
-    AuthenticationResponse updateAuthenticationDetails(String userName, AuthenticationRequest authenticationRequest);
+  AuthenticationResponse updateAuthenticationDetails(
+      String userName, AuthenticationRequest authenticationRequest);
 
-    void changePassword(ResetPasswordRequest resetPasswordRequest);
+  void changePassword(ResetPasswordRequest resetPasswordRequest);
 
-    void deactivateAuthentication(String userName);
+  void deactivateAuthentication(String userName);
 
-    void resetPassword(String userName);
+  void resetPassword(String userName);
 
-    void deleteAuthentication(String userName);
+  void deleteAuthentication(String userName);
 }

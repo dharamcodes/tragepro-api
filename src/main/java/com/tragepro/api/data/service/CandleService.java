@@ -8,13 +8,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface CandleService {
 
-    CandleResponse create(CandleRequest candleRequest);
+  CandleResponse create(CandleRequest candleRequest);
 
-    Optional<CandleResponse> getById(String id);
+  Optional<CandleResponse> getById(String id);
 
-    Page<CandleResponse> getAll(Pageable pageable);
+  Page<CandleResponse> getAll(Pageable pageable);
 
-    CandleResponse update(String id, CandleRequest candleRequest);
+  CandleResponse update(String id, CandleRequest candleRequest);
 
-    void delete(String id);
+  void delete(String id);
+
+  boolean isCandleExists(String name, long timestamp);
 }

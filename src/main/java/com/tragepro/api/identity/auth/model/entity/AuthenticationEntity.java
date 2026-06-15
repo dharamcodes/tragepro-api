@@ -19,24 +19,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "authDetailData")
 public class AuthenticationEntity extends BaseEntity {
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    @Indexed(unique = true)
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email cannot be blank")
-    private String email;
+  @Indexed(unique = true)
+  @Email(message = "Invalid email format")
+  @NotBlank(message = "Email cannot be blank")
+  private String email;
 
-    @Indexed(unique = true)
-    @NotBlank(message = "Identifier cannot be blank")
-    @Size(min = 5, max = 15, message = "Identifier must be between 6 and 20 characters")
-    private String userName;
+  @Indexed(unique = true)
+  @NotBlank(message = "Identifier cannot be blank")
+  @Size(min = 5, max = 15, message = "Identifier must be between 6 and 20 characters")
+  private String userName;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
-    private String password;
+  @NotBlank(message = "Password cannot be blank")
+  @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+  private String password;
 
-    private RoleType role;
-    private Boolean isActive;
-    private Set<String> identifiers;
+  private RoleType role;
+  private Boolean isActive;
+  private Set<String> identifiers;
 }

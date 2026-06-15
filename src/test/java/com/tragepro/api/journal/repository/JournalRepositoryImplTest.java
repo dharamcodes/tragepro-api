@@ -28,103 +28,97 @@ import org.springframework.data.mongodb.core.query.Query;
 @ExtendWith(MockitoExtension.class)
 class JournalRepositoryImplTest {
 
-    @Mock
-    private MongoTemplate mongoTemplate;
+  @Mock private MongoTemplate mongoTemplate;
 
-    @InjectMocks
-    private JournalRepositoryImpl journalRepositoryImpl;
+  @InjectMocks private JournalRepositoryImpl journalRepositoryImpl;
 
-    @Captor
-    private ArgumentCaptor<Query> queryCaptor;
+  @Captor private ArgumentCaptor<Query> queryCaptor;
 
-    private Pageable pageable;
-    private JournalEntity entity;
+  private Pageable pageable;
+  private JournalEntity entity;
 
-    @BeforeEach
-    void setUp() {
-        pageable = PageRequest.of(0, 10);
-        entity = new JournalEntity();
-        entity.setId("testId");
-    }
+  @BeforeEach
+  void setUp() {
+    pageable = PageRequest.of(0, 10);
+    entity = new JournalEntity();
+    entity.setId("testId");
+  }
 
-    @Test
-    void testFindWithFilters_NoFilters() {
-        TradeFilter filter = TradeFilter.builder().build();
+  @Test
+  void testFindWithFilters_NoFilters() {
+    TradeFilter filter = TradeFilter.builder().build();
 
-        when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(1L);
-        when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of(entity));
+    when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(1L);
+    when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of(entity));
 
-        Page<JournalEntity> result = journalRepositoryImpl.findWithFilters(filter, pageable);
+    Page<JournalEntity> result = journalRepositoryImpl.findWithFilters(filter, pageable);
 
-        assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+    assertNotNull(result);
+    assertEquals(1, result.getTotalElements());
 
-        verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
-        Query query = queryCaptor.getValue();
-        assertEquals(0, query.getQueryObject().size());
-    }
+    verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
+    Query query = queryCaptor.getValue();
+    assertEquals(0, query.getQueryObject().size());
+  }
 
-    @Test
-    void testFindWithFilters_WithBasicFilters() {
-        TradeFilter filter = TradeFilter.builder()
-                .accountId("accId")
-                .symbol("AAPL")
-                .tradeType(TradeType.LONG)
-                .build();
+  @Test
+  void testFindWithFilters_WithBasicFilters() {
+    TradeFilter filter =
+        TradeFilter.builder().accountId("accId").symbol("AAPL").tradeType(TradeType.LONG).build();
 
-        when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(1L);
-        when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of(entity));
+    when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(1L);
+    when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of(entity));
 
-        Page<JournalEntity> result = journalRepositoryImpl.findWithFilters(filter, pageable);
+    Page<JournalEntity> result = journalRepositoryImpl.findWithFilters(filter, pageable);
 
-        assertNotNull(result);
+    assertNotNull(result);
 
-        verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
-        Query query = queryCaptor.getValue();
-        assertEquals("accId", query.getQueryObject().get("accountId"));
-        assertEquals("AAPL", query.getQueryObject().get("symbol"));
-        assertEquals(TradeType.LONG, query.getQueryObject().get("tradeType"));
-    }
+    verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
+    Query query = queryCaptor.getValue();
+    assertEquals("accId", query.getQueryObject().get("accountId"));
+    assertEquals("AAPL", query.getQueryObject().get("symbol"));
+    assertEquals(TradeType.LONG, query.getQueryObject().get("tradeType"));
+  }
 
-    @Test
-    void testFindWithFilters_WithYearFilter() {
-        TradeFilter filter = TradeFilter.builder().year(2023).build();
+  @Test
+  void testFindWithFilters_WithYearFilter() {
+    TradeFilter filter = TradeFilter.builder().year(2023).build();
 
-        when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(0L);
-        when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of());
+    when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(0L);
+    when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of());
 
-        journalRepositoryImpl.findWithFilters(filter, pageable);
+    journalRepositoryImpl.findWithFilters(filter, pageable);
 
-        verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
-        Query query = queryCaptor.getValue();
-        assertNotNull(query.getQueryObject().get("entryTime"));
-    }
+    verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
+    Query query = queryCaptor.getValue();
+    assertNotNull(query.getQueryObject().get("entryTime"));
+  }
 
-    @Test
-    void testFindWithFilters_WithYearMonthFilter() {
-        TradeFilter filter = TradeFilter.builder().year(2023).month(5).build();
+  @Test
+  void testFindWithFilters_WithYearMonthFilter() {
+    TradeFilter filter = TradeFilter.builder().year(2023).month(5).build();
 
-        when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(0L);
-        when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of());
+    when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(0L);
+    when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of());
 
-        journalRepositoryImpl.findWithFilters(filter, pageable);
+    journalRepositoryImpl.findWithFilters(filter, pageable);
 
-        verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
-        Query query = queryCaptor.getValue();
-        assertNotNull(query.getQueryObject().get("entryTime"));
-    }
+    verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
+    Query query = queryCaptor.getValue();
+    assertNotNull(query.getQueryObject().get("entryTime"));
+  }
 
-    @Test
-    void testFindWithFilters_WithYearMonthDayFilter() {
-        TradeFilter filter = TradeFilter.builder().year(2023).month(5).day(15).build();
+  @Test
+  void testFindWithFilters_WithYearMonthDayFilter() {
+    TradeFilter filter = TradeFilter.builder().year(2023).month(5).day(15).build();
 
-        when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(0L);
-        when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of());
+    when(mongoTemplate.count(any(Query.class), eq(JournalEntity.class))).thenReturn(0L);
+    when(mongoTemplate.find(any(Query.class), eq(JournalEntity.class))).thenReturn(List.of());
 
-        journalRepositoryImpl.findWithFilters(filter, pageable);
+    journalRepositoryImpl.findWithFilters(filter, pageable);
 
-        verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
-        Query query = queryCaptor.getValue();
-        assertNotNull(query.getQueryObject().get("entryTime"));
-    }
+    verify(mongoTemplate).count(queryCaptor.capture(), eq(JournalEntity.class));
+    Query query = queryCaptor.getValue();
+    assertNotNull(query.getQueryObject().get("entryTime"));
+  }
 }

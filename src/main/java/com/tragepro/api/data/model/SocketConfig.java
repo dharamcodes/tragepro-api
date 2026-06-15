@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "data.socket")
 public class SocketConfig {
-    private String url;
-    private String token;
-    private String clientId;
-    private boolean reconnect;
-    private String urlPattern;
-    private int maxReconnectAttempts;
-    private long initialReconnectDelay;
-    private long maxReconnectDelay;
+  private String url;
+  private String token;
+  private String clientId;
+  private boolean reconnect;
+  private String urlPattern;
+  private int maxReconnectAttempts;
+  private long initialReconnectDelay;
+  private long maxReconnectDelay;
 }

@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TradeType {
-    LONG("Long"),
-    SHORT("Short");
+  LONG("Long"),
+  SHORT("Short");
 
-    private final String value;
+  private final String value;
 }

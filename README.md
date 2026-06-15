@@ -30,3 +30,122 @@ The platform consists of several core components:
 ### Support Components
 - **Cache** → fast access to frequently used data
 - **Watch List** → tracks instruments for strategies
+
+## Workflows
+
+### 1. Scanning Stocks for Strategy Setup
+This flow runs continuously or on a schedule to filter the broader market universe for stocks matching your specific strategy parameters.
+
+```mermaid
+flowchart TD
+    %% Styling Definitions
+    classDef default fill:#f9f9f9,stroke:#e0e0e0,stroke-width:1px,color:#333
+    classDef trigger fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
+    classDef process fill:#ffffff,stroke:#9e9e9e,stroke-width:1px,color:#000
+    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+
+    StartScan([Start Scan])
+    EndScan([End Scan])
+
+    subgraph Pipeline [Scan & Evaluate]
+        direction TD
+        FetchData[Fetch Market Data for Universe]
+        ApplyFilters[Apply Technical / Fundamental Filters]
+        EvaluateStrategy[Evaluate Strategy Conditions]
+        Decision{Setup Found?}
+
+        FetchData --> ApplyFilters --> EvaluateStrategy --> Decision
+    end
+
+    StartScan --> FetchData
+
+    Decision -- " Yes " --> AddWatchlist[Add Stock to Watchlist]
+    Decision -- " No " --> NextStock[Check Next Stock]
+
+    NextStock -.->|Loop| FetchData
+    AddWatchlist --> EndScan
+
+    class StartScan,EndScan trigger;
+    class FetchData,ApplyFilters,EvaluateStrategy,NextStock process;
+    class Decision decision;
+    class AddWatchlist action;
+```
+
+### 2. Observing for Correct Price Range
+Once a stock is on the Watchlist, it is observed in real-time. When the price hits the desired entry range, execution is triggered.
+
+```mermaid
+flowchart TD
+    %% Styling Definitions
+    classDef trigger fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
+    classDef process fill:#ffffff,stroke:#9e9e9e,stroke-width:1px,color:#000
+    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+
+    StartObs([Start Observation])
+    WaitTick[Wait for Next Tick]
+    TriggerTrade[Trigger Trade Execution]
+
+    subgraph Pipeline [Monitor & Validate]
+        direction TD
+        MonitorNode[Monitor Watchlist Stocks]
+        FetchPrice[Fetch Real-Time Price/Candles]
+        CheckRange{Price in Target Zone?}
+        ValidateNode[Validate Trigger Conditions]
+        ConfirmNode{Conditions Met?}
+
+        MonitorNode --> FetchPrice --> CheckRange
+        CheckRange -- " Yes " --> ValidateNode --> ConfirmNode
+    end
+
+    StartObs --> MonitorNode
+    ConfirmNode -- " Yes " --> TriggerTrade
+
+    CheckRange -- " No " --> WaitTick
+    ConfirmNode -- " No " --> WaitTick
+    WaitTick -.->|Loop| MonitorNode
+
+    class StartObs trigger;
+    class WaitTick,MonitorNode,FetchPrice,ValidateNode process;
+    class CheckRange,ConfirmNode decision;
+    class TriggerTrade action;
+```
+
+### 3. Trade Execution Flow
+The sequence of events from the moment a setup is triggered to the order being placed with the broker and recorded in the journal.
+
+```mermaid
+sequenceDiagram
+    autonumber
+
+    box rgba(2, 136, 209, 0.05) Internal Trading System
+    participant SE as Strategy Executor
+    participant TM as Trade Manager
+    participant J as Trade Journal
+    end
+
+    box rgba(56, 142, 60, 0.05) External Integration
+    participant B as Broker API
+    end
+
+    SE->>TM: Send Execution Signal (Buy/Sell)
+    activate TM
+
+    TM->>B: Place Order (Limit/Market)
+    activate B
+    B-->>TM: Order Placed Acknowledgment
+    deactivate B
+
+    TM->>J: Log Pending Trade Entry
+
+    Note over TM,B: Active Order Monitoring Loop
+    loop Monitor Order Status
+        TM->>B: Check Order Status
+        B-->>TM: Status (Filled / Partial / Rejected)
+    end
+
+    TM->>J: Update Journal with Execution Price
+    TM-->>SE: Notify Execution Complete
+    deactivate TM
+```

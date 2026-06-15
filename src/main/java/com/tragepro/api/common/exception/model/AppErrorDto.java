@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class AppErrorDto {
-    private String message;
-    private String errorCode;
-    private LocalDateTime timestamp;
+  private String message;
+  private String errorCode;
+  private LocalDateTime timestamp;
 }

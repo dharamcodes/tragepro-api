@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MapperConfig<E, R, O> {
 
-    @Bean
-    public Map<MapperType, BaseMapper<E, R, O>> mappers() {
-        return new EnumMap<>(MapperType.class);
-    }
+  @Bean
+  public Map<MapperType, BaseMapper<E, R, O>> mappers() {
+    return new EnumMap<>(MapperType.class);
+  }
 }

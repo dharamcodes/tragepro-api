@@ -16,52 +16,54 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
-    private final AuthenticationService authenticationService;
+  private final AuthenticationService authenticationService;
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok().body(authenticationService.login(loginRequest));
-    }
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    return ResponseEntity.ok().body(authenticationService.login(loginRequest));
+  }
 
-    @PostMapping("/signup")
-    public ResponseEntity<AuthenticationResponse> signup(
-            @Valid @RequestBody AuthenticationRequest authenticationRequest) {
-        return ResponseEntity.ok().body(authenticationService.signup(authenticationRequest));
-    }
+  @PostMapping("/signup")
+  public ResponseEntity<AuthenticationResponse> signup(
+      @Valid @RequestBody AuthenticationRequest authenticationRequest) {
+    return ResponseEntity.ok().body(authenticationService.signup(authenticationRequest));
+  }
 
-    @GetMapping("/find/{userName}")
-    public ResponseEntity<AuthenticationResponse> get(@PathVariable String userName) {
-        return ResponseEntity.ok().body(authenticationService.getByUserName(userName));
-    }
+  @GetMapping("/find/{userName}")
+  public ResponseEntity<AuthenticationResponse> get(@PathVariable String userName) {
+    return ResponseEntity.ok().body(authenticationService.getByUserName(userName));
+  }
 
-    @PutMapping("/update/{userName}")
-    public ResponseEntity<AuthenticationResponse> update(
-            @PathVariable String userName, @Valid @RequestBody AuthenticationRequest authenticationRequest) {
-        return ResponseEntity.ok()
-                .body(authenticationService.updateAuthenticationDetails(userName, authenticationRequest));
-    }
+  @PutMapping("/update/{userName}")
+  public ResponseEntity<AuthenticationResponse> update(
+      @PathVariable String userName,
+      @Valid @RequestBody AuthenticationRequest authenticationRequest) {
+    return ResponseEntity.ok()
+        .body(authenticationService.updateAuthenticationDetails(userName, authenticationRequest));
+  }
 
-    @DeleteMapping("/deactivate/{userName}")
-    public ResponseEntity<Void> deactivate(@PathVariable String userName) {
-        authenticationService.deactivateAuthentication(userName);
-        return ResponseEntity.accepted().build();
-    }
+  @DeleteMapping("/deactivate/{userName}")
+  public ResponseEntity<Void> deactivate(@PathVariable String userName) {
+    authenticationService.deactivateAuthentication(userName);
+    return ResponseEntity.accepted().build();
+  }
 
-    @PutMapping("/password")
-    public ResponseEntity<Void> changePassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        authenticationService.changePassword(resetPasswordRequest);
-        return ResponseEntity.accepted().build();
-    }
+  @PutMapping("/password")
+  public ResponseEntity<Void> changePassword(
+      @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    authenticationService.changePassword(resetPasswordRequest);
+    return ResponseEntity.accepted().build();
+  }
 
-    @PostMapping("/reset-password/{userName}")
-    public ResponseEntity<Void> resetPassword(@PathVariable String userName) {
-        authenticationService.resetPassword(userName);
-        return ResponseEntity.accepted().build();
-    }
+  @PostMapping("/reset-password/{userName}")
+  public ResponseEntity<Void> resetPassword(@PathVariable String userName) {
+    authenticationService.resetPassword(userName);
+    return ResponseEntity.accepted().build();
+  }
 
-    @DeleteMapping("/delete/{userName}")
-    public ResponseEntity<Void> delete(@PathVariable String userName) {
-        authenticationService.deleteAuthentication(userName);
-        return ResponseEntity.accepted().build();
-    }
+  @DeleteMapping("/delete/{userName}")
+  public ResponseEntity<Void> delete(@PathVariable String userName) {
+    authenticationService.deleteAuthentication(userName);
+    return ResponseEntity.accepted().build();
+  }
 }

@@ -35,199 +35,206 @@ import org.springframework.security.core.userdetails.UserDetails;
 @ExtendWith(MockitoExtension.class)
 class IdentityAuthTests {
 
-    @Mock
-    private UserDetailService userDetailService;
+  @Mock private UserDetailService userDetailService;
 
-    @Mock
-    private FilterChain filterChain;
+  @Mock private FilterChain filterChain;
 
-    private JWTAuthFilter jwtAuthFilter;
+  private JWTAuthFilter jwtAuthFilter;
 
-    private JwtTokenHelper jwtTokenHelper;
+  private JwtTokenHelper jwtTokenHelper;
 
-    @BeforeEach
-    void setUp() {
-        jwtTokenHelper = new JwtTokenHelper("UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=", 7200, 15);
-        jwtAuthFilter = new JWTAuthFilter(userDetailService, jwtTokenHelper);
-        SecurityContextHolder.clearContext();
+  @BeforeEach
+  void setUp() {
+    jwtTokenHelper = new JwtTokenHelper("UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=", 7200, 15);
+    jwtAuthFilter = new JWTAuthFilter(userDetailService, jwtTokenHelper);
+    SecurityContextHolder.clearContext();
+  }
+
+  @Test
+  void testEmailHelperPrivateConstructor() throws Exception {
+    Constructor<EmailHelper> constructor = EmailHelper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    try {
+      constructor.newInstance();
+      fail("Expected InvocationTargetException");
+    } catch (InvocationTargetException e) {
+      assertTrue(e.getTargetException() instanceof UnsupportedOperationException);
     }
+  }
 
-    @Test
-    void testEmailHelperPrivateConstructor() throws Exception {
-        Constructor<EmailHelper> constructor = EmailHelper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        try {
-            constructor.newInstance();
-            fail("Expected InvocationTargetException");
-        } catch (InvocationTargetException e) {
-            assertTrue(e.getTargetException() instanceof UnsupportedOperationException);
-        }
+  @Test
+  void testEmailHelperMethods() {
+    EmailHelper.sendEmail("recipient@example.com", "subject", "body");
+    assertTrue(EmailHelper.sendPasswordResetEmail("recipient@example.com", "token"));
+  }
+
+  @Test
+  void testJwtTokenHelperLifecycleAndValidation() {
+    String username = "testUser";
+    Map<String, String> claims = Map.of("role", "APP_USER");
+
+    String token = jwtTokenHelper.generateToken(username, claims);
+    assertNotNull(token);
+    assertEquals(username, jwtTokenHelper.extractUsername(token));
+
+    UserDetails userDetails = new User(username, "password", new ArrayList<>());
+    assertTrue(jwtTokenHelper.validateToken(token, userDetails));
+
+    String resetToken = jwtTokenHelper.generateResetPasswordToken(username, claims);
+    assertNotNull(resetToken);
+    assertEquals(username, jwtTokenHelper.extractUsername(resetToken));
+
+    String invalidToken = token + "modifiedSignature";
+    AppException exception =
+        assertThrows(AppException.class, () -> jwtTokenHelper.getTokenBody(invalidToken));
+    assertEquals(ErrorType.DATA_NOT_FOUND, exception.getErrorType());
+  }
+
+  @Test
+  void testJWTAuthFilterPublicEndpoints() throws Exception {
+    String[] publicEndpoints = {
+      "/swagger-ui/index.html",
+      "/swagger-ui.html",
+      "/v3/api-docs",
+      "/swagger-resources/configuration/ui",
+      "/webjars/springfox-swagger-ui/springfox.css",
+      "/api/v1/auth/login",
+      "/api/v1/auth/signup"
+    };
+
+    for (String endpoint : publicEndpoints) {
+      MockHttpServletRequest request = new MockHttpServletRequest();
+      request.setRequestURI(endpoint);
+      MockHttpServletResponse response = new MockHttpServletResponse();
+      FilterChain mockChain = mock(FilterChain.class);
+
+      jwtAuthFilter.doFilter(request, response, mockChain);
+      verify(mockChain).doFilter(request, response);
     }
+  }
 
-    @Test
-    void testEmailHelperMethods() {
-        EmailHelper.sendEmail("recipient@example.com", "subject", "body");
-        assertTrue(EmailHelper.sendPasswordResetEmail("recipient@example.com", "token"));
+  @Test
+  void testJWTAuthFilterMissingOrInvalidHeader() throws Exception {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/api/v1/candles");
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    jwtAuthFilter.doFilter(request, response, filterChain);
+    verify(filterChain, times(1)).doFilter(request, response);
+
+    request.addHeader("Authorization", "Basic dXNlcjpwYXNz");
+    jwtAuthFilter.doFilter(request, response, filterChain);
+    verify(filterChain, times(2)).doFilter(request, response);
+  }
+
+  @Test
+  void testJWTAuthFilterValidTokenRoles() throws Exception {
+    RoleType[] roles = {
+      RoleType.APP_USER, RoleType.APP_MANAGER, RoleType.APP_ADMIN, RoleType.SUPER_USER
+    };
+
+    for (RoleType role : roles) {
+      SecurityContextHolder.clearContext();
+      String token = jwtTokenHelper.generateToken("testUser", Map.of("role", role.name()));
+
+      MockHttpServletRequest request = new MockHttpServletRequest();
+      request.setRequestURI("/api/v1/candles");
+      request.addHeader("Authorization", "Bearer " + token);
+      MockHttpServletResponse response = new MockHttpServletResponse();
+      FilterChain mockChain = mock(FilterChain.class);
+
+      UserDetails userDetails = new User("testUser", "password", new ArrayList<>());
+      when(userDetailService.loadUserByUsername("testUser")).thenReturn(userDetails);
+
+      jwtAuthFilter.doFilter(request, response, mockChain);
+      verify(mockChain).doFilter(request, response);
+      assertNotNull(SecurityContextHolder.getContext().getAuthentication());
     }
+  }
 
-    @Test
-    void testJwtTokenHelperLifecycleAndValidation() {
-        String username = "testUser";
-        Map<String, String> claims = Map.of("role", "APP_USER");
+  @Test
+  void testJWTAuthFilterResetPasswordSuccess() throws Exception {
+    String token =
+        jwtTokenHelper.generateResetPasswordToken(
+            "testUser",
+            Map.of(
+                "role", RoleType.APP_USER.name(),
+                "passwordReset", RoleType.PASSWORD_RESET_CLAIM.getValue()));
 
-        String token = jwtTokenHelper.generateToken(username, claims);
-        assertNotNull(token);
-        assertEquals(username, jwtTokenHelper.extractUsername(token));
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/api/v1/reset-password");
+    request.addHeader("Authorization", "Bearer " + token);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+    FilterChain mockChain = mock(FilterChain.class);
 
-        UserDetails userDetails = new User(username, "password", new ArrayList<>());
-        assertTrue(jwtTokenHelper.validateToken(token, userDetails));
+    UserDetails userDetails = new User("testUser", "password", new ArrayList<>());
+    when(userDetailService.loadUserByUsername("testUser")).thenReturn(userDetails);
 
-        String resetToken = jwtTokenHelper.generateResetPasswordToken(username, claims);
-        assertNotNull(resetToken);
-        assertEquals(username, jwtTokenHelper.extractUsername(resetToken));
+    jwtAuthFilter.doFilter(request, response, mockChain);
+    verify(mockChain).doFilter(request, response);
+  }
 
-        String invalidToken = token + "modifiedSignature";
-        AppException exception = assertThrows(AppException.class, () -> jwtTokenHelper.getTokenBody(invalidToken));
-        assertEquals(ErrorType.DATA_NOT_FOUND, exception.getErrorType());
-    }
+  @Test
+  void testJWTAuthFilterResetPasswordDenied() throws Exception {
+    String token =
+        jwtTokenHelper.generateResetPasswordToken(
+            "testUser",
+            Map.of("role", RoleType.APP_USER.name(), "passwordReset", "INVALID_CLAIM_VALUE"));
 
-    @Test
-    void testJWTAuthFilterPublicEndpoints() throws Exception {
-        String[] publicEndpoints = {
-            "/swagger-ui/index.html",
-            "/swagger-ui.html",
-            "/v3/api-docs",
-            "/swagger-resources/configuration/ui",
-            "/webjars/springfox-swagger-ui/springfox.css",
-            "/api/v1/auth/login",
-            "/api/v1/auth/signup"
-        };
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/api/v1/reset-password");
+    request.addHeader("Authorization", "Bearer " + token);
+    MockHttpServletResponse response = new MockHttpServletResponse();
 
-        for (String endpoint : publicEndpoints) {
-            MockHttpServletRequest request = new MockHttpServletRequest();
-            request.setRequestURI(endpoint);
-            MockHttpServletResponse response = new MockHttpServletResponse();
-            FilterChain mockChain = mock(FilterChain.class);
+    UserDetails userDetails = new User("testUser", "password", new ArrayList<>());
+    when(userDetailService.loadUserByUsername("testUser")).thenReturn(userDetails);
 
-            jwtAuthFilter.doFilter(request, response, mockChain);
-            verify(mockChain).doFilter(request, response);
-        }
-    }
+    jwtAuthFilter.doFilter(request, response, filterChain);
+    assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+    assertTrue(response.getContentAsString().contains("Invalid or expired token"));
+  }
 
-    @Test
-    void testJWTAuthFilterMissingOrInvalidHeader() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/api/v1/candles");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+  @Test
+  void testJWTAuthFilterInvalidTokenException() throws Exception {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/api/v1/candles");
+    request.addHeader("Authorization", "Bearer invalidtokenhere");
+    MockHttpServletResponse response = new MockHttpServletResponse();
 
-        jwtAuthFilter.doFilter(request, response, filterChain);
-        verify(filterChain, times(1)).doFilter(request, response);
+    jwtAuthFilter.doFilter(request, response, filterChain);
+    assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+  }
 
-        request.addHeader("Authorization", "Basic dXNlcjpwYXNz");
-        jwtAuthFilter.doFilter(request, response, filterChain);
-        verify(filterChain, times(2)).doFilter(request, response);
-    }
+  @Test
+  void testAuthenticationMapper() {
+    AuthenticationMapper mapper = new AuthenticationMapperImpl();
+    assertNull(mapper.requestToEntity(null));
+    assertNull(mapper.entityToResponse(null));
 
-    @Test
-    void testJWTAuthFilterValidTokenRoles() throws Exception {
-        RoleType[] roles = {RoleType.APP_USER, RoleType.APP_MANAGER, RoleType.APP_ADMIN, RoleType.SUPER_USER};
+    AuthenticationEntity target =
+        new AuthenticationEntity(null, null, null, null, null, null, null);
+    mapper.merge(null, target);
 
-        for (RoleType role : roles) {
-            SecurityContextHolder.clearContext();
-            String token = jwtTokenHelper.generateToken("testUser", Map.of("role", role.name()));
+    AuthenticationRequest request =
+        AuthenticationRequest.builder()
+            .userName("username")
+            .email("email@example.com")
+            .password("password")
+            .role(RoleType.APP_USER)
+            .isActive(true)
+            .build();
 
-            MockHttpServletRequest request = new MockHttpServletRequest();
-            request.setRequestURI("/api/v1/candles");
-            request.addHeader("Authorization", "Bearer " + token);
-            MockHttpServletResponse response = new MockHttpServletResponse();
-            FilterChain mockChain = mock(FilterChain.class);
+    AuthenticationEntity entity = mapper.requestToEntity(request);
+    assertNotNull(entity);
+    assertEquals("username", entity.getUserName());
 
-            UserDetails userDetails = new User("testUser", "password", new ArrayList<>());
-            when(userDetailService.loadUserByUsername("testUser")).thenReturn(userDetails);
+    AuthenticationResponse response = mapper.entityToResponse(entity);
+    assertNotNull(response);
+    assertEquals("username", response.userName());
 
-            jwtAuthFilter.doFilter(request, response, mockChain);
-            verify(mockChain).doFilter(request, response);
-            assertNotNull(SecurityContextHolder.getContext().getAuthentication());
-        }
-    }
-
-    @Test
-    void testJWTAuthFilterResetPasswordSuccess() throws Exception {
-        String token = jwtTokenHelper.generateResetPasswordToken(
-                "testUser",
-                Map.of(
-                        "role", RoleType.APP_USER.name(),
-                        "passwordReset", RoleType.PASSWORD_RESET_CLAIM.getValue()));
-
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/api/v1/reset-password");
-        request.addHeader("Authorization", "Bearer " + token);
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain mockChain = mock(FilterChain.class);
-
-        UserDetails userDetails = new User("testUser", "password", new ArrayList<>());
-        when(userDetailService.loadUserByUsername("testUser")).thenReturn(userDetails);
-
-        jwtAuthFilter.doFilter(request, response, mockChain);
-        verify(mockChain).doFilter(request, response);
-    }
-
-    @Test
-    void testJWTAuthFilterResetPasswordDenied() throws Exception {
-        String token = jwtTokenHelper.generateResetPasswordToken(
-                "testUser", Map.of("role", RoleType.APP_USER.name(), "passwordReset", "INVALID_CLAIM_VALUE"));
-
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/api/v1/reset-password");
-        request.addHeader("Authorization", "Bearer " + token);
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        UserDetails userDetails = new User("testUser", "password", new ArrayList<>());
-        when(userDetailService.loadUserByUsername("testUser")).thenReturn(userDetails);
-
-        jwtAuthFilter.doFilter(request, response, filterChain);
-        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
-        assertTrue(response.getContentAsString().contains("Invalid or expired token"));
-    }
-
-    @Test
-    void testJWTAuthFilterInvalidTokenException() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/api/v1/candles");
-        request.addHeader("Authorization", "Bearer invalidtokenhere");
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        jwtAuthFilter.doFilter(request, response, filterChain);
-        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
-    }
-
-    @Test
-    void testAuthenticationMapper() {
-        AuthenticationMapper mapper = new AuthenticationMapperImpl();
-        assertNull(mapper.requestToEntity(null));
-        assertNull(mapper.entityToResponse(null));
-
-        AuthenticationEntity target = new AuthenticationEntity(null, null, null, null, null, null, null);
-        mapper.merge(null, target);
-
-        AuthenticationRequest request = AuthenticationRequest.builder()
-                .userName("username")
-                .email("email@example.com")
-                .password("password")
-                .role(RoleType.APP_USER)
-                .isActive(true)
-                .build();
-
-        AuthenticationEntity entity = mapper.requestToEntity(request);
-        assertNotNull(entity);
-        assertEquals("username", entity.getUserName());
-
-        AuthenticationResponse response = mapper.entityToResponse(entity);
-        assertNotNull(response);
-        assertEquals("username", response.userName());
-
-        AuthenticationEntity merged = new AuthenticationEntity(null, null, null, null, null, null, null);
-        mapper.merge(request, merged);
-        assertEquals("username", merged.getUserName());
-    }
+    AuthenticationEntity merged =
+        new AuthenticationEntity(null, null, null, null, null, null, null);
+    mapper.merge(request, merged);
+    assertEquals("username", merged.getUserName());
+  }
 }

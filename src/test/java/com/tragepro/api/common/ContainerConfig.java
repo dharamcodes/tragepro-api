@@ -7,13 +7,12 @@ import org.testcontainers.mongodb.MongoDBContainer;
 
 public class ContainerConfig {
 
-    @Container
-    @ServiceConnection
-    protected static MongoDBContainer mongo =
-            new MongoDBContainer("mongo:latest").withReplicaSet().withReuse(true);
+  @Container @ServiceConnection
+  protected static MongoDBContainer mongo =
+      new MongoDBContainer("mongo:latest").withReplicaSet().withReuse(true);
 
-    @BeforeAll
-    static void init() {
-        mongo.start();
-    }
+  @BeforeAll
+  static void init() {
+    mongo.start();
+  }
 }

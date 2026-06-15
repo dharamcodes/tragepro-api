@@ -8,8 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("sequence_counters")
 public class Base32IdSeq {
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    private long sequence;
+  private long sequence;
 }

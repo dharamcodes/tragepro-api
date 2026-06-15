@@ -11,28 +11,28 @@ import org.junit.jupiter.api.Test;
 
 class IdentityAccountTests {
 
-    @Test
-    void testAccountDetailMapper() {
-        AccountDetailMapper mapper = new AccountDetailMapperImpl();
-        assertNull(mapper.requestToEntity(null));
-        assertNull(mapper.entityToResponse(null));
+  @Test
+  void testAccountDetailMapper() {
+    AccountDetailMapper mapper = new AccountDetailMapperImpl();
+    assertNull(mapper.requestToEntity(null));
+    assertNull(mapper.entityToResponse(null));
 
-        AccountDetailEntity target = AccountDetailEntity.builder().build();
-        mapper.merge(null, target);
+    AccountDetailEntity target = AccountDetailEntity.builder().build();
+    mapper.merge(null, target);
 
-        AccountDetailRequest request =
-                new AccountDetailRequest("name", "email@example.com", "identifier", 9876543210L, true);
+    AccountDetailRequest request =
+        new AccountDetailRequest("name", "email@example.com", "identifier", 9876543210L, true);
 
-        AccountDetailEntity entity = mapper.requestToEntity(request);
-        assertNotNull(entity);
-        assertEquals("name", entity.getName());
+    AccountDetailEntity entity = mapper.requestToEntity(request);
+    assertNotNull(entity);
+    assertEquals("name", entity.getName());
 
-        AccountDetailResponse response = mapper.entityToResponse(entity);
-        assertNotNull(response);
-        assertEquals("name", response.name());
+    AccountDetailResponse response = mapper.entityToResponse(entity);
+    assertNotNull(response);
+    assertEquals("name", response.name());
 
-        AccountDetailEntity merged = AccountDetailEntity.builder().build();
-        mapper.merge(request, merged);
-        assertEquals("name", merged.getName());
-    }
+    AccountDetailEntity merged = AccountDetailEntity.builder().build();
+    mapper.merge(request, merged);
+    assertEquals("name", merged.getName());
+  }
 }

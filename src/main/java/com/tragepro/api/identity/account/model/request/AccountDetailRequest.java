@@ -12,16 +12,12 @@ import lombok.Builder;
 @Builder
 @Base32IdGen
 public record AccountDetailRequest(
-        @NotBlank(message = "User name cannot be blank") String name,
-
-        @Email(message = "Invalid email format") @NotBlank(message = "Email cannot be blank")
+    @NotBlank(message = "User name cannot be blank") String name,
+    @Email(message = "Invalid email format") @NotBlank(message = "Email cannot be blank")
         String email,
-
-        @Identifier String identifier,
-
-        @NotNull(message = "Phone number cannot be null")
+    @Identifier String identifier,
+    @NotNull(message = "Phone number cannot be null")
         @Min(value = 1000000000L, message = "Phone number must be at least 10 digits")
         @Max(value = 999999999999L, message = "Phone number must be at most 12 digits")
         Long phoneNumber,
-
-        Boolean isActive) {}
+    Boolean isActive) {}

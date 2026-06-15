@@ -23,32 +23,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "trade_journals")
 public class JournalEntity extends BaseEntity {
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    @Indexed
-    private String accountId;
+  @Indexed private String accountId;
 
-    @Indexed
-    private String symbol;
+  @Indexed private String symbol;
 
-    private TradeType tradeType;
+  private TradeType tradeType;
 
-    private TradeStatus status;
+  private TradeStatus status;
 
-    private BigDecimal entryPrice;
+  private BigDecimal entryPrice;
 
-    private BigDecimal exitPrice;
+  private BigDecimal exitPrice;
 
-    private BigDecimal quantity;
+  private BigDecimal quantity;
 
-    private Instant entryTime;
+  private Instant entryTime;
 
-    private Instant exitTime;
+  private Instant exitTime;
 
-    private BigDecimal pnl;
+  private BigDecimal pnl;
 
-    private String notes;
+  private String notes;
 
-    private List<String> tags;
+  private List<String> tags;
 }

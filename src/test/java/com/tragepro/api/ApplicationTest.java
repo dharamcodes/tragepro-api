@@ -9,10 +9,10 @@ import org.springframework.modulith.core.ApplicationModules;
 @SpringBootTest
 class ApplicationTest {
 
-    @Test
-    void contextLoads() {
-        ApplicationModules modules = ApplicationModules.of(Application.class);
-        modules.forEach(module -> log.debug(module.getDisplayName()));
-        modules.verify();
-    }
+  @Test
+  void contextLoads() {
+    ApplicationModules modules = ApplicationModules.of(Application.class);
+    modules.forEach(module -> log.debug(module.getDisplayName()));
+    modules.verify();
+  }
 }
