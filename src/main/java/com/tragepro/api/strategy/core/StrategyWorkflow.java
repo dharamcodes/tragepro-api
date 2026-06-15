@@ -1,3 +1,3 @@
-package com.tragepro.api.strategy.workflow;
+package com.tragepro.api.strategy.core;
 
 public interface StrategyWorkflow {}
