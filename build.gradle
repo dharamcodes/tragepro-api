@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.diffplug.spotless' version "8.6.0"
+    id 'com.diffplug.spotless' version "7.0.4"
     id 'jacoco'
 }
 
@@ -103,7 +103,7 @@ spotless {
         removeUnusedImports()
         leadingTabsToSpaces(4)
         trimTrailingWhitespace()
-        googleJavaFormat()
+        googleJavaFormat('1.22.0')
     }
     format 'misc', {
         target '**/*.gradle', '**/*.md', '.gitignore'
