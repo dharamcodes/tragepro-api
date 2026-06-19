@@ -103,7 +103,7 @@ spotless {
         removeUnusedImports()
         leadingTabsToSpaces(4)
         trimTrailingWhitespace()
-        googleJavaFormat('1.25.0')
+        googleJavaFormat('1.35.0')
     }
     format 'misc', {
         target '**/*.gradle', '**/*.md', '.gitignore'
@@ -116,6 +116,13 @@ spotless {
         target '**/*.yml', '**/*.yaml'
         targetExclude 'build/**'
         leadingTabsToSpaces(2)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'properties', {
+        target '**/*.properties'
+        targetExclude 'build/**'
+        leadingTabsToSpaces(4)
         trimTrailingWhitespace()
         endWithNewline()
     }
