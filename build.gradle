@@ -37,7 +37,7 @@ ext {
     mapStruct = "1.6.3"
     springModulithVersion = "2.1.0"
     swaggerUiVersion = "5.32.6"
-    copperVersion = "7.0.0"
+    copperVersion = "8.0.0"
     lombokMapstruct = "0.2.0"
 }
 
