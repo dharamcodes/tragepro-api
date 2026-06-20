@@ -1,7 +1,7 @@
-package com.tragepro.api.strategy.core.impl;
+package com.tragepro.api.strategy.workflow.impl;
 
-import com.tragepro.api.strategy.core.StrategyWorkflow;
 import com.tragepro.api.strategy.model.request.StrategyWorkflowRequest;
+import com.tragepro.api.strategy.workflow.StrategyWorkflow;
 import org.copperengine.core.Interrupt;
 import org.copperengine.core.Workflow;
 import org.copperengine.core.WorkflowDescription;

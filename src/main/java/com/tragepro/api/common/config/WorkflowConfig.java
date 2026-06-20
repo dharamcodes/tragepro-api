@@ -40,28 +40,21 @@ public class WorkflowConfig {
     engine.setWfRepository(repository);
     engine.setDependencyInjector(dependencyInjector);
     engine.setIdFactory(new JdkRandomUUIDFactory());
-
     DefaultTimeoutManager timeoutManager = new DefaultTimeoutManager();
     timeoutManager.setEngine(engine);
     engine.setTimeoutManager(timeoutManager);
-
     DefaultEarlyResponseContainer earlyResponseContainer = new DefaultEarlyResponseContainer();
     engine.setEarlyResponseContainer(earlyResponseContainer);
-
     DefaultTicketPoolManager ticketPoolManager = new DefaultTicketPoolManager();
     engine.setTicketPoolManager(ticketPoolManager);
-
     DefaultProcessorPoolManager<TransientProcessorPool> poolManager =
         new DefaultProcessorPoolManager<>();
     poolManager.setEngine(engine);
-
     TransientPriorityProcessorPool pool =
         new TransientPriorityProcessorPool(
             TransientPriorityProcessorPool.DEFAULT_POOL_ID, threadCount);
     poolManager.setProcessorPools(Collections.singletonList(pool));
-
     engine.setPoolManager(poolManager);
-
     return engine;
   }
 }
