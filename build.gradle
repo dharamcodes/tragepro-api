@@ -122,12 +122,11 @@ spotless {
     format 'properties', {
         target '**/*.properties'
         targetExclude 'build/**'
-        leadingTabsToSpaces(4)
+        leadingTabsToSpaces(2)
         trimTrailingWhitespace()
         endWithNewline()
     }
 }
-
 
 tasks.named('test') {
     useJUnitPlatform()
