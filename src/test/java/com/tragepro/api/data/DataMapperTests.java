@@ -3,13 +3,13 @@ package com.tragepro.api.data;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.tragepro.api.common.exception.ServerException;
-import com.tragepro.api.data.model.CandleData;
-import com.tragepro.api.data.model.SymbolData;
-import com.tragepro.api.data.model.entity.CandleEntity;
+import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.entity.CandleEntity;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.model.entity.WatchListEntity;
-import com.tragepro.api.data.model.request.CandleRequest;
 import com.tragepro.api.data.model.request.WatchListRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
 import com.tragepro.api.data.model.response.WatchListResponse;
 import com.tragepro.api.data.service.mapper.CandleMapper;
 import com.tragepro.api.data.service.mapper.CandleMapperImpl;

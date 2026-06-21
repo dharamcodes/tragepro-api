@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.tragepro.api.common.ApiTestSetup;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.data.model.entity.WatchListEntity;
 import com.tragepro.api.data.model.request.WatchListRequest;
 import com.tragepro.api.data.repository.WatchListRepository;

@@ -1,18 +1,21 @@
 package com.tragepro.api.data.scheduler.adopter;
 
 import com.tragepro.api.common.constant.DataTimeType;
+import com.tragepro.api.common.event.DataEvent;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.client.adopter.FeedClientAdaptor;
-import com.tragepro.api.data.model.request.CandleRequest;
+import com.tragepro.api.data.event.DataEventPublisher;
 import com.tragepro.api.data.model.request.FeedClientRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
 import com.tragepro.api.data.service.CandleService;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -25,6 +28,10 @@ public class FeedDataHandler {
 
   private final FeedClientAdaptor feedClientAdaptor;
   private final CandleService candleService;
+  private final DataEventPublisher dataEventPublisher;
+
+  @Value("${data.fetch.daysBack}")
+  private Integer daysBack;
 
   @Async("customSchedulerExecutor")
   public void handleHistoricalData(FeedClientRequest feedClientRequest) {
@@ -38,6 +45,11 @@ public class FeedDataHandler {
             .map(candle -> candle.add(DataTimeType.HISTORICAL))
             .map(this::processCandle)
             .toList());
+    var firstCandle = candleRequests.getFirst();
+    var historicalData =
+        candleService.getCandlesBySymbolAndDaysBack(firstCandle.symbolData().name(), daysBack);
+    dataEventPublisher.publish(
+        new DataEvent(feedClientRequest.securityId().toString(), historicalData));
   }
 
   @Async("customSchedulerExecutor")
@@ -52,6 +64,11 @@ public class FeedDataHandler {
             .map(candle -> candle.add(DataTimeType.INTRADAY))
             .map(this::processCandle)
             .toList());
+    var firstCandle = candleRequests.getFirst();
+    var historicalData =
+        candleService.getCandlesBySymbolAndDaysBack(firstCandle.symbolData().name(), daysBack);
+    dataEventPublisher.publish(
+        new DataEvent(feedClientRequest.securityId().toString(), historicalData));
   }
 
   private CandleResponse processCandle(CandleRequest candle) {
@@ -67,7 +84,6 @@ public class FeedDataHandler {
           candle.candleData().timestamp());
       return CandleResponse.builder().build();
     }
-
     return Optional.ofNullable(candleService.create(candle))
         .orElseThrow(() -> new AppException(ErrorType.INTERNAL_ERROR));
   }

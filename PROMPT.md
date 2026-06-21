@@ -1,4 +1,4 @@
-# 🚀 SDE3 Spring Boot & Java 21+ Engineering Guidelines
+# 🚀 SDE3 Spring Boot & Java 25+ Engineering Guidelines
 
 This document defines the high-standard engineering, architectural, security, and operational guidelines for this project. Every feature implementation, code change, and system design must adhere to these standards.
 

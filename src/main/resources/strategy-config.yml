@@ -1,0 +1,36 @@
+workflow:
+  strategy:
+    - name: INTRADAY_VP_VWAP
+      timeframe:
+        - value: 5
+          uom: MIN
+          type: LOWER
+        - value: 15
+          uom: MIN
+          type: HIGHER
+      builder:
+        - ABC
+        - ABC
+      evaluator:
+        - ABC
+        - ABC
+      executor:
+        - ABC
+        - ABC
+    - name: SWING_VP_VWAP
+      timeframe:
+        - value: 1
+          uom: HR
+          type: LOWER
+        - value: 6
+          uom: HR
+          type: HIGHER
+      builder:
+        - ABC
+        - ABC
+      evaluator:
+        - ABC
+        - ABC
+      executor:
+        - ABC
+        - ABC

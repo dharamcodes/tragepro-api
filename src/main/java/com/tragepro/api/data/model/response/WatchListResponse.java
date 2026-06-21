@@ -1,7 +1,7 @@
 package com.tragepro.api.data.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.SymbolData;
 import java.util.Set;
 import lombok.Builder;
 

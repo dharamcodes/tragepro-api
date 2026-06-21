@@ -1,7 +1,7 @@
 package com.tragepro.api.data.web;
 
-import com.tragepro.api.data.model.request.CandleRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.model.response.PagedResponse;
 import com.tragepro.api.data.service.CandleService;
 import jakarta.validation.Valid;

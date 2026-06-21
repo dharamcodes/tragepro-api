@@ -1,7 +1,6 @@
 package com.tragepro.api.data.config;
 
 import com.tragepro.api.data.client.FeedClient;
-import com.tragepro.api.data.model.ClientConfig;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;

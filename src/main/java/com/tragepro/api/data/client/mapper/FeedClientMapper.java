@@ -1,8 +1,8 @@
 package com.tragepro.api.data.client.mapper;
 
-import com.tragepro.api.data.model.CandleData;
-import com.tragepro.api.data.model.SymbolData;
-import com.tragepro.api.data.model.request.CandleRequest;
+import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.request.CandleRequest;
 import com.tragepro.api.data.model.request.FeedClientRequest;
 import com.tragepro.api.data.model.response.FeedClientResponse;
 import java.util.Collections;

@@ -4,11 +4,13 @@ import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.data.model.request.CandleRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.repository.CandleRepository;
 import com.tragepro.api.data.service.CandleService;
 import com.tragepro.api.data.service.mapper.CandleMapper;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,5 +84,16 @@ public class CandleServiceImpl implements CandleService {
   @Override
   public boolean isCandleExists(String name, long timestamp) {
     return candleRepository.existsBySymbolDataNameAndCandleDataTimestamp(name, timestamp);
+  }
+
+  @Override
+  public java.util.List<CandleResponse> getCandlesBySymbolAndDaysBack(
+      String symbolName, int daysBack) {
+    long timestampFrom = Instant.now().minus(daysBack, ChronoUnit.DAYS).getEpochSecond();
+    var candleEntities =
+        candleRepository.findBySymbolDataNameAndCandleDataTimestampGreaterThanEqual(
+            symbolName, timestampFrom);
+    var mapper = mapperFactory.getMapper(MapperType.CANDLE_DATA_MAPPER);
+    return candleEntities.stream().map(mapper::entityToResponse).toList();
   }
 }

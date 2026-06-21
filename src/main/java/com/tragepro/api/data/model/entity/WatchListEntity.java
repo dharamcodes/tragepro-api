@@ -1,7 +1,7 @@
 package com.tragepro.api.data.model.entity;
 
 import com.tragepro.api.common.model.BaseEntity;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.SymbolData;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;

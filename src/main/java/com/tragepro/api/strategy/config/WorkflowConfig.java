@@ -26,8 +26,10 @@ public class WorkflowConfig {
   @Bean(initMethod = "start", destroyMethod = "shutdown")
   public FileBasedWorkflowRepository fileBasedWorkflowRepository() {
     FileBasedWorkflowRepository repository = new FileBasedWorkflowRepository();
-    repository.setSourceDirs(Collections.singletonList("src/main/java"));
-    repository.setTargetDir("build/copper-compiled-workflows");
+    repository.setSourceDirs(Collections.singletonList("src/main/workflows"));
+    java.io.File targetDir = new java.io.File("build/copper-compiled-workflows");
+    repository.setTargetDir(targetDir.getAbsolutePath());
+    repository.setCompilerOptions("-g", "-d", targetDir.getAbsolutePath(), "-proc:none");
     return repository;
   }
 
@@ -40,28 +42,21 @@ public class WorkflowConfig {
     engine.setWfRepository(repository);
     engine.setDependencyInjector(dependencyInjector);
     engine.setIdFactory(new JdkRandomUUIDFactory());
-
     DefaultTimeoutManager timeoutManager = new DefaultTimeoutManager();
     timeoutManager.setEngine(engine);
     engine.setTimeoutManager(timeoutManager);
-
     DefaultEarlyResponseContainer earlyResponseContainer = new DefaultEarlyResponseContainer();
     engine.setEarlyResponseContainer(earlyResponseContainer);
-
     DefaultTicketPoolManager ticketPoolManager = new DefaultTicketPoolManager();
     engine.setTicketPoolManager(ticketPoolManager);
-
     DefaultProcessorPoolManager<TransientProcessorPool> poolManager =
         new DefaultProcessorPoolManager<>();
     poolManager.setEngine(engine);
-
     TransientPriorityProcessorPool pool =
         new TransientPriorityProcessorPool(
             TransientPriorityProcessorPool.DEFAULT_POOL_ID, threadCount);
     poolManager.setProcessorPools(Collections.singletonList(pool));
-
     engine.setPoolManager(poolManager);
-
     return engine;
   }
 }

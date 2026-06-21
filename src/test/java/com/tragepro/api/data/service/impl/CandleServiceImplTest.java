@@ -8,9 +8,9 @@ import static org.mockito.Mockito.*;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.data.model.entity.CandleEntity;
-import com.tragepro.api.data.model.request.CandleRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
+import com.tragepro.api.common.model.entity.CandleEntity;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.repository.CandleRepository;
 import com.tragepro.api.data.service.mapper.CandleMapper;
 import java.util.Optional;
@@ -112,5 +112,66 @@ class CandleServiceImplTest {
     when(candleRepository.findById(anyString())).thenReturn(Optional.empty());
 
     assertThrows(AppException.class, () -> candleService.delete("test-id"));
+  }
+
+  @Test
+  void getAll_Success() {
+    when(candleRepository.findAll(any(org.springframework.data.domain.Pageable.class)))
+        .thenReturn(
+            new org.springframework.data.domain.PageImpl<>(java.util.List.of(candleEntity)));
+    when(mapperFactory.getMapper(MapperType.CANDLE_DATA_MAPPER)).thenReturn(candleMapper);
+    when(candleMapper.entityToResponse(any())).thenReturn(candleResponse);
+
+    org.springframework.data.domain.Page<CandleResponse> response =
+        candleService.getAll(org.springframework.data.domain.Pageable.unpaged());
+
+    assertNotNull(response);
+    assertFalse(response.isEmpty());
+  }
+
+  @Test
+  void getAll_Empty() {
+    when(candleRepository.findAll(any(org.springframework.data.domain.Pageable.class)))
+        .thenReturn(org.springframework.data.domain.Page.empty());
+
+    assertThrows(
+        AppException.class,
+        () -> candleService.getAll(org.springframework.data.domain.Pageable.unpaged()));
+  }
+
+  @Test
+  void update_Success() {
+    when(candleRepository.findById(anyString())).thenReturn(Optional.of(candleEntity));
+    when(mapperFactory.getMapper(MapperType.CANDLE_DATA_MAPPER)).thenReturn(candleMapper);
+    doNothing().when(candleMapper).merge(any(), any());
+    when(candleRepository.save(any())).thenReturn(candleEntity);
+    when(candleMapper.entityToResponse(any())).thenReturn(candleResponse);
+
+    CandleResponse response = candleService.update("test-id", candleRequest);
+
+    assertNotNull(response);
+    verify(candleRepository, times(1)).save(candleEntity);
+  }
+
+  @Test
+  void update_NotFound() {
+    when(candleRepository.findById(anyString())).thenReturn(Optional.empty());
+
+    assertThrows(AppException.class, () -> candleService.update("test-id", candleRequest));
+  }
+
+  @Test
+  void getCandlesBySymbolAndDaysBack_Success() {
+    when(candleRepository.findBySymbolDataNameAndCandleDataTimestampGreaterThanEqual(
+            anyString(), anyLong()))
+        .thenReturn(java.util.List.of(candleEntity));
+    when(mapperFactory.getMapper(MapperType.CANDLE_DATA_MAPPER)).thenReturn(candleMapper);
+    when(candleMapper.entityToResponse(any())).thenReturn(candleResponse);
+
+    java.util.List<CandleResponse> response =
+        candleService.getCandlesBySymbolAndDaysBack("AAPL", 5);
+
+    assertNotNull(response);
+    assertFalse(response.isEmpty());
   }
 }
