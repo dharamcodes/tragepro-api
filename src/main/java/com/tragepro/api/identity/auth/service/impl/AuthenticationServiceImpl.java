@@ -133,7 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     var mapper = mapperFactory.getMapper(MapperType.AUTHENTICATION_MAPPER);
     var authenticationDetails = authenticationRepository.findByUserNameAndIsActive(userName, true);
     if (ObjectUtils.isEmpty(authenticationDetails)) {
-      log.error("User with given userName does not exists {}", userName);
+      log.error("Failed to deactivate: active user with userName {} does not exist", userName);
       throw new AppException(ErrorType.DATA_NOT_FOUND);
     }
     var mergeRequest = AuthenticationRequest.builder().isActive(false).build();
