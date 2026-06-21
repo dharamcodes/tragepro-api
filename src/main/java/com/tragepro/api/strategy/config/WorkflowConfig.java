@@ -26,8 +26,10 @@ public class WorkflowConfig {
   @Bean(initMethod = "start", destroyMethod = "shutdown")
   public FileBasedWorkflowRepository fileBasedWorkflowRepository() {
     FileBasedWorkflowRepository repository = new FileBasedWorkflowRepository();
-    repository.setSourceDirs(Collections.singletonList("src/main/java"));
-    repository.setTargetDir("build/copper-compiled-workflows");
+    repository.setSourceDirs(Collections.singletonList("src/main/workflows"));
+    java.io.File targetDir = new java.io.File("build/copper-compiled-workflows");
+    repository.setTargetDir(targetDir.getAbsolutePath());
+    repository.setCompilerOptions("-g", "-d", targetDir.getAbsolutePath(), "-proc:none");
     return repository;
   }
 

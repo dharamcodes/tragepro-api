@@ -87,5 +87,14 @@ class SecurityMapperTest {
   void testNullHandling() {
     assertNull(mapper.requestToEntity(null));
     assertNull(mapper.entityToResponse(null));
+
+    SecurityEntity entity = new SecurityEntity();
+    mapper.merge(null, entity); // test null source
+  }
+
+  @Test
+  void testEmptyHandling() {
+    SecurityEntity entity = mapper.requestToEntity(SecurityRequest.builder().build());
+    assertNotNull(entity);
   }
 }

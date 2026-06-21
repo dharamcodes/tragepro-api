@@ -1,8 +1,8 @@
-package com.tragepro.api.data.model.request;
+package com.tragepro.api.common.model.request;
 
 import com.tragepro.api.common.constant.DataTimeType;
-import com.tragepro.api.data.model.CandleData;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.SymbolData;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 

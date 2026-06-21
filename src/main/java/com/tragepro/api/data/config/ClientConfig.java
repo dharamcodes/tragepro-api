@@ -1,5 +1,6 @@
-package com.tragepro.api.data.model;
+package com.tragepro.api.data.config;
 
+import com.tragepro.api.data.model.ClientHeader;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import lombok.Data;

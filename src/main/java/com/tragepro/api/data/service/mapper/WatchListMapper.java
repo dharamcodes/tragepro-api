@@ -5,7 +5,7 @@ import com.tragepro.api.common.exception.ServerException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.BaseMapper;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.data.model.entity.WatchListEntity;
 import com.tragepro.api.data.model.request.WatchListRequest;
 import com.tragepro.api.data.model.response.WatchListResponse;

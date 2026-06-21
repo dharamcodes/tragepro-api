@@ -4,10 +4,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.tragepro.api.common.ApiTestSetup;
-import com.tragepro.api.data.model.CandleData;
-import com.tragepro.api.data.model.SymbolData;
-import com.tragepro.api.data.model.entity.CandleEntity;
-import com.tragepro.api.data.model.request.CandleRequest;
+import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.entity.CandleEntity;
+import com.tragepro.api.common.model.request.CandleRequest;
 import com.tragepro.api.data.repository.CandleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

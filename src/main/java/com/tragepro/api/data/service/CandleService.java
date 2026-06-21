@@ -1,7 +1,8 @@
 package com.tragepro.api.data.service;
 
-import com.tragepro.api.data.model.request.CandleRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,4 +20,6 @@ public interface CandleService {
   void delete(String id);
 
   boolean isCandleExists(String name, long timestamp);
+
+  List<CandleResponse> getCandlesBySymbolAndDaysBack(String symbolName, int daysBack);
 }

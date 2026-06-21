@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import com.tragepro.api.common.constant.ExchangeSegment;
 import com.tragepro.api.common.constant.InstrumentType;
 import com.tragepro.api.common.exception.AppException;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.data.model.request.FeedClientRequest;
 import com.tragepro.api.data.model.response.SecurityResponse;
 import com.tragepro.api.data.model.response.WatchListResponse;

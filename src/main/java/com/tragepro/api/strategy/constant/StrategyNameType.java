@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum StrategyName {
-    INTRADAY_VP_VWAP,
-    SWING_VP_VWAP;
+public enum StrategyNameType {
+  INTRADAY_VP_VWAP,
+  SWING_VP_VWAP;
 }

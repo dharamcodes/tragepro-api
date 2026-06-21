@@ -3,19 +3,22 @@ package com.tragepro.api.strategy.builder;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
 import com.tragepro.api.strategy.model.response.StrategyResponse;
 
-public interface StrategyBuilder {
+public abstract class AbstractStrategyBuilder {
 
-  StrategyResponse build(StrategyRequest request);
+  abstract StrategyResponse build();
 
-  static StrategyResponse populateData(StrategyRequest strategyRequest) {
+  public static StrategyResponse populateData(
+      StrategyRequest.StrategyRequestBuilder requestBuilder) {
     return StrategyResponse.builder().build();
   }
 
-  static StrategyResponse populateMeta(StrategyRequest strategyRequest) {
+  public static StrategyResponse populateMeta(
+      StrategyRequest.StrategyRequestBuilder requestBuilder) {
     return StrategyResponse.builder().build();
   }
 
-  static StrategyResponse populateIndicator(StrategyRequest strategyRequest) {
+  public static StrategyResponse populateIndicator(
+      StrategyRequest.StrategyRequestBuilder requestBuilder) {
     return StrategyResponse.builder().build();
   }
 }

@@ -3,7 +3,7 @@ package com.tragepro.api.data.client.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.tragepro.api.data.model.request.CandleRequest;
+import com.tragepro.api.common.model.request.CandleRequest;
 import com.tragepro.api.data.model.request.FeedClientRequest;
 import com.tragepro.api.data.model.response.FeedClientResponse;
 import java.util.Collections;

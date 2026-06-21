@@ -1,9 +1,8 @@
-package com.tragepro.api.data.model.entity;
+package com.tragepro.api.common.model.entity;
 
-import com.tragepro.api.common.constant.FeedType;
 import com.tragepro.api.common.model.BaseEntity;
-import com.tragepro.api.data.model.CandleData;
-import com.tragepro.api.data.model.SymbolData;
+import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.SymbolData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "candles")
 public class CandleEntity extends BaseEntity {
   @Id private String id;
-  private FeedType feedType;
+
   private SymbolData symbolData;
   private CandleData candleData;
 }

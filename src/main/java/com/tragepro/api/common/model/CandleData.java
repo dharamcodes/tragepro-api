@@ -1,4 +1,4 @@
-package com.tragepro.api.data.model;
+package com.tragepro.api.common.model;
 
 import lombok.Builder;
 

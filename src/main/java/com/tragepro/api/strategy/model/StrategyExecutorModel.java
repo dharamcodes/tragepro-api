@@ -1,3 +1,3 @@
 package com.tragepro.api.strategy.model;
 
-public class StrategyExecutor {}
+public class StrategyExecutorModel {}

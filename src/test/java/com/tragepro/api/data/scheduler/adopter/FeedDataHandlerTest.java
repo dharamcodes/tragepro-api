@@ -5,12 +5,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
+import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.client.adopter.FeedClientAdaptor;
-import com.tragepro.api.data.model.CandleData;
-import com.tragepro.api.data.model.SymbolData;
-import com.tragepro.api.data.model.request.CandleRequest;
 import com.tragepro.api.data.model.request.FeedClientRequest;
-import com.tragepro.api.data.model.response.CandleResponse;
 import com.tragepro.api.data.service.CandleService;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +28,8 @@ class FeedDataHandlerTest {
 
   @Mock private CandleService candleService;
 
+  @Mock private com.tragepro.api.data.event.DataEventPublisher dataEventPublisher;
+
   @InjectMocks private FeedDataHandler feedDataHandler;
 
   private FeedClientRequest feedClientRequest;
@@ -43,6 +45,7 @@ class FeedDataHandlerTest {
             .symbolData(new SymbolData("AAPL", "Apple Inc."))
             .candleData(new CandleData(1609459200000L, 100.0, 110.0, 90.0, 105.0, 1000.0))
             .build();
+    org.springframework.test.util.ReflectionTestUtils.setField(feedDataHandler, "daysBack", 5);
   }
 
   @Test

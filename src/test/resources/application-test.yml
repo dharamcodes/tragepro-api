@@ -1,7 +1,35 @@
-server.port=8081
+server:
+  port: 8081
 
-# Set logging level
-logging.level.root=DEBUG
-logging.level.org.springframework=DEBUG
-logging.level.org.springframework.boot.context.config=DEBUG
-logging.level.org.springframework.boot.autoconfigure.mongo.embedded=DEBUG
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG
+    org.springframework.boot.context.config: DEBUG
+    org.springframework.boot.autoconfigure.mongo.embedded: DEBUG
+
+data:
+  fetch:
+    daysBack: 5
+  watchlist:
+    identifiers: "AAPL,MSFT"
+  scheduler:
+    fromDateDays: 90
+    enableHistorical: false
+    enableIntraday: false
+    jobs:
+      morning: "0 0 8 * * ?"
+      evening: "0 0 16 * * ?"
+  rest:
+    clientName: MockClient
+    baseUrl: https://mock-api.com
+    conTimeout: 5000
+    readTimeout: 10000
+    clientHeaders:
+      - name: Accept
+        value: application/json
+
+jwt:
+  secret: UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=
+  expirationMinutes: 7200
+  resetPasswordExpirationMinutes: 15

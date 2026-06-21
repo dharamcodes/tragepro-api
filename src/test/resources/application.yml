@@ -1,3 +1,6 @@
-spring.application.name=tragepro-api
+spring:
+  application:
+    name: tragepro-api
 
-spring.profiles.active=test
+  profiles:
+    active: test
