@@ -7,11 +7,8 @@ import com.tragepro.api.strategy.model.entity.StrategyEntity;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
 import com.tragepro.api.strategy.model.response.StrategyResponse;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class StrategyBuilderMapperTest {
 
   private final StrategyBuilderMapper mapper = Mappers.getMapper(StrategyBuilderMapper.class);

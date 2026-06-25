@@ -1,6 +1,18 @@
 spring:
   application:
     name: tragepro-api
+  threads:
+    virtual:
+      enabled: true
+  config:
+    import:
+      - "optional:file:.env"
+      - "optional:file:.env.properties"
+      - "optional:classpath:data-feed-config.yml"
+      - "optional:classpath:strategy-config.yml"
+  mongodb:
+    representation:
+      uuid: standard
 
   profiles:
     active: test

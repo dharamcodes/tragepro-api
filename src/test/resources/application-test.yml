@@ -1,12 +1,17 @@
 server:
   port: 8081
 
+spring:
+  mongodb:
+    representation:
+      uuid: standard
+
 logging:
   level:
-    root: DEBUG
-    org.springframework: DEBUG
-    org.springframework.boot.context.config: DEBUG
-    org.springframework.boot.autoconfigure.mongo.embedded: DEBUG
+    root: INFO
+    org.springframework: INFO
+    org.springframework.boot.context.config: INFO
+    org.springframework.boot.autoconfigure.mongo.embedded: INFO
 
 data:
   fetch:
