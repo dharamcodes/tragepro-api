@@ -1,5 +1,6 @@
 package com.tragepro.api.strategy.config;
 
+import java.io.File;
 import java.util.Collections;
 import org.copperengine.core.common.DefaultProcessorPoolManager;
 import org.copperengine.core.common.DefaultTicketPoolManager;
@@ -26,8 +27,9 @@ public class WorkflowConfig {
   @Bean(initMethod = "start", destroyMethod = "shutdown")
   public FileBasedWorkflowRepository fileBasedWorkflowRepository() {
     FileBasedWorkflowRepository repository = new FileBasedWorkflowRepository();
-    repository.setSourceDirs(Collections.singletonList("src/main/workflows"));
-    java.io.File targetDir = new java.io.File("build/copper-compiled-workflows");
+    repository.setSourceDirs(
+        Collections.singletonList("src/main/java/com/tragepro/api/strategy/workflow"));
+    File targetDir = new File("build/classes/java/main/com/tragepro/api/strategy/workflow");
     repository.setTargetDir(targetDir.getAbsolutePath());
     repository.setCompilerOptions("-g", "-d", targetDir.getAbsolutePath(), "-proc:none");
     return repository;
