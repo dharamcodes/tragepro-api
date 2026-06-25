@@ -1,30 +1,36 @@
 package com.tragepro.api.alert.event;
 
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
+import com.tragepro.api.common.ContainerConfig;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
-@ExtendWith(MockitoExtension.class)
-class AlertEventSystemTest {
+@SpringBootTest
+@ActiveProfiles("test")
+class AlertEventSystemTest extends ContainerConfig {
 
-  @Mock private ApplicationEventPublisher applicationEventPublisher;
+  @Autowired private AlertEventPublisher publisher;
+  @Autowired private PlatformTransactionManager transactionManager;
 
-  @InjectMocks private AlertEventPublisher publisher;
-
-  @InjectMocks private AlertEventListener listener;
+  @MockitoSpyBean private AlertEventListener listener;
 
   @Test
   void testPublishAndListen() {
     AlertEvent event = new AlertEvent("test-id", "test-message");
 
-    publisher.publish(event);
-    verify(applicationEventPublisher).publishEvent(event);
+    TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+    transactionTemplate.executeWithoutResult(
+        status -> {
+          publisher.publish(event);
+        });
 
-    listener.on(event);
+    verify(listener, timeout(5000)).on(event);
   }
 }

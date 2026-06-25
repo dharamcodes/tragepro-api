@@ -13,6 +13,7 @@ import com.tragepro.api.common.model.response.CandleResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(config = CommonMapperConfig.class)
@@ -23,7 +24,8 @@ public interface CandleMapper extends BaseMapper<CandleEntity, CandleRequest, Ca
   CandleEntity requestToEntity(CandleRequest candleRequest);
 
   @Override
-  @org.mapstruct.Mapping(source = "id", target = "id")
+  @Mapping(source = "id", target = "id")
+  @Mapping(ignore = true, target = "dataTimeType")
   CandleResponse entityToResponse(CandleEntity candleEntity);
 
   @Override

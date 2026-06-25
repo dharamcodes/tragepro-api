@@ -1,4 +1,4 @@
-package com.tragepro.api.strategy.config;
+package com.tragepro.api.common.config;
 
 import java.io.File;
 import java.util.Collections;
@@ -29,7 +29,10 @@ public class WorkflowConfig {
     FileBasedWorkflowRepository repository = new FileBasedWorkflowRepository();
     repository.setSourceDirs(
         Collections.singletonList("src/main/java/com/tragepro/api/strategy/workflow"));
-    File targetDir = new File("build/classes/java/main/com/tragepro/api/strategy/workflow");
+    File targetDir = new File("build/copper-workflows/classes");
+    if (!targetDir.exists()) {
+      targetDir.mkdirs();
+    }
     repository.setTargetDir(targetDir.getAbsolutePath());
     repository.setCompilerOptions("-g", "-d", targetDir.getAbsolutePath(), "-proc:none");
     return repository;

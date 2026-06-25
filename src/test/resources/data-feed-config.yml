@@ -1,0 +1,13 @@
+data:
+  rest:
+    clientName: DhanHq
+    baseUrl: https://api.dhan.co/v2
+    conTimeout: 5000
+    readTimeout: 10000
+    clientHeaders:
+      - name: Accept
+        value: application/json
+      - name: Content-Type
+        value: application/json
+      - name: access-token
+        value: ${ACCESS_TOKEN_DHANHQ}
