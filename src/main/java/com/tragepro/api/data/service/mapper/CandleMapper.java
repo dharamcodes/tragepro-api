@@ -1,6 +1,6 @@
 package com.tragepro.api.data.service.mapper;
 
-import com.tragepro.api.common.config.CommonMapperConfig;
+import com.tragepro.api.common.config.CommonMapper;
 import com.tragepro.api.common.exception.ServerException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.BaseMapper;
@@ -16,7 +16,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = CommonMapperConfig.class)
+@Mapper(config = CommonMapper.class)
 public interface CandleMapper extends BaseMapper<CandleEntity, CandleRequest, CandleResponse> {
 
   @Override
@@ -24,7 +24,7 @@ public interface CandleMapper extends BaseMapper<CandleEntity, CandleRequest, Ca
   CandleEntity requestToEntity(CandleRequest candleRequest);
 
   @Override
-  @Mapping(source = "id", target = "id")
+  //  @Mapping(source = "id", target = "id")
   @Mapping(ignore = true, target = "dataTimeType")
   CandleResponse entityToResponse(CandleEntity candleEntity);
 

@@ -1,8 +1,8 @@
 package com.tragepro.api.data.scheduler;
 
-import com.tragepro.api.common.constant.ExchangeSegment;
+import com.tragepro.api.common.constant.ExchangeSeg;
 import com.tragepro.api.common.constant.InstrumentType;
-import com.tragepro.api.common.constant.IntervalType;
+import com.tragepro.api.common.constant.TimeInterval;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.data.model.request.FeedClientRequest;
@@ -61,7 +61,7 @@ public class FeedDataScheduler {
                   var securityEntry = securityService.fetSecurityBySymbol(stock.symbol());
                   return FeedClientRequest.builder()
                       .securityId(securityEntry.securityId())
-                      .exchangeSegment(ExchangeSegment.of(securityEntry.exchange()).getValue())
+                      .exchangeSegment(ExchangeSeg.of(securityEntry.exchange()).getValue())
                       .instrument(InstrumentType.of(securityEntry.instrument()).getValue())
                       .expiryCode(0)
                       .oi(true)
@@ -92,9 +92,9 @@ public class FeedDataScheduler {
                   var securityEntry = securityService.fetSecurityBySymbol(stock.symbol());
                   return FeedClientRequest.builder()
                       .securityId(securityEntry.securityId())
-                      .exchangeSegment(ExchangeSegment.of(securityEntry.exchange()).getValue())
+                      .exchangeSegment(ExchangeSeg.of(securityEntry.exchange()).getValue())
                       .instrument(InstrumentType.of(securityEntry.instrument()).getValue())
-                      .interval(IntervalType.MIN_1.getValue())
+                      .interval(TimeInterval.MIN_1.getValue())
                       .oi(true)
                       .fromDate(fromDate.format(formatter))
                       .toDate(toDate.format(formatter))

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.tragepro.api.common.constant.ExchangeSegment;
+import com.tragepro.api.common.constant.ExchangeSeg;
 import com.tragepro.api.common.constant.InstrumentType;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.model.SymbolData;
@@ -69,7 +69,7 @@ class FeedDataSchedulerTest {
     SecurityResponse securityResponse =
         SecurityResponse.builder()
             .securityId(12345)
-            .exchange(ExchangeSegment.NSE_EQ.getExchange())
+            .exchange(ExchangeSeg.NSE_EQ.getExchange())
             .instrument(InstrumentType.EQUITY.getValue())
             .build();
     when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(securityResponse);
@@ -102,7 +102,7 @@ class FeedDataSchedulerTest {
     SecurityResponse securityResponse =
         SecurityResponse.builder()
             .securityId(12345)
-            .exchange(ExchangeSegment.NSE_EQ.getExchange())
+            .exchange(ExchangeSeg.NSE_EQ.getExchange())
             .instrument(InstrumentType.EQUITY.getValue())
             .build();
     when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(securityResponse);

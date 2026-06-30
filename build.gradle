@@ -39,6 +39,7 @@ ext {
     swaggerUiVersion = "5.32.6"
     copperVersion = "8.0.0"
     lombokMapstruct = "0.2.0"
+    temporalVersion = "1.36.0"
 }
 
 dependencies {
@@ -57,8 +58,11 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApi"
     implementation "io.jsonwebtoken:jjwt-api:$jwtVersion"
     implementation 'org.projectlombok:lombok'
-    implementation "org.copper-engine:copper-coreengine:$copperVersion"
-    implementation "org.copper-engine:copper-spring:$copperVersion"
+//    implementation "org.copper-engine:copper-coreengine:$copperVersion"
+//    implementation "org.copper-engine:copper-spring:$copperVersion"
+
+    implementation "io.temporal:temporal-sdk:$temporalVersion"
+    implementation "io.temporal:temporal-spring-boot-starter:$temporalVersion"
 
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jwtVersion"

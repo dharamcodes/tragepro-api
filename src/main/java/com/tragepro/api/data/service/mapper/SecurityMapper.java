@@ -1,6 +1,6 @@
 package com.tragepro.api.data.service.mapper;
 
-import com.tragepro.api.common.config.CommonMapperConfig;
+import com.tragepro.api.common.config.CommonMapper;
 import com.tragepro.api.common.mapper.BaseMapper;
 import com.tragepro.api.common.mapper.MapperType;
 import com.tragepro.api.data.model.entity.SecurityEntity;
@@ -9,7 +9,7 @@ import com.tragepro.api.data.model.response.SecurityResponse;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 
-@Mapper(config = CommonMapperConfig.class)
+@Mapper(config = CommonMapper.class)
 public interface SecurityMapper
     extends BaseMapper<SecurityEntity, SecurityRequest, SecurityResponse> {
 

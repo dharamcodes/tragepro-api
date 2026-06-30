@@ -5,8 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.tragepro.api.common.constant.StrategyType;
-import com.tragepro.api.strategy.constant.StrategyNameType;
-import com.tragepro.api.strategy.constant.TimeFrameType;
+import com.tragepro.api.strategy.constant.Timeframe;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
 import org.junit.jupiter.api.Test;
 
@@ -36,10 +35,7 @@ class StrategyTest {
 
   @Test
   void testEnums() {
-    assertNotNull(StrategyNameType.valueOf("INTRADAY_VP_VWAP"));
-    assertEquals(2, StrategyNameType.values().length);
-
-    assertNotNull(TimeFrameType.valueOf("LOWER"));
-    assertEquals(3, TimeFrameType.values().length);
+    assertNotNull(Timeframe.valueOf("LOWER"));
+    assertEquals(3, Timeframe.values().length);
   }
 }

@@ -10,6 +10,8 @@ import com.tragepro.api.data.repository.WatchListRepository;
 import com.tragepro.api.data.service.WatchListService;
 import com.tragepro.api.data.service.mapper.WatchListMapper;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -53,6 +55,17 @@ public class WatchListServiceImpl implements WatchListService {
       throw new AppException(ErrorType.DATA_NOT_FOUND);
     }
     return watchListEntities.map(mapper::entityToResponse);
+  }
+
+  @Override
+  public Set<WatchListResponse> getAll() {
+    var mapper = mapperFactory.getMapper(MapperType.WATCHLIST_MAPPER);
+    var watchListEntities = watchListRepository.findAll();
+    if (watchListEntities.isEmpty()) {
+      log.info("No watchLists found in database");
+      return java.util.Collections.emptySet();
+    }
+    return watchListEntities.stream().map(mapper::entityToResponse).collect(Collectors.toSet());
   }
 
   @Override

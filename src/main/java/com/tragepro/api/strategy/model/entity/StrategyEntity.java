@@ -1,29 +1,26 @@
 package com.tragepro.api.strategy.model.entity;
 
 import com.tragepro.api.common.model.BaseEntity;
-import com.tragepro.api.common.model.CandleData;
-import com.tragepro.api.strategy.model.StrategyBuilderModel;
-import com.tragepro.api.strategy.model.StrategyEvaluatorModel;
-import com.tragepro.api.strategy.model.StrategyExecutorModel;
-import com.tragepro.api.strategy.model.StrategyStepsModel;
-import java.util.List;
+import com.tragepro.api.strategy.model.*;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-// @Document(collection = "securityDetails")
+@Document(collection = "strategyData")
 public class StrategyEntity extends BaseEntity {
-  private String id;
-  private String name;
-  private String symbol;
-  private StrategyStepsModel steps;
-  private StrategyBuilderModel builder;
-  private StrategyEvaluatorModel evaluator;
-  private StrategyExecutorModel executor;
-  private List<CandleData> candleData;
+  @Id private String id;
+  private StrategyModel strategy;
+  private SymbolModel symbolData;
+  private CandleModel candleData;
+  private StatusModel currentState;
+  private Set<IndicatorModel> indicators;
+  private Set<TimeframeModel> timeframes;
 }
