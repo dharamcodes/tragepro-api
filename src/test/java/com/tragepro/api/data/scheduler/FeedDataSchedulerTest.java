@@ -9,11 +9,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.tragepro.api.common.constant.ExchangeSegment;
+import com.tragepro.api.common.constant.Exchange;
+import com.tragepro.api.common.constant.ExchangeSeg;
 import com.tragepro.api.common.constant.InstrumentType;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.model.SymbolData;
-import com.tragepro.api.data.model.request.FeedClientRequest;
+import com.tragepro.api.data.model.request.DataRequestWrapper;
 import com.tragepro.api.data.model.response.SecurityResponse;
 import com.tragepro.api.data.model.response.WatchListResponse;
 import com.tragepro.api.data.scheduler.adopter.FeedDataHandler;
@@ -63,20 +64,24 @@ class FeedDataSchedulerTest {
   void scheduleHistorical_Success() {
     WatchListResponse watchListResponse =
         new WatchListResponse(
-            "test-watchlist-id", "Test Watchlist", "Desc", Set.of(new SymbolData("AAPL", "Apple")));
+            "test-watchlist-id",
+            "Test Watchlist",
+            "Desc",
+            Exchange.NSE,
+            Set.of(new SymbolData("AAPL", "Apple")));
     when(watchlistService.getById("test-watchlist-id")).thenReturn(Optional.of(watchListResponse));
 
     SecurityResponse securityResponse =
         SecurityResponse.builder()
             .securityId(12345)
-            .exchange(ExchangeSegment.NSE_EQ.getExchange())
+            .exchange(ExchangeSeg.NSE_EQ.getExchange())
             .instrument(InstrumentType.EQUITY.getValue())
             .build();
     when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(securityResponse);
 
     assertDoesNotThrow(() -> feedDataScheduler.scheduleHistorical());
 
-    verify(feedDataHandler, times(1)).handleHistoricalData(any(FeedClientRequest.class));
+    verify(feedDataHandler, times(1)).handleHistoricalData(any(DataRequestWrapper.class));
   }
 
   @Test
@@ -96,19 +101,23 @@ class FeedDataSchedulerTest {
   void scheduleIntraday_Success() {
     WatchListResponse watchListResponse =
         new WatchListResponse(
-            "test-watchlist-id", "Test Watchlist", "Desc", Set.of(new SymbolData("AAPL", "Apple")));
+            "test-watchlist-id",
+            "Test Watchlist",
+            "Desc",
+            Exchange.NSE,
+            Set.of(new SymbolData("AAPL", "Apple")));
     when(watchlistService.getById("test-watchlist-id")).thenReturn(Optional.of(watchListResponse));
 
     SecurityResponse securityResponse =
         SecurityResponse.builder()
             .securityId(12345)
-            .exchange(ExchangeSegment.NSE_EQ.getExchange())
+            .exchange(ExchangeSeg.NSE_EQ.getExchange())
             .instrument(InstrumentType.EQUITY.getValue())
             .build();
     when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(securityResponse);
 
     assertDoesNotThrow(() -> feedDataScheduler.scheduleIntraday());
 
-    verify(feedDataHandler, times(1)).handleIntradayData(any(FeedClientRequest.class));
+    verify(feedDataHandler, times(1)).handleIntradayData(any(DataRequestWrapper.class));
   }
 }

@@ -68,19 +68,32 @@ class SecurityMapperTest {
 
   @Test
   void testMerge() {
-    SecurityRequest request = SecurityRequest.builder().symbol("NEW_AAPL").build();
+    SecurityRequest request =
+        SecurityRequest.builder()
+            .exchange("NSE")
+            .segment("EQ")
+            .securityId(12345)
+            .isin("INE123")
+            .instrument("EQUITY")
+            .symbol("NEW_AAPL")
+            .symbolName("Apple Inc")
+            .name("Apple")
+            .build();
 
     SecurityEntity entity = new SecurityEntity();
-    entity.setExchange("NSE");
+    entity.setExchange("NSE_OLD");
     entity.setSymbol("OLD_AAPL");
 
     mapper.merge(request, entity);
 
     assertEquals("NEW_AAPL", entity.getSymbol());
-    assertEquals(
-        "NSE",
-        entity.getExchange()); // Unchanged if null in request (depends on MapStruct config, usually
-    // overwrites or ignores null)
+    assertEquals("NSE", entity.getExchange());
+    assertEquals("EQ", entity.getSegment());
+    assertEquals(12345, entity.getSecurityId());
+    assertEquals("INE123", entity.getIsin());
+    assertEquals("EQUITY", entity.getInstrument());
+    assertEquals("Apple Inc", entity.getSymbolName());
+    assertEquals("Apple", entity.getName());
   }
 
   @Test

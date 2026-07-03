@@ -2,6 +2,7 @@ package com.tragepro.api.data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.exception.ServerException;
 import com.tragepro.api.common.model.CandleData;
 import com.tragepro.api.common.model.SymbolData;
@@ -65,7 +66,7 @@ class DataMapperTests {
 
     Set<SymbolData> stocks = new HashSet<>();
     stocks.add(new SymbolData("AAPL", "Apple"));
-    WatchListRequest request = new WatchListRequest("name", "desc", stocks);
+    WatchListRequest request = new WatchListRequest("name", "desc", Exchange.NSE, stocks);
 
     WatchListEntity entity = mapper.requestToEntity(request);
     assertNotNull(entity);

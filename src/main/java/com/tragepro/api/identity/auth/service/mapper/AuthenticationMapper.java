@@ -1,6 +1,6 @@
 package com.tragepro.api.identity.auth.service.mapper;
 
-import com.tragepro.api.common.config.CommonMapperConfig;
+import com.tragepro.api.common.config.CommonMapper;
 import com.tragepro.api.common.mapper.BaseMapper;
 import com.tragepro.api.common.mapper.MapperType;
 import com.tragepro.api.identity.auth.model.entity.AuthenticationEntity;
@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = CommonMapperConfig.class)
+@Mapper(config = CommonMapper.class)
 public interface AuthenticationMapper
     extends BaseMapper<AuthenticationEntity, AuthenticationRequest, AuthenticationResponse> {
 

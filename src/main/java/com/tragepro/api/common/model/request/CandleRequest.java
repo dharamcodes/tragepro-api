@@ -16,4 +16,12 @@ public record CandleRequest(
   public CandleRequest add(DataTimeType type) {
     return new CandleRequest(type, symbolData, candleData);
   }
+
+  public CandleRequest setSymbolData(SymbolData symbolData) {
+    return new CandleRequest(this.dataTimeType, symbolData, this.candleData);
+  }
+
+  public CandleRequest withSymbolData(SymbolData symbolData) {
+    return new CandleRequest(this.dataTimeType, symbolData, this.candleData);
+  }
 }

@@ -8,14 +8,43 @@ spring:
     active: local
   config:
     import:
-      - "optional:file:.env"
+      - "optional:file:.env[.properties]"
       - "optional:file:.env.properties"
       - "optional:classpath:data-feed-config.yml"
       - "optional:classpath:strategy-config.yml"
 
-copper:
-  engine:
-    thread-count: 10
+resilience4j:
+  ratelimiter:
+    instances:
+      backendService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0ms
+
+
+
+temporal:
+  server:
+    target: localhost:7233   # Temporal frontend service address
+    namespace: tragepro-api
+
+  # Worker configuration
+  worker:
+    task-queue: tragepro-api-task-queue
+    max-concurrent-workflow-task-pollers: 5
+    max-concurrent-activity-task-pollers: 10
+    sticky-cache-size: 100
+
+  # Workflow client options
+  client:
+    identity: ${spring.application.name}-${random.uuid}
+    retry-options:
+      maximum-attempts: 3
+      initial-interval: 1s
+      maximum-interval: 10s
+      backoff-coefficient: 2.0
+
+
 
 springdoc:
   api-docs:

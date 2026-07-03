@@ -21,7 +21,7 @@ data:
   scheduler:
     fromDateDays: 90
     enableHistorical: false
-    enableIntraday: false
+    enableIntraday: true
     jobs:
       morning: "0 0 8 * * ?"
       evening: "0 0 16 * * ?"

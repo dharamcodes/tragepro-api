@@ -1,12 +1,20 @@
 package com.tragepro.api.strategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.tragepro.api.common.constant.StrategyType;
-import com.tragepro.api.strategy.constant.StrategyNameType;
-import com.tragepro.api.strategy.constant.TimeFrameType;
+import com.tragepro.api.strategy.constant.IndicatorType;
+import com.tragepro.api.strategy.constant.StrategyBuilderStep;
+import com.tragepro.api.strategy.constant.StrategyEvaluatorStep;
+import com.tragepro.api.strategy.constant.StrategyExecutorStep;
+import com.tragepro.api.strategy.constant.StrategyState;
+import com.tragepro.api.strategy.constant.StrategyStep;
+import com.tragepro.api.strategy.constant.Timeframe;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
 import org.junit.jupiter.api.Test;
 
@@ -36,10 +44,44 @@ class StrategyTest {
 
   @Test
   void testEnums() {
-    assertNotNull(StrategyNameType.valueOf("INTRADAY_VP_VWAP"));
-    assertEquals(2, StrategyNameType.values().length);
+    assertNotNull(Timeframe.valueOf("LOWER"));
+    assertEquals(3, Timeframe.values().length);
 
-    assertNotNull(TimeFrameType.valueOf("LOWER"));
-    assertEquals(3, TimeFrameType.values().length);
+    // StrategyBuilderStep
+    assertNotNull(StrategyBuilderStep.valueOf("BUILD_VOLUME_PROFILE"));
+    assertEquals(
+        StrategyBuilderStep.BUILD_VOLUME_PROFILE, StrategyBuilderStep.of("BUILD_VOLUME_PROFILE"));
+    assertNull(StrategyBuilderStep.of(null));
+    assertNull(StrategyBuilderStep.of("UNKNOWN"));
+
+    // StrategyStep
+    assertNotNull(StrategyStep.valueOf("INIT"));
+    assertTrue(StrategyStep.nextStep(StrategyStep.INIT).isPresent());
+    assertEquals(StrategyStep.BUILD, StrategyStep.nextStep(StrategyStep.INIT).get());
+
+    // StrategyEvaluatorStep
+    assertNotNull(StrategyEvaluatorStep.valueOf("EVALUATE_VOLUME_PROFILE"));
+    assertEquals(
+        StrategyEvaluatorStep.EVALUATE_VOLUME_PROFILE,
+        StrategyEvaluatorStep.of("EVALUATE_VOLUME_PROFILE"));
+    assertNull(StrategyEvaluatorStep.of(null));
+    assertNull(StrategyEvaluatorStep.of("UNKNOWN"));
+
+    // StrategyExecutorStep
+    assertNotNull(StrategyExecutorStep.valueOf("EXECUTE_BUY"));
+    assertEquals(StrategyExecutorStep.EXECUTE_BUY, StrategyExecutorStep.of("EXECUTE_BUY"));
+    assertNull(StrategyExecutorStep.of(null));
+    assertNull(StrategyExecutorStep.of("UNKNOWN"));
+
+    // StrategyState
+    assertNotNull(StrategyState.valueOf("INITIALIZING"));
+    assertTrue(StrategyState.nextState(StrategyState.INITIALIZING).isPresent());
+    assertEquals(StrategyState.BUILDING, StrategyState.nextState(StrategyState.INITIALIZING).get());
+    assertFalse(StrategyState.nextState(StrategyState.OBSERVING_EXECUTE).isPresent());
+
+    // IndicatorType
+    assertNotNull(IndicatorType.valueOf("VOLUME_PROFILE"));
+    assertEquals(IndicatorType.VOLUME_PROFILE, IndicatorType.of("VOLUME_PROFILE"));
+    assertThrows(IllegalArgumentException.class, () -> IndicatorType.of("UNKNOWN"));
   }
 }

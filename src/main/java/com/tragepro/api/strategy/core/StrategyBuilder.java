@@ -1,7 +1,8 @@
 package com.tragepro.api.strategy.core;
 
-import java.util.concurrent.TimeUnit;
+import com.tragepro.api.strategy.model.request.StrategyRequest;
+import com.tragepro.api.strategy.model.response.StrategyResponse;
 
 public interface StrategyBuilder {
-  void build(long time, TimeUnit uom);
+  StrategyResponse build(StrategyRequest strategyRequest);
 }

@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.tragepro.api.common.ApiTestSetup;
+import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.data.model.entity.WatchListEntity;
 import com.tragepro.api.data.model.request.WatchListRequest;
@@ -30,7 +31,7 @@ class WatchListControllerTest extends ApiTestSetup {
     stocks.add(new SymbolData("AAPL", "Apple Inc."));
     stocks.add(new SymbolData("MSFT", "Microsoft Corp."));
 
-    watchListRequest = new WatchListRequest("My Watchlist", "Tech stocks", stocks);
+    watchListRequest = new WatchListRequest("My Watchlist", "Tech stocks", Exchange.NSE, stocks);
 
     WatchListEntity entity = new WatchListEntity();
     entity.setName(watchListRequest.name());
@@ -94,7 +95,7 @@ class WatchListControllerTest extends ApiTestSetup {
     Set<SymbolData> updatedStocks = new HashSet<>();
     updatedStocks.add(new SymbolData("TSLA", "Tesla Inc."));
     WatchListRequest updateRequest =
-        new WatchListRequest("Updated Watchlist", "EV stocks", updatedStocks);
+        new WatchListRequest("Updated Watchlist", "EV stocks", Exchange.NSE, updatedStocks);
 
     mockMvc
         .perform(

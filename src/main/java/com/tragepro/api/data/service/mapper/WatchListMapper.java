@@ -1,6 +1,6 @@
 package com.tragepro.api.data.service.mapper;
 
-import com.tragepro.api.common.config.CommonMapperConfig;
+import com.tragepro.api.common.config.CommonMapper;
 import com.tragepro.api.common.exception.ServerException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.BaseMapper;
@@ -15,7 +15,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = CommonMapperConfig.class)
+@Mapper(config = CommonMapper.class)
 public interface WatchListMapper
     extends BaseMapper<WatchListEntity, WatchListRequest, WatchListResponse> {
 

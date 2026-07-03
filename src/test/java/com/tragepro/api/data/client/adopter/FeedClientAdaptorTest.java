@@ -59,4 +59,21 @@ class FeedClientAdaptorTest {
     verify(feedClient).getIntradayFeed(request);
     verify(feedClientMapper).map(response, request);
   }
+
+  @Test
+  void testFallbackMethods() throws Exception {
+    when(feedClient.getHistoricalFeed(request)).thenReturn(response);
+    when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
+
+    List<CandleRequest> resultHist =
+        org.springframework.test.util.ReflectionTestUtils.invokeMethod(
+            adaptor, "apiCallFallbackHistorical", request);
+    assertEquals(mappedRequests, resultHist);
+
+    when(feedClient.getIntradayFeed(request)).thenReturn(response);
+    List<CandleRequest> resultIntra =
+        org.springframework.test.util.ReflectionTestUtils.invokeMethod(
+            adaptor, "apiCallFallbackIntraday", request);
+    assertEquals(mappedRequests, resultIntra);
+  }
 }

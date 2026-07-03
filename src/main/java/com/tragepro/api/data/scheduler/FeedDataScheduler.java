@@ -1,10 +1,12 @@
 package com.tragepro.api.data.scheduler;
 
-import com.tragepro.api.common.constant.ExchangeSegment;
+import com.tragepro.api.common.constant.ExchangeSeg;
 import com.tragepro.api.common.constant.InstrumentType;
-import com.tragepro.api.common.constant.IntervalType;
+import com.tragepro.api.common.constant.TimeInterval;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
+import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.data.model.request.DataRequestWrapper;
 import com.tragepro.api.data.model.request.FeedClientRequest;
 import com.tragepro.api.data.model.response.WatchListResponse;
 import com.tragepro.api.data.scheduler.adopter.FeedDataHandler;
@@ -45,62 +47,44 @@ public class FeedDataScheduler {
   @Scheduled(cron = "${data.scheduler.jobs.morning}")
   public void scheduleHistorical() {
     if (!enableHistorical) return;
-    WatchListResponse watchList =
-        watchlistService
-            .getById(identifiers)
-            .orElseThrow(() -> new AppException(ErrorType.DATA_NOT_FOUND));
-    log.info("fetch watchlist historical :: {}", watchList.name());
-
-    LocalDate toDate = LocalDate.now();
-    LocalDate fromDate = toDate.minusDays(interval);
-
-    List<FeedClientRequest> requestList =
-        watchList.stocks().stream()
-            .map(
-                stock -> {
-                  var securityEntry = securityService.fetSecurityBySymbol(stock.symbol());
-                  return FeedClientRequest.builder()
-                      .securityId(securityEntry.securityId())
-                      .exchangeSegment(ExchangeSegment.of(securityEntry.exchange()).getValue())
-                      .instrument(InstrumentType.of(securityEntry.instrument()).getValue())
-                      .expiryCode(0)
-                      .oi(true)
-                      .fromDate(fromDate.format(formatter))
-                      .toDate(toDate.format(formatter))
-                      .build();
-                })
-            .toList();
-    requestList.forEach(feedDataHandler::handleHistoricalData);
+    buildRequestList("fetch watchlist historical :: {}")
+        .forEach(feedDataHandler::handleHistoricalData);
   }
 
   @Scheduled(cron = "${data.scheduler.jobs.evening}")
   public void scheduleIntraday() {
     if (!enableIntraday) return;
+    buildRequestList("fetch watchlist intraday :: {}").forEach(feedDataHandler::handleIntradayData);
+  }
+
+  private List<DataRequestWrapper> buildRequestList(String logTemplate) {
     WatchListResponse watchList =
         watchlistService
             .getById(identifiers)
             .orElseThrow(() -> new AppException(ErrorType.DATA_NOT_FOUND));
-    log.info("fetch watchlist intraday :: {}", watchList.name());
+    log.info(logTemplate, watchList.name());
 
     LocalDate toDate = LocalDate.now();
     LocalDate fromDate = toDate.minusDays(interval);
 
-    List<FeedClientRequest> requestList =
-        watchList.stocks().stream()
-            .map(
-                stock -> {
-                  var securityEntry = securityService.fetSecurityBySymbol(stock.symbol());
-                  return FeedClientRequest.builder()
+    return watchList.stocks().stream()
+        .map(
+            stock -> {
+              var securityEntry = securityService.fetSecurityBySymbol(stock.symbol());
+              var request =
+                  FeedClientRequest.builder()
                       .securityId(securityEntry.securityId())
-                      .exchangeSegment(ExchangeSegment.of(securityEntry.exchange()).getValue())
+                      .exchangeSegment(ExchangeSeg.of(securityEntry.exchange()).getValue())
                       .instrument(InstrumentType.of(securityEntry.instrument()).getValue())
-                      .interval(IntervalType.MIN_1.getValue())
+                      .interval(TimeInterval.MIN_1.getValue())
                       .oi(true)
                       .fromDate(fromDate.format(formatter))
                       .toDate(toDate.format(formatter))
                       .build();
-                })
-            .toList();
-    requestList.forEach(feedDataHandler::handleIntradayData);
+              var symbolData =
+                  SymbolData.builder().symbol(stock.symbol()).name(stock.name()).build();
+              return DataRequestWrapper.builder().clientReq(request).symbolData(symbolData).build();
+            })
+        .toList();
   }
 }

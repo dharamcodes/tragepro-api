@@ -8,7 +8,7 @@ import com.tragepro.api.common.model.request.CandleRequest;
 import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.client.adopter.FeedClientAdaptor;
 import com.tragepro.api.data.event.DataEventPublisher;
-import com.tragepro.api.data.model.request.FeedClientRequest;
+import com.tragepro.api.data.model.request.DataRequestWrapper;
 import com.tragepro.api.data.service.CandleService;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +34,8 @@ public class FeedDataHandler {
   private Integer daysBack;
 
   @Async("customSchedulerExecutor")
-  public void handleHistoricalData(FeedClientRequest feedClientRequest) {
+  public void handleHistoricalData(DataRequestWrapper feedClientRequestWrapper) {
+    var feedClientRequest = feedClientRequestWrapper.getClientReq();
     List<CandleRequest> candleRequests = feedClientAdaptor.historicalDataAdaptor(feedClientRequest);
     if (candleRequests.isEmpty()) {
       log.error("No historical data found for feed request - {}", feedClientRequest.securityId());
@@ -53,12 +54,17 @@ public class FeedDataHandler {
   }
 
   @Async("customSchedulerExecutor")
-  public void handleIntradayData(FeedClientRequest feedClientRequest) {
+  public void handleIntradayData(DataRequestWrapper feedClientRequestWrapper) {
+    var feedClientRequest = feedClientRequestWrapper.getClientReq();
     List<CandleRequest> candleRequests = feedClientAdaptor.intradayDataAdaptor(feedClientRequest);
     if (candleRequests.isEmpty()) {
       log.error("No intraday found for feed request - {}", feedClientRequest.securityId());
       throw new AppException(ErrorType.DATA_NOT_FOUND);
     }
+    candleRequests =
+        candleRequests.stream()
+            .map(v -> v.setSymbolData(feedClientRequestWrapper.getSymbolData()))
+            .toList();
     CompletableFuture.completedFuture(
         candleRequests.stream()
             .map(candle -> candle.add(DataTimeType.INTRADAY))

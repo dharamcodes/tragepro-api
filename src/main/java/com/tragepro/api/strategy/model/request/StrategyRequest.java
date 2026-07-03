@@ -1,23 +1,21 @@
 package com.tragepro.api.strategy.model.request;
 
-import com.tragepro.api.common.model.CandleData;
-import com.tragepro.api.strategy.model.StrategyBuilderModel;
-import com.tragepro.api.strategy.model.StrategyEvaluatorModel;
-import com.tragepro.api.strategy.model.StrategyExecutorModel;
-import com.tragepro.api.strategy.model.StrategyStepsModel;
-import java.util.List;
+import com.tragepro.api.strategy.model.*;
+import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StrategyRequest {
-  private String id;
-  private String name;
-  private String symbol;
-  private StrategyStepsModel steps;
-  private StrategyBuilderModel builder;
-  private StrategyEvaluatorModel evaluator;
-  private StrategyExecutorModel executor;
-  private List<CandleData> candleData;
+  private StrategyModel strategy;
+  private SymbolModel symbolData;
+  private CandleModel candleData;
+  private StatusModel currentState;
+  private Set<IndicatorModel> indicators;
+  private Set<TimeframeModel> timeframes;
 }

@@ -1,6 +1,7 @@
 package com.tragepro.api.data.repository;
 
 import com.tragepro.api.data.model.entity.WatchListEntity;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -10,4 +11,6 @@ public interface WatchListRepository extends MongoRepository<WatchListEntity, St
 
   @Query(value = "{}", fields = "{ 'id': 1, 'name': 1, 'description': 1 }")
   Page<WatchListEntity> getWatchListSummery(Pageable pageable);
+
+  List<WatchListEntity> findAll();
 }

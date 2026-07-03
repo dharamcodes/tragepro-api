@@ -1,5 +1,6 @@
 package com.tragepro.api.data.model.entity;
 
+import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.model.BaseEntity;
 import com.tragepro.api.common.model.SymbolData;
 import java.util.Set;
@@ -20,5 +21,6 @@ public class WatchListEntity extends BaseEntity {
 
   private String name;
   private String description;
+  private Exchange exchange;
   private Set<SymbolData> stocks;
 }
