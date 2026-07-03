@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CandleModel {
-  private List<CandleData> tickDatta;
+  private List<CandleData> baseData;
   private List<CandleData> htfData;
   private List<CandleData> ltfData;
 }

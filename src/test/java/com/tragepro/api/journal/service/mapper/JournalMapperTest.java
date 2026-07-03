@@ -88,4 +88,20 @@ class JournalMapperTest {
     mapper.updateEntityFromRequest(request, entity);
     // mapstruct will either clear or keep based on config, here we just test branches
   }
+
+  @Test
+  void testUpdateEntityFromRequest_EntityTagsNull() {
+    JournalRequest request1 = JournalRequest.builder().tags(List.of("tag1")).build();
+    JournalEntity entity1 = new JournalEntity();
+    entity1.setTags(null);
+    mapper.updateEntityFromRequest(request1, entity1);
+    assertNotNull(entity1.getTags());
+    assertEquals("tag1", entity1.getTags().get(0));
+
+    JournalRequest request2 = JournalRequest.builder().tags(null).build();
+    JournalEntity entity2 = new JournalEntity();
+    entity2.setTags(null);
+    mapper.updateEntityFromRequest(request2, entity2);
+    assertNull(entity2.getTags());
+  }
 }

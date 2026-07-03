@@ -2,8 +2,9 @@ package com.tragepro.api.strategy.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.strategy.constant.Exchange;
+import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.strategy.model.StrategyModel;
 import com.tragepro.api.strategy.model.SymbolModel;
 import com.tragepro.api.strategy.model.entity.StrategyEntity;
@@ -115,5 +116,73 @@ class StrategyMapperTest {
     mapper.merge(null, target);
     assertNotNull(target.getStrategy());
     assertEquals("Old Name", target.getStrategy().getName());
+  }
+
+  @Test
+  void testToSymbolData() {
+    SymbolModel symbolModel = SymbolModel.builder().symbol("AAPL").name("Apple").build();
+    SymbolData symbolData = mapper.toSymbolData(symbolModel);
+    assertNotNull(symbolData);
+    assertEquals("AAPL", symbolData.symbol());
+    assertEquals("Apple", symbolData.name());
+  }
+
+  @Test
+  void testResponseToRequest() {
+    assertNull(mapper.responseToRequest(null));
+
+    StrategyResponse response =
+        StrategyResponse.builder().strategy(StrategyModel.builder().name("Test").build()).build();
+    StrategyRequest request = mapper.responseToRequest(response);
+    assertNotNull(request);
+    assertNotNull(request.getStrategy());
+    assertEquals("Test", request.getStrategy().getName());
+  }
+
+  @Test
+  void testPartialNulls() {
+    StrategyRequest req1 = StrategyRequest.builder().strategy(null).symbolData(null).build();
+    StrategyEntity ent1 = mapper.requestToEntity(req1);
+    assertNotNull(ent1);
+    assertNull(ent1.getStrategy());
+    assertNull(ent1.getSymbolData());
+
+    StrategyRequest req2 =
+        StrategyRequest.builder()
+            .strategy(StrategyModel.builder().build())
+            .symbolData(null)
+            .build();
+    StrategyEntity ent2 = mapper.requestToEntity(req2);
+    assertNotNull(ent2);
+    assertNotNull(ent2.getStrategy());
+    assertNull(ent2.getSymbolData());
+
+    StrategyRequest req3 =
+        StrategyRequest.builder().strategy(null).symbolData(SymbolModel.builder().build()).build();
+    StrategyEntity ent3 = mapper.requestToEntity(req3);
+    assertNotNull(ent3);
+    assertNull(ent3.getStrategy());
+    assertNotNull(ent3.getSymbolData());
+
+    StrategyEntity ent4 = new StrategyEntity();
+    ent4.setStrategy(null);
+    ent4.setSymbolData(null);
+    StrategyResponse resp4 = mapper.entityToResponse(ent4);
+    assertNotNull(resp4);
+    assertNull(resp4.getStrategy());
+    assertNull(resp4.getSymbolData());
+
+    StrategyRequest req5 = StrategyRequest.builder().strategy(null).symbolData(null).build();
+    StrategyEntity ent5 = new StrategyEntity();
+    ent5.setStrategy(StrategyModel.builder().name("Old").build());
+    mapper.merge(req5, ent5);
+
+    StrategyResponse resp6 = StrategyResponse.builder().strategy(null).symbolData(null).build();
+    StrategyRequest req6 = mapper.responseToRequest(resp6);
+    assertNotNull(req6);
+    assertNull(req6.getStrategy());
+    assertNull(req6.getSymbolData());
+
+    assertThrows(NullPointerException.class, () -> mapper.toSymbolData(null));
   }
 }

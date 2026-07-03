@@ -19,7 +19,7 @@ public class StrategyWorkflowExecutor {
   private final WorkflowClient workflowClient;
   private final TemporalProperties temporalProperties;
 
-  @Scheduled(initialDelay = 10000, fixedRate = 5000)
+  @Scheduled(initialDelay = 10000, fixedRate = 500000000)
   public void schedule() {
     log.info("Starting scheduled DataInitWorkflow...");
     DataInitWorkflow workflow =

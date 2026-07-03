@@ -1,4 +1,4 @@
-package com.tragepro.api.strategy.constant;
+package com.tragepro.api.common.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -8,13 +8,22 @@ spring:
     active: local
   config:
     import:
-      - "optional:file:.env"
+      - "optional:file:.env[.properties]"
       - "optional:file:.env.properties"
       - "optional:classpath:data-feed-config.yml"
       - "optional:classpath:strategy-config.yml"
 
+resilience4j:
+  ratelimiter:
+    instances:
+      backendService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0ms
+
+
+
 temporal:
-  # Temporal service connection
   server:
     target: localhost:7233   # Temporal frontend service address
     namespace: tragepro-api

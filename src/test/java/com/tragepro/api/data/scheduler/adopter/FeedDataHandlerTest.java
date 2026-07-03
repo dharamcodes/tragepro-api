@@ -10,6 +10,7 @@ import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.common.model.request.CandleRequest;
 import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.data.client.adopter.FeedClientAdaptor;
+import com.tragepro.api.data.model.request.DataRequestWrapper;
 import com.tragepro.api.data.model.request.FeedClientRequest;
 import com.tragepro.api.data.service.CandleService;
 import java.util.Collections;
@@ -34,6 +35,7 @@ class FeedDataHandlerTest {
 
   private FeedClientRequest feedClientRequest;
   private CandleRequest validCandleRequest;
+  private DataRequestWrapper dataRequestWrapper;
 
   @BeforeEach
   void setUp() {
@@ -45,6 +47,11 @@ class FeedDataHandlerTest {
             .symbolData(new SymbolData("AAPL", "Apple Inc."))
             .candleData(new CandleData(1609459200000L, 100.0, 110.0, 90.0, 105.0, 1000.0))
             .build();
+    dataRequestWrapper =
+        DataRequestWrapper.builder()
+            .clientReq(feedClientRequest)
+            .symbolData(new SymbolData("AAPL", "Apple Inc."))
+            .build();
     org.springframework.test.util.ReflectionTestUtils.setField(feedDataHandler, "daysBack", 5);
   }
 
@@ -54,7 +61,7 @@ class FeedDataHandlerTest {
     when(candleService.isCandleExists("Apple Inc.", 1609459200000L)).thenReturn(false);
     when(candleService.create(any())).thenReturn(CandleResponse.builder().build());
 
-    assertDoesNotThrow(() -> feedDataHandler.handleHistoricalData(feedClientRequest));
+    assertDoesNotThrow(() -> feedDataHandler.handleHistoricalData(dataRequestWrapper));
 
     verify(candleService, times(1)).create(any());
   }
@@ -63,7 +70,8 @@ class FeedDataHandlerTest {
   void handleHistoricalData_NoDataFound() {
     when(feedClientAdaptor.historicalDataAdaptor(any())).thenReturn(Collections.emptyList());
 
-    assertThrows(AppException.class, () -> feedDataHandler.handleHistoricalData(feedClientRequest));
+    assertThrows(
+        AppException.class, () -> feedDataHandler.handleHistoricalData(dataRequestWrapper));
   }
 
   @Test
@@ -72,7 +80,13 @@ class FeedDataHandlerTest {
     when(candleService.isCandleExists("Apple Inc.", 1609459200000L)).thenReturn(false);
     when(candleService.create(any())).thenReturn(CandleResponse.builder().build());
 
-    assertDoesNotThrow(() -> feedDataHandler.handleIntradayData(feedClientRequest));
+    DataRequestWrapper wrapper =
+        DataRequestWrapper.builder()
+            .clientReq(feedClientRequest)
+            .symbolData(new SymbolData("AAPL", "Apple Inc."))
+            .build();
+
+    assertDoesNotThrow(() -> feedDataHandler.handleIntradayData(wrapper));
 
     verify(candleService, times(1)).create(any());
   }
@@ -81,7 +95,13 @@ class FeedDataHandlerTest {
   void handleIntradayData_NoDataFound() {
     when(feedClientAdaptor.intradayDataAdaptor(any())).thenReturn(Collections.emptyList());
 
-    assertThrows(AppException.class, () -> feedDataHandler.handleIntradayData(feedClientRequest));
+    DataRequestWrapper wrapper =
+        DataRequestWrapper.builder()
+            .clientReq(feedClientRequest)
+            .symbolData(new SymbolData("AAPL", "Apple Inc."))
+            .build();
+
+    assertThrows(AppException.class, () -> feedDataHandler.handleIntradayData(wrapper));
   }
 
   @Test
@@ -89,7 +109,7 @@ class FeedDataHandlerTest {
     when(feedClientAdaptor.historicalDataAdaptor(any())).thenReturn(List.of(validCandleRequest));
     when(candleService.isCandleExists("Apple Inc.", 1609459200000L)).thenReturn(true);
 
-    assertDoesNotThrow(() -> feedDataHandler.handleHistoricalData(feedClientRequest));
+    assertDoesNotThrow(() -> feedDataHandler.handleHistoricalData(dataRequestWrapper));
 
     verify(candleService, never()).create(any());
   }
@@ -100,7 +120,8 @@ class FeedDataHandlerTest {
     when(candleService.isCandleExists("Apple Inc.", 1609459200000L)).thenReturn(false);
     when(candleService.create(any())).thenReturn(null);
 
-    assertThrows(AppException.class, () -> feedDataHandler.handleHistoricalData(feedClientRequest));
+    assertThrows(
+        AppException.class, () -> feedDataHandler.handleHistoricalData(dataRequestWrapper));
   }
 
   @Test
@@ -126,7 +147,7 @@ class FeedDataHandlerTest {
       when(feedClientAdaptor.historicalDataAdaptor(any()))
           .thenReturn(Collections.singletonList(req));
       assertThrows(
-          AppException.class, () -> feedDataHandler.handleHistoricalData(feedClientRequest));
+          AppException.class, () -> feedDataHandler.handleHistoricalData(dataRequestWrapper));
     }
   }
 }

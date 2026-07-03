@@ -1,14 +1,13 @@
 package com.tragepro.api.strategy.core.workflow.activity.impl;
 
+import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.context.WatchlistContext;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
 import com.tragepro.api.common.model.SymbolData;
 import com.tragepro.api.common.util.CloneUtil;
-import com.tragepro.api.strategy.constant.Exchange;
-import com.tragepro.api.strategy.constant.StrategyState;
-import com.tragepro.api.strategy.constant.StrategyStep;
 import com.tragepro.api.strategy.context.StrategyContextConfig;
+import com.tragepro.api.strategy.core.workflow.activity.BaseActivity;
 import com.tragepro.api.strategy.core.workflow.activity.DataInitActivity;
 import com.tragepro.api.strategy.model.*;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
@@ -21,10 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DataInitActivityImpl implements DataInitActivity {
@@ -50,7 +47,6 @@ public class DataInitActivityImpl implements DataInitActivity {
     var strategy = configLoaderService.getStrategyByName(strategyName);
     return StrategyRequest.builder()
         .strategy(getStrategy(strategy))
-        .currentState(getCurrentState())
         .indicators(getIndicators(strategy))
         .timeframes(getTimeframe(strategy))
         .build();
@@ -73,6 +69,7 @@ public class DataInitActivityImpl implements DataInitActivity {
 
   @Override
   public Set<StrategyRequest> storeData(Set<StrategyRequest> strategyRequests) {
+    BaseActivity.evaluateState(strategyRequests);
     var mapper = mapperFactory.getMapper(MapperType.STRATEGY_BUILDER_MAPPER);
     return strategyRequests.stream()
         .map(strategyService::createOrUpdate)
@@ -98,10 +95,6 @@ public class DataInitActivityImpl implements DataInitActivity {
         .name(symbolData.name())
         .exchange(Exchange.NSE)
         .build();
-  }
-
-  private StatusModel getCurrentState() {
-    return StatusModel.builder().state(StrategyState.INITIALIZING).step(StrategyStep.INIT).build();
   }
 
   private Set<IndicatorModel> getIndicators(StrategyConfig strategyConfig) {

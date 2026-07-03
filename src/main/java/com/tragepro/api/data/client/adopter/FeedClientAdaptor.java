@@ -5,6 +5,7 @@ import com.tragepro.api.data.client.FeedClient;
 import com.tragepro.api.data.client.mapper.FeedClientMapper;
 import com.tragepro.api.data.model.request.FeedClientRequest;
 import com.tragepro.api.data.model.response.FeedClientResponse;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,14 @@ public class FeedClientAdaptor {
   private final FeedClient feedClient;
   private final FeedClientMapper feedClientMapper;
 
+  @RateLimiter(name = "apiLimiter", fallbackMethod = "apiCallFallbackHistorical")
   public List<CandleRequest> historicalDataAdaptor(FeedClientRequest request) {
     log.info("Fetching historical feed for securityId: {}", request.securityId());
     FeedClientResponse response = feedClient.getHistoricalFeed(request);
     return processResponse(response, request);
   }
 
+  @RateLimiter(name = "apiLimiter", fallbackMethod = "apiCallFallbackIntraday")
   public List<CandleRequest> intradayDataAdaptor(FeedClientRequest request) {
     log.info("Fetching intraday feed for securityId: {}", request.securityId());
     FeedClientResponse response = feedClient.getIntradayFeed(request);
@@ -33,5 +36,19 @@ public class FeedClientAdaptor {
   private List<CandleRequest> processResponse(
       FeedClientResponse response, FeedClientRequest request) {
     return feedClientMapper.map(response, request);
+  }
+
+  private List<CandleRequest> apiCallFallbackHistorical(FeedClientRequest request)
+      throws InterruptedException {
+    log.info("Calling fallback HistoricalFeed for securityId: {}", request.securityId());
+    Thread.sleep(10000);
+    return historicalDataAdaptor(request);
+  }
+
+  private List<CandleRequest> apiCallFallbackIntraday(FeedClientRequest request)
+      throws InterruptedException {
+    log.info("Calling fallback IntradayFeed for securityId: {}", request.securityId());
+    Thread.sleep(10000);
+    return intradayDataAdaptor(request);
   }
 }

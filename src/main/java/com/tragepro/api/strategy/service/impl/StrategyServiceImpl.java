@@ -90,7 +90,7 @@ public class StrategyServiceImpl implements StrategyService {
 
     if (mergedEntity.equals(existingEntity)) {
       log.info(
-          "Strategy with watchlist {}, symbol {} and state {} is identical. Skipping patch.",
+          "Strategy with watchlist {}, symbol {} and state {} is identical :: Skipping patch.",
           watchlist,
           symbol,
           state);
@@ -98,7 +98,7 @@ public class StrategyServiceImpl implements StrategyService {
     }
 
     log.info(
-        "Strategy with watchlist {}, symbol {} and state {} has changes. Patching entry.",
+        "Strategy with watchlist {}, symbol {} and state {} has changes :: Patching entry.",
         watchlist,
         symbol,
         state);
@@ -109,7 +109,7 @@ public class StrategyServiceImpl implements StrategyService {
   private StrategyResponse createNewStrategy(
       StrategyRequest strategyRequest, String watchlist, String symbol, StrategyState state) {
     log.info(
-        "Strategy with watchlist {}, symbol {} and state {} not found. Creating new entry.",
+        "Strategy with watchlist {}, symbol {} and state {} not found :: Creating new entry.",
         watchlist,
         symbol,
         state);

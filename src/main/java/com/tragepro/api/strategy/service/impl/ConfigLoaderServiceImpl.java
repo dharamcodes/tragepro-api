@@ -1,5 +1,7 @@
 package com.tragepro.api.strategy.service.impl;
 
+import com.tragepro.api.common.exception.AppException;
+import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.strategy.props.StrategyConfig;
 import com.tragepro.api.strategy.props.WorkflowConfig;
 import com.tragepro.api.strategy.service.ConfigLoaderService;
@@ -16,6 +18,6 @@ public class ConfigLoaderServiceImpl implements ConfigLoaderService {
     return workflowConfig.getStrategy().stream()
         .filter(s -> s.getName().equalsIgnoreCase(name))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Strategy not found: " + name));
+        .orElseThrow(() -> new AppException(ErrorType.INTERNAL_ERROR));
   }
 }

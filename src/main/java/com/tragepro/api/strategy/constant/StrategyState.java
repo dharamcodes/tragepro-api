@@ -1,5 +1,7 @@
 package com.tragepro.api.strategy.constant;
 
+import java.util.Arrays;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,4 +17,8 @@ public enum StrategyState {
 
   private final String name;
   private final int priority;
+
+  public static Optional<StrategyState> nextState(StrategyState current) {
+    return Arrays.stream(values()).filter(s -> s.priority == current.priority + 1).findFirst();
+  }
 }
