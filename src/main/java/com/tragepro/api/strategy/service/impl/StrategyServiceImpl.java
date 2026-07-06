@@ -12,7 +12,10 @@ import com.tragepro.api.strategy.model.response.StrategyResponse;
 import com.tragepro.api.strategy.repository.StrategyRepository;
 import com.tragepro.api.strategy.service.StrategyService;
 import com.tragepro.api.strategy.service.mapper.StrategyMapper;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,6 +57,17 @@ public class StrategyServiceImpl implements StrategyService {
     return existingEntityOpt
         .map(existingEntity -> handleExistingStrategy(strategyRequest, existingEntity, mapper))
         .orElseGet(() -> createNewStrategy(strategyRequest, watchlist, symbol, state));
+  }
+
+  @Override
+  public Set<StrategyResponse> getAll() {
+    var mapper = mapperFactory.getMapper(MapperType.STRATEGY_BUILDER_MAPPER);
+    List<StrategyEntity> strategyResponses = strategyRepository.findAll();
+    if (strategyResponses.isEmpty()) {
+      log.info("No strategies found in database");
+      return java.util.Collections.emptySet();
+    }
+    return strategyResponses.stream().map(mapper::entityToResponse).collect(Collectors.toSet());
   }
 
   private void validateRequest(StrategyRequest strategyRequest) {

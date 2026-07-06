@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.tragepro.api.common.constant.TimeUnit;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
-import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.CandleDataModel;
 import com.tragepro.api.strategy.model.TimeframeModel;
 import java.time.Instant;
 import java.util.List;
@@ -33,13 +33,14 @@ class TimeframeConverterUtilTest {
     long now = Instant.parse("2026-07-01T10:02:00Z").toEpochMilli();
     long nowPlus1 = Instant.parse("2026-07-01T10:03:00Z").toEpochMilli();
 
-    CandleData c1 = new CandleData(now, 100.0, 105.0, 95.0, 101.0, 10.0);
-    CandleData c2 = new CandleData(nowPlus1, 101.0, 106.0, 96.0, 102.0, 20.0);
+    CandleDataModel c1 = new CandleDataModel(now, 100.0, 105.0, 95.0, 101.0, 10.0);
+    CandleDataModel c2 = new CandleDataModel(nowPlus1, 101.0, 106.0, 96.0, 102.0, 20.0);
 
-    List<CandleData> result = TimeframeConverterUtil.convert(List.of(c1, c2), source, destination);
+    List<CandleDataModel> result =
+        TimeframeConverterUtil.convert(List.of(c1, c2), source, destination);
     assertNotNull(result);
     assertEquals(1, result.size());
-    CandleData aggregate = result.get(0);
+    CandleDataModel aggregate = result.get(0);
     assertEquals(100.0, aggregate.open());
     assertEquals(106.0, aggregate.high());
     assertEquals(95.0, aggregate.low());
@@ -52,8 +53,8 @@ class TimeframeConverterUtilTest {
     TimeframeModel source = TimeframeModel.builder().value(1).uom(TimeUnit.HOUR).build();
     TimeframeModel destination = TimeframeModel.builder().value(2).uom(TimeUnit.HOUR).build();
     long epoch = Instant.parse("2026-07-01T10:30:00Z").toEpochMilli();
-    CandleData c1 = new CandleData(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
-    List<CandleData> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
+    CandleDataModel c1 = new CandleDataModel(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
+    List<CandleDataModel> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
     assertNotNull(result);
     assertEquals(1, result.size());
   }
@@ -63,8 +64,8 @@ class TimeframeConverterUtilTest {
     TimeframeModel source = TimeframeModel.builder().value(1).uom(TimeUnit.DAY).build();
     TimeframeModel destination = TimeframeModel.builder().value(2).uom(TimeUnit.DAY).build();
     long epoch = Instant.parse("2026-07-01T10:30:00Z").toEpochMilli();
-    CandleData c1 = new CandleData(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
-    List<CandleData> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
+    CandleDataModel c1 = new CandleDataModel(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
+    List<CandleDataModel> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
     assertNotNull(result);
     assertEquals(1, result.size());
   }
@@ -74,8 +75,8 @@ class TimeframeConverterUtilTest {
     TimeframeModel source = TimeframeModel.builder().value(1).uom(TimeUnit.WEEK).build();
     TimeframeModel destination = TimeframeModel.builder().value(1).uom(TimeUnit.WEEK).build();
     long epoch = Instant.parse("2026-07-01T10:30:00Z").toEpochMilli();
-    CandleData c1 = new CandleData(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
-    List<CandleData> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
+    CandleDataModel c1 = new CandleDataModel(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
+    List<CandleDataModel> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
     assertNotNull(result);
     assertEquals(1, result.size());
   }
@@ -85,8 +86,8 @@ class TimeframeConverterUtilTest {
     TimeframeModel source = TimeframeModel.builder().value(1).uom(TimeUnit.MONTH).build();
     TimeframeModel destination = TimeframeModel.builder().value(3).uom(TimeUnit.MONTH).build();
     long epoch = Instant.parse("2026-07-01T10:30:00Z").toEpochMilli();
-    CandleData c1 = new CandleData(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
-    List<CandleData> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
+    CandleDataModel c1 = new CandleDataModel(epoch, 100.0, 105.0, 95.0, 101.0, 10.0);
+    List<CandleDataModel> result = TimeframeConverterUtil.convert(List.of(c1), source, destination);
     assertNotNull(result);
     assertEquals(1, result.size());
   }

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.SymbolDataModel;
 import com.tragepro.api.strategy.model.StrategyModel;
 import com.tragepro.api.strategy.model.SymbolModel;
 import com.tragepro.api.strategy.model.entity.StrategyEntity;
@@ -121,7 +121,7 @@ class StrategyMapperTest {
   @Test
   void testToSymbolData() {
     SymbolModel symbolModel = SymbolModel.builder().symbol("AAPL").name("Apple").build();
-    SymbolData symbolData = mapper.toSymbolData(symbolModel);
+    SymbolDataModel symbolData = mapper.toSymbolData(symbolModel);
     assertNotNull(symbolData);
     assertEquals("AAPL", symbolData.symbol());
     assertEquals("Apple", symbolData.name());

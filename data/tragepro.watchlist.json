@@ -1,0 +1,218 @@
+[{
+  "_id": {
+    "$oid": "6a2ebec538bb66a3fe795919"
+  },
+  "name": "NIFTY_50",
+  "description": "Nifty 50 stocks all sectors",
+  "stocks": [
+    {
+      "symbol": "INDIGO",
+      "name": "InterGlobe Aviation Ltd."
+    },
+    {
+      "symbol": "BHARTIARTL",
+      "name": "Bharti Airtel Ltd."
+    },
+    {
+      "symbol": "HCLTECH",
+      "name": "HCL Technologies Ltd."
+    },
+    {
+      "symbol": "TATASTEEL",
+      "name": "Tata Steel Ltd."
+    },
+    {
+      "symbol": "GRASIM",
+      "name": "Grasim Industries Ltd."
+    },
+    {
+      "symbol": "JIOFIN",
+      "name": "Jio Financial Services Ltd."
+    },
+    {
+      "symbol": "TRENT",
+      "name": "Trent Ltd."
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "name": "Kotak Mahindra Bank Ltd."
+    },
+    {
+      "symbol": "ADANIENT",
+      "name": "Adani Enterprises Ltd."
+    },
+    {
+      "symbol": "ASIANPAINT",
+      "name": "Asian Paints Ltd."
+    },
+    {
+      "symbol": "EICHERMOT",
+      "name": "Eicher Motors Ltd."
+    },
+    {
+      "symbol": "LT",
+      "name": "Larsen & Toubro Ltd."
+    },
+    {
+      "symbol": "NESTLEIND",
+      "name": "Nestle India Ltd."
+    },
+    {
+      "symbol": "ADANIPORTS",
+      "name": "Adani Ports and Special Economic Zone Ltd."
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "name": "Sun Pharmaceutical Industries Ltd."
+    },
+    {
+      "symbol": "SBILIFE",
+      "name": "SBI Life Insurance Company Ltd."
+    },
+    {
+      "symbol": "ULTRACEMCO",
+      "name": "UltraTech Cement Ltd."
+    },
+    {
+      "symbol": "SBIN",
+      "name": "State Bank of India"
+    },
+    {
+      "symbol": "POWERGRID",
+      "name": "Power Grid Corporation of India Ltd."
+    },
+    {
+      "symbol": "TCS",
+      "name": "Tata Consultancy Services Ltd."
+    },
+    {
+      "symbol": "ITC",
+      "name": "ITC Ltd."
+    },
+    {
+      "symbol": "NTPC",
+      "name": "NTPC Ltd."
+    },
+    {
+      "symbol": "HDFCLIFE",
+      "name": "HDFC Life Insurance Company Ltd."
+    },
+    {
+      "symbol": "M&M",
+      "name": "Mahindra & Mahindra Ltd."
+    },
+    {
+      "symbol": "BAJAJFINSV",
+      "name": "Bajaj Finserv Ltd."
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "name": "Bajaj Finance Ltd."
+    },
+    {
+      "symbol": "ONGC",
+      "name": "Oil & Natural Gas Corporation Ltd."
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "name": "Hindustan Unilever Ltd."
+    },
+    {
+      "symbol": "TMPV",
+      "name": "Tata Motors Passenger Vehicles Ltd."
+    },
+    {
+      "symbol": "TECHM",
+      "name": "Tech Mahindra Ltd."
+    },
+    {
+      "symbol": "COALINDIA",
+      "name": "Coal India Ltd."
+    },
+    {
+      "symbol": "CIPLA",
+      "name": "Cipla Ltd."
+    },
+    {
+      "symbol": "MARUTI",
+      "name": "Maruti Suzuki India Ltd."
+    },
+    {
+      "symbol": "DRREDDY",
+      "name": "Dr. Reddy's Laboratories Ltd."
+    },
+    {
+      "symbol": "ETERNAL",
+      "name": "Eternal Ltd."
+    },
+    {
+      "symbol": "BAJAJ-AUTO",
+      "name": "Bajaj Auto Ltd."
+    },
+    {
+      "symbol": "INFY",
+      "name": "Infosys Ltd."
+    },
+    {
+      "symbol": "ICICIBANK",
+      "name": "ICICI Bank Ltd."
+    },
+    {
+      "symbol": "HINDALCO",
+      "name": "Hindalco Industries Ltd."
+    },
+    {
+      "symbol": "WIPRO",
+      "name": "Wipro Ltd."
+    },
+    {
+      "symbol": "MAXHEALTH",
+      "name": "Max Healthcare Institute Ltd."
+    },
+    {
+      "symbol": "APOLLOHOSP",
+      "name": "Apollo Hospitals Enterprise Ltd."
+    },
+    {
+      "symbol": "TITAN",
+      "name": "Titan Company Ltd."
+    },
+    {
+      "symbol": "TATACONSUM",
+      "name": "Tata Consumer Products Ltd."
+    },
+    {
+      "symbol": "RELIANCE",
+      "name": "Reliance Industries Ltd."
+    },
+    {
+      "symbol": "AXISBANK",
+      "name": "Axis Bank Ltd."
+    },
+    {
+      "symbol": "SHRIRAMFIN",
+      "name": "Shriram Finance Ltd."
+    },
+    {
+      "symbol": "JSWSTEEL",
+      "name": "JSW Steel Ltd."
+    },
+    {
+      "symbol": "BEL",
+      "name": "Bharat Electronics Ltd."
+    },
+    {
+      "symbol": "HDFCBANK",
+      "name": "HDFC Bank Ltd."
+    }
+  ],
+  "createdBy": "user_ysbhI0Al",
+  "createdAt": {
+    "$date": "2026-06-14T14:46:29.959Z"
+  },
+  "updatedBy": "user_ysbhI0Al",
+  "updatedAt": {
+    "$date": "2026-06-14T17:51:27.118Z"
+  },
+  "_class": "com.tragepro.api.data.model.entity.WatchListEntity"
+}]

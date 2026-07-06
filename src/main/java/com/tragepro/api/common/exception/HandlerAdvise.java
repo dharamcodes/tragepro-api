@@ -5,7 +5,6 @@ import com.tragepro.api.common.exception.model.AppErrorDto;
 import com.tragepro.api.common.exception.model.ServerErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class HandlerAdvise {
                 .build());
   }
 
-  @ExceptionHandler({AppException.class, AccessDeniedException.class})
+  @ExceptionHandler(AppException.class)
   public ResponseEntity<AppErrorDto> handle(AppException appException) {
     ErrorType errorType = appException.getErrorType();
     return ResponseEntity.status(appException.getErrorType().getCode())
@@ -45,7 +44,39 @@ public class HandlerAdvise {
                 .build());
   }
 
-  @ExceptionHandler({ConstraintViolationException.class, RuntimeException.class})
+  @ExceptionHandler({
+    java.nio.file.AccessDeniedException.class,
+    org.springframework.security.access.AccessDeniedException.class
+  })
+  public ResponseEntity<AppErrorDto> handleAccessDenied(Exception ex) {
+    ErrorType errorType = ErrorType.ACCESS_DENIED;
+    return ResponseEntity.status(errorType.getCode())
+        .body(
+            AppErrorDto.builder()
+                .errorCode(errorType.getErrorCode())
+                .timestamp(LocalDateTime.now())
+                .message(messageSource.getMessage(errorType.getMessage(), null, Locale.ENGLISH))
+                .build());
+  }
+
+  @ExceptionHandler({
+    org.springframework.web.bind.MethodArgumentNotValidException.class,
+    org.springframework.validation.BindException.class,
+    ConstraintViolationException.class,
+    org.springframework.http.converter.HttpMessageNotReadableException.class
+  })
+  public ResponseEntity<AppErrorDto> handleValidation(Exception ex) {
+    ErrorType errorType = ErrorType.INVALID_PARAMETER;
+    return ResponseEntity.status(errorType.getCode())
+        .body(
+            AppErrorDto.builder()
+                .errorCode(errorType.getErrorCode())
+                .timestamp(LocalDateTime.now())
+                .message(messageSource.getMessage(errorType.getMessage(), null, Locale.ENGLISH))
+                .build());
+  }
+
+  @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<AppErrorDto> handle(RuntimeException runtimeException) {
     ErrorType errorType = ErrorType.INTERNAL_ERROR;
     return ResponseEntity.status(errorType.getCode())

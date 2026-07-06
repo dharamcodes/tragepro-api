@@ -1,6 +1,6 @@
 package com.tragepro.api.common.context;
 
-import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.SymbolDataModel;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class WatchlistContext {
 
-  private final Map<String, Set<SymbolData>> watchlist = new HashMap<>();
+  private final Map<String, Set<SymbolDataModel>> watchlist = new HashMap<>();
 
-  public Set<SymbolData> getWatchlist(String name) {
+  public Set<SymbolDataModel> getWatchlist(String name) {
     return watchlist.getOrDefault(name, new HashSet<>());
   }
 
-  public void addWatchlist(String name, Set<SymbolData> symbols) {
+  public void addWatchlist(String name, Set<SymbolDataModel> symbols) {
     watchlist.put(name, symbols);
   }
 }
