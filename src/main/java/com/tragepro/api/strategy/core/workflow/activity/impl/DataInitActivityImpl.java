@@ -4,9 +4,9 @@ import com.tragepro.api.common.constant.Exchange;
 import com.tragepro.api.common.context.WatchlistContext;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.SymbolDataModel;
 import com.tragepro.api.common.util.CloneUtil;
-import com.tragepro.api.strategy.context.StrategyContextConfig;
+import com.tragepro.api.strategy.context.StrategyContext;
 import com.tragepro.api.strategy.core.workflow.activity.BaseActivity;
 import com.tragepro.api.strategy.core.workflow.activity.DataInitActivity;
 import com.tragepro.api.strategy.model.*;
@@ -28,7 +28,7 @@ public class DataInitActivityImpl implements DataInitActivity {
 
   private final ConfigLoaderService configLoaderService;
   private final WatchlistContext watchlistContext;
-  private final StrategyContextConfig strategyContextConfig;
+  private final StrategyContext strategyContext;
   private final StrategyService strategyService;
   private final MapperFactory<StrategyMapper> mapperFactory;
   private final CloneUtil cloneUtil;
@@ -78,7 +78,7 @@ public class DataInitActivityImpl implements DataInitActivity {
   }
 
   private void updateContext(StrategyMapper mapper, StrategyResponse response) {
-    strategyContextConfig.put(mapper.toSymbolData(response.getSymbolData()), response);
+    strategyContext.put(response.getStrategy().getName(), response);
   }
 
   private StrategyModel getStrategy(StrategyConfig strategyConfig) {
@@ -89,10 +89,10 @@ public class DataInitActivityImpl implements DataInitActivity {
         .build();
   }
 
-  private SymbolModel getSymbol(SymbolData symbolData) {
+  private SymbolModel getSymbol(SymbolDataModel symbolDataModel) {
     return SymbolModel.builder()
-        .symbol(symbolData.symbol())
-        .name(symbolData.name())
+        .symbol(symbolDataModel.symbol())
+        .name(symbolDataModel.name())
         .exchange(Exchange.NSE)
         .build();
   }

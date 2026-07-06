@@ -64,7 +64,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     mockMvc
         .perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().is5xxServerError());
+        .andExpect(status().isBadRequest());
   }
 
   @Test

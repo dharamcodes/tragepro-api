@@ -58,7 +58,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
             post("/api/v1/account")
                 .header("Authorization", authToken)
                 .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().is5xxServerError());
+        .andExpect(status().isBadRequest());
 
     mockMvc
         .perform(

@@ -1,6 +1,6 @@
 package com.tragepro.api.strategy.model;
 
-import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.CandleDataModel;
 import com.tragepro.api.strategy.constant.IndicatorType;
 import com.tragepro.api.strategy.constant.Timeframe;
 import java.util.Set;
@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 public class IndicatorModel {
   private IndicatorType name;
   private Timeframe timeFrame;
-  private Set<CandleData> levels;
+  private Set<CandleDataModel> levels;
 }

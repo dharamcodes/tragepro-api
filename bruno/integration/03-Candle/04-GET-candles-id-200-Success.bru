@@ -13,6 +13,6 @@ get {
 script:post-response {
   expect(res.getStatus()).to.equal(200);
   expect(res.body.id).to.equal(bru.getVar("testCandleId"));
-  expect(res.body.symbolData.id).to.equal("AAPL");
+  expect(res.body.symbolData.symbol).to.equal("AAPL");
   expect(res.body.candleData.open).to.equal(130.0);
 }

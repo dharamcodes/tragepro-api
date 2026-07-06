@@ -8,13 +8,13 @@ import com.tragepro.api.common.constant.TimeUnit;
 import com.tragepro.api.common.context.WatchlistContext;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.common.model.SymbolData;
+import com.tragepro.api.common.model.SymbolDataModel;
 import com.tragepro.api.common.util.CloneUtil;
 import com.tragepro.api.strategy.constant.IndicatorType;
 import com.tragepro.api.strategy.constant.StrategyState;
 import com.tragepro.api.strategy.constant.StrategyStep;
 import com.tragepro.api.strategy.constant.Timeframe;
-import com.tragepro.api.strategy.context.StrategyContextConfig;
+import com.tragepro.api.strategy.context.StrategyContext;
 import com.tragepro.api.strategy.core.workflow.activity.impl.DataInitActivityImpl;
 import com.tragepro.api.strategy.model.StatusModel;
 import com.tragepro.api.strategy.model.StrategyModel;
@@ -42,7 +42,7 @@ class DataInitActivityImplTest {
 
   @Mock private ConfigLoaderService configLoaderService;
   @Mock private WatchlistContext watchlistContext;
-  @Mock private StrategyContextConfig strategyContextConfig;
+  @Mock private StrategyContext strategyContext;
   @Mock private StrategyService strategyService;
   @Mock private MapperFactory<StrategyMapper> mapperFactory;
   @Mock private CloneUtil cloneUtil;
@@ -67,7 +67,10 @@ class DataInitActivityImplTest {
                     .build())
             .build();
     strategyResponse =
-        StrategyResponse.builder().symbolData(SymbolModel.builder().symbol("SYM").build()).build();
+        StrategyResponse.builder()
+            .strategy(StrategyModel.builder().name("STRATEGY_NAME").build())
+            .symbolData(SymbolModel.builder().symbol("SYM").build())
+            .build();
     strategyEntity = new StrategyEntity();
   }
 
@@ -76,12 +79,11 @@ class DataInitActivityImplTest {
     when(mapperFactory.getMapper(MapperType.STRATEGY_BUILDER_MAPPER)).thenReturn(strategyMapper);
     when(strategyMapper.requestToEntity(strategyRequest)).thenReturn(strategyEntity);
     when(strategyMapper.entityToResponse(strategyEntity)).thenReturn(strategyResponse);
-    when(strategyMapper.toSymbolData(any())).thenReturn(new SymbolData("SYM", "Name"));
 
     Set<StrategyResponse> result = dataInitActivity.run(Set.of(strategyRequest));
     assertNotNull(result);
     assertEquals(1, result.size());
-    verify(strategyContextConfig, times(1)).put(any(), eq(strategyResponse));
+    verify(strategyContext, times(1)).put(eq("STRATEGY_NAME"), eq(strategyResponse));
   }
 
   @Test
@@ -124,7 +126,7 @@ class DataInitActivityImplTest {
 
   @Test
   void testLoadSymbol() {
-    SymbolData symbolData = new SymbolData("AAPL", "Apple");
+    SymbolDataModel symbolData = new SymbolDataModel("AAPL", "Apple");
     when(watchlistContext.getWatchlist("WL")).thenReturn(Set.of(symbolData));
     when(cloneUtil.clone(eq(strategyRequest), eq(StrategyRequest.class)))
         .thenReturn(strategyRequest);

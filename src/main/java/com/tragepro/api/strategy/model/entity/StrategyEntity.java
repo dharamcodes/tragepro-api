@@ -1,6 +1,6 @@
 package com.tragepro.api.strategy.model.entity;
 
-import com.tragepro.api.common.model.BaseEntity;
+import com.tragepro.api.common.model.entity.BaseEntity;
 import com.tragepro.api.strategy.model.*;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Document(collection = "strategyData")
+@Document(collection = "strategy")
 public class StrategyEntity extends BaseEntity {
   @Id private String id;
   private StrategyModel strategy;

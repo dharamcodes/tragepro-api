@@ -2,7 +2,7 @@ package com.tragepro.api.strategy.util;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
-import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.CandleDataModel;
 import com.tragepro.api.strategy.model.TimeframeModel;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -15,8 +15,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TimeframeConverterUtil {
 
-  public static List<CandleData> convert(
-      List<CandleData> candles, TimeframeModel source, TimeframeModel destination) {
+  public static List<CandleDataModel> convert(
+      List<CandleDataModel> candles, TimeframeModel source, TimeframeModel destination) {
 
     if (destination.getValue() < source.getValue()) {
       throw new AppException(ErrorType.INVALID_FIELD_TYPE);
@@ -32,20 +32,20 @@ public class TimeframeConverterUtil {
         .toList();
   }
 
-  private static CandleData aggregate(Map.Entry<Long, List<CandleData>> entry) {
+  private static CandleDataModel aggregate(Map.Entry<Long, List<CandleDataModel>> entry) {
 
-    List<CandleData> candles = entry.getValue();
+    List<CandleDataModel> candles = entry.getValue();
 
-    CandleData first = candles.getFirst();
-    CandleData last = candles.getLast();
+    CandleDataModel first = candles.getFirst();
+    CandleDataModel last = candles.getLast();
 
-    return new CandleData(
+    return new CandleDataModel(
         entry.getKey(),
         first.open(),
-        candles.stream().map(CandleData::high).max(Double::compareTo).orElse(0.0),
-        candles.stream().map(CandleData::low).min(Double::compareTo).orElse(0.0),
+        candles.stream().map(CandleDataModel::high).max(Double::compareTo).orElse(0.0),
+        candles.stream().map(CandleDataModel::low).min(Double::compareTo).orElse(0.0),
         last.close(),
-        candles.stream().map(CandleData::volume).reduce(0.0, Double::sum));
+        candles.stream().map(CandleDataModel::volume).reduce(0.0, Double::sum));
   }
 
   private static long bucketStart(long timeStamp, TimeframeModel tf) {

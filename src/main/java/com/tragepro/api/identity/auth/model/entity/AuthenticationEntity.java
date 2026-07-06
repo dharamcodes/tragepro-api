@@ -1,6 +1,6 @@
 package com.tragepro.api.identity.auth.model.entity;
 
-import com.tragepro.api.common.model.BaseEntity;
+import com.tragepro.api.common.model.entity.BaseEntity;
 import com.tragepro.api.identity.auth.constant.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

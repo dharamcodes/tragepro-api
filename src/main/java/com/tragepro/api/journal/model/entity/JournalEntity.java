@@ -1,6 +1,6 @@
 package com.tragepro.api.journal.model.entity;
 
-import com.tragepro.api.common.model.BaseEntity;
+import com.tragepro.api.common.model.entity.BaseEntity;
 import com.tragepro.api.journal.model.enums.TradeStatus;
 import com.tragepro.api.journal.model.enums.TradeType;
 import java.math.BigDecimal;

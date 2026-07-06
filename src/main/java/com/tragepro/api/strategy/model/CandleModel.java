@@ -1,6 +1,6 @@
 package com.tragepro.api.strategy.model;
 
-import com.tragepro.api.common.model.CandleData;
+import com.tragepro.api.common.model.CandleDataModel;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CandleModel {
-  private List<CandleData> baseData;
-  private List<CandleData> htfData;
-  private List<CandleData> ltfData;
+  private List<CandleDataModel> baseData;
+  private List<CandleDataModel> htfData;
+  private List<CandleDataModel> ltfData;
 }

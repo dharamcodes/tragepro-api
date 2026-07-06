@@ -2,7 +2,7 @@ package com.tragepro.api.identity.account.model.entity;
 
 import com.tragepro.api.common.identifier.annotation.Base32IdGen;
 import com.tragepro.api.common.identifier.annotation.Identifier;
-import com.tragepro.api.common.model.BaseEntity;
+import com.tragepro.api.common.model.entity.BaseEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
