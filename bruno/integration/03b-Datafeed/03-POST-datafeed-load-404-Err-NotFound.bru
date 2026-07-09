@@ -1,0 +1,22 @@
+meta {
+  name: 03-POST-datafeed-load-404-Err-NotFound
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/datafeed/load
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "watchListName": "Non Existent Watchlist",
+    "daysBack": 5
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(404);
+}

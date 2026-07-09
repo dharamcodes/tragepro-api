@@ -12,4 +12,16 @@ public class ExecutorConfig {
   public Executor customSchedulerExecutor() {
     return Executors.newVirtualThreadPerTaskExecutor();
   }
+
+  @Bean(name = "datafeedThreadPoolExecutor")
+  public Executor datafeedThreadPoolExecutor() {
+    org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor executor =
+        new org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(5);
+    executor.setMaxPoolSize(10);
+    executor.setQueueCapacity(25);
+    executor.setThreadNamePrefix("datafeed-thread-");
+    executor.initialize();
+    return executor;
+  }
 }

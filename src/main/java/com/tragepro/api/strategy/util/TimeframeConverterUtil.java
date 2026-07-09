@@ -45,7 +45,7 @@ public class TimeframeConverterUtil {
         candles.stream().map(CandleDataModel::high).max(Double::compareTo).orElse(0.0),
         candles.stream().map(CandleDataModel::low).min(Double::compareTo).orElse(0.0),
         last.close(),
-        candles.stream().map(CandleDataModel::volume).reduce(0.0, Double::sum));
+        candles.stream().mapToLong(CandleDataModel::volume).sum());
   }
 
   private static long bucketStart(long timeStamp, TimeframeModel tf) {

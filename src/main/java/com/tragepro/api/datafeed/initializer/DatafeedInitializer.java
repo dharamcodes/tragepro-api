@@ -9,7 +9,6 @@ import com.tragepro.api.common.model.response.CandleResponse;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;
 import com.tragepro.api.datafeed.service.CandleService;
 import com.tragepro.api.datafeed.service.WatchListService;
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -59,11 +58,18 @@ public class DatafeedInitializer implements CommandLineRunner {
     candles.forEach(
         candle -> {
           log.info("Initialized candle for symbol :: {}", candle.symbolData().name());
+          long ts = candle.candleData().timestamp();
+          java.time.LocalDate localDate =
+              ts > 1_000_000_000_000L
+                  ? java.time.Instant.ofEpochMilli(ts)
+                      .atZone(java.time.ZoneId.systemDefault())
+                      .toLocalDate()
+                  : java.time.LocalDate.ofEpochDay(ts);
           datafeedContext.put(
               candle.symbolData(),
               DatafeedModel.builder()
                   .symbol(candle.symbolData().name())
-                  .timestamp(LocalDate.ofEpochDay(candle.candleData().timestamp()))
+                  .timestamp(localDate)
                   .state(DatafeedState.INITIALIZED)
                   .build());
         });

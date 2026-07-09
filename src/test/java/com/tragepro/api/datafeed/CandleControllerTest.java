@@ -26,7 +26,7 @@ class CandleControllerTest extends ApiTestSetup {
     candleRequest =
         new CandleRequest(
             new SymbolDataModel("BTCUSD", "Bitcoin"),
-            new CandleDataModel(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000.0));
+            new CandleDataModel(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000L));
 
     CandleEntity entity = new CandleEntity();
     entity.setSymbolData(candleRequest.symbolData());
@@ -97,7 +97,7 @@ class CandleControllerTest extends ApiTestSetup {
     CandleRequest updateRequest =
         new CandleRequest(
             new SymbolDataModel("BTCUSD", "Updated Bitcoin"),
-            new CandleDataModel(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000.0));
+            new CandleDataModel(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000L));
 
     mockMvc
         .perform(
@@ -114,7 +114,7 @@ class CandleControllerTest extends ApiTestSetup {
     CandleRequest updateRequest =
         new CandleRequest(
             new SymbolDataModel("BTCUSD", "Updated Bitcoin"),
-            new CandleDataModel(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000.0));
+            new CandleDataModel(1609459200000L, 29000.0, 29500.0, 28500.0, 29300.0, 1000L));
 
     mockMvc
         .perform(
