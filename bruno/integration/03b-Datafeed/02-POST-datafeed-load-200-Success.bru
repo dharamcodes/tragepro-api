@@ -1,0 +1,24 @@
+meta {
+  name: 02-POST-datafeed-load-200-Success
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/datafeed/load
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "watchListName": "Datafeed Load Test Watchlist",
+    "daysBack": 5
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.watchList).to.equal("Datafeed Load Test Watchlist");
+  expect(res.body.message).to.equal("Data load initiated successfully");
+}

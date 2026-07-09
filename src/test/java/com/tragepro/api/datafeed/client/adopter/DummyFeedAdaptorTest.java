@@ -7,8 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.tragepro.api.common.model.request.CandleRequest;
-import com.tragepro.api.datafeed.client.FeedClient;
-import com.tragepro.api.datafeed.client.adopter.client.FeedClientAdaptor;
+import com.tragepro.api.datafeed.client.adopter.client.DummyFeedAdaptor;
 import com.tragepro.api.datafeed.client.mapper.FeedClientMapper;
 import com.tragepro.api.datafeed.model.request.FeedClientRequest;
 import com.tragepro.api.datafeed.model.response.FeedClientResponse;
@@ -21,51 +20,45 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class FeedClientAdaptorTest {
+class DummyFeedAdaptorTest {
 
-  @Mock private FeedClient feedClient;
   @Mock private FeedClientMapper feedClientMapper;
 
-  @InjectMocks private FeedClientAdaptor adaptor;
+  @InjectMocks private DummyFeedAdaptor adaptor;
 
   private FeedClientRequest request;
-  private FeedClientResponse response;
   private List<CandleRequest> mappedRequests;
 
   @BeforeEach
   void setUp() {
     request = FeedClientRequest.builder().securityId(123).build();
-    response = new FeedClientResponse(null, null, null, null, null, null, null);
     mappedRequests = List.of(CandleRequest.builder().build());
   }
 
   @Test
   void testHistoricalDataAdaptor() {
-    when(feedClient.getHistoricalFeed(request)).thenReturn(response);
-    when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
+    when(feedClientMapper.map(any(FeedClientResponse.class), eq(request)))
+        .thenReturn(mappedRequests);
 
     List<CandleRequest> result = adaptor.historicalDataAdaptor(request);
 
     assertEquals(mappedRequests, result);
-    verify(feedClient).getHistoricalFeed(request);
-    verify(feedClientMapper).map(response, request);
+    verify(feedClientMapper).map(any(FeedClientResponse.class), eq(request));
   }
 
   @Test
   void testIntradayDataAdaptor() {
-    when(feedClient.getIntradayFeed(request)).thenReturn(response);
-    when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
+    when(feedClientMapper.map(any(FeedClientResponse.class), eq(request)))
+        .thenReturn(mappedRequests);
 
     List<CandleRequest> result = adaptor.intradayDataAdaptor(request);
 
     assertEquals(mappedRequests, result);
-    verify(feedClient).getIntradayFeed(request);
-    verify(feedClientMapper).map(response, request);
+    verify(feedClientMapper).map(any(FeedClientResponse.class), eq(request));
   }
 
   @Test
-  void testFallbackMethods() throws Exception {
-    when(feedClient.getHistoricalFeed(request)).thenReturn(response);
+  void testFallbackMethods() {
     when(feedClientMapper.map(any(FeedClientResponse.class), eq(request)))
         .thenReturn(mappedRequests);
 
@@ -74,7 +67,6 @@ class FeedClientAdaptorTest {
             adaptor, "apiCallFallbackHistorical", request);
     assertEquals(mappedRequests, resultHist);
 
-    when(feedClient.getIntradayFeed(request)).thenReturn(response);
     List<CandleRequest> resultIntra =
         org.springframework.test.util.ReflectionTestUtils.invokeMethod(
             adaptor, "apiCallFallbackIntraday", request);
