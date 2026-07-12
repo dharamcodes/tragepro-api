@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
         @Info(
             title = "TradePro API Docs",
             version = "1.0",
-            description = "API documentation for TradePro"),
+            description =
+                "Comprehensive API documentation for TradePro, covering identity management, authentication, historical and intraday candle data feeds, watchlists, algorithmic strategy configurations, and trading journals."),
     security = @SecurityRequirement(name = "bearerAuth"))
 @SecurityScheme(
     name = "bearerAuth",

@@ -4,7 +4,7 @@ import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.common.util.CloneUtil;
+import com.tragepro.api.common.util.ObjectCloneUtil;
 import com.tragepro.api.strategy.constant.StrategyState;
 import com.tragepro.api.strategy.model.entity.StrategyEntity;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
@@ -27,7 +27,6 @@ public class StrategyServiceImpl implements StrategyService {
 
   private final StrategyRepository strategyRepository;
   private final MapperFactory<StrategyMapper> mapperFactory;
-  private final CloneUtil cloneUtil;
 
   @Override
   public StrategyResponse create(StrategyRequest strategyRequest) {
@@ -99,7 +98,7 @@ public class StrategyServiceImpl implements StrategyService {
     var symbol = strategyRequest.getSymbolData().getSymbol();
     var state = strategyRequest.getCurrentState().getState();
 
-    var mergedEntity = cloneUtil.clone(existingEntity, StrategyEntity.class);
+    var mergedEntity = ObjectCloneUtil.clone(existingEntity, StrategyEntity.class);
     mapper.merge(strategyRequest, mergedEntity);
 
     if (mergedEntity.equals(existingEntity)) {

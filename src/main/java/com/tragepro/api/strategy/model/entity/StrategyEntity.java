@@ -1,5 +1,6 @@
 package com.tragepro.api.strategy.model.entity;
 
+import com.tragepro.api.common.model.TimeframeModel;
 import com.tragepro.api.common.model.entity.BaseEntity;
 import com.tragepro.api.strategy.model.*;
 import java.util.Set;

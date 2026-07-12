@@ -8,7 +8,6 @@ import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.common.util.CloneUtil;
 import com.tragepro.api.strategy.constant.StrategyState;
 import com.tragepro.api.strategy.model.StatusModel;
 import com.tragepro.api.strategy.model.StrategyModel;
@@ -32,7 +31,6 @@ class StrategyServiceTest {
 
   @Mock private StrategyRepository strategyRepository;
   @Mock private MapperFactory<StrategyMapper> mapperFactory;
-  @Mock private CloneUtil cloneUtil;
   @Mock private StrategyMapper strategyMapper;
 
   @InjectMocks private StrategyServiceImpl strategyService;
@@ -134,13 +132,11 @@ class StrategyServiceTest {
   @Test
   void testCreateOrUpdate_FoundIdentical_BypassesSave() {
     StrategyEntity existingEntity = new StrategyEntity();
-    StrategyEntity clonedEntity = new StrategyEntity();
 
     when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
             "WL", "SYM", StrategyState.INITIALIZING))
         .thenReturn(Optional.of(existingEntity));
-    when(cloneUtil.clone(existingEntity, StrategyEntity.class)).thenReturn(clonedEntity);
-    doNothing().when(strategyMapper).merge(validRequest, clonedEntity);
+    doNothing().when(strategyMapper).merge(any(StrategyRequest.class), any(StrategyEntity.class));
     when(strategyMapper.entityToResponse(existingEntity)).thenReturn(mockResponse);
 
     StrategyResponse result = strategyService.createOrUpdate(validRequest);
@@ -152,20 +148,25 @@ class StrategyServiceTest {
   @Test
   void testCreateOrUpdate_FoundDifferent_SavesMerged() {
     StrategyEntity existingEntity = new StrategyEntity();
-    StrategyEntity clonedEntity = new StrategyEntity();
-    clonedEntity.setId("changed-id");
 
     when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
             "WL", "SYM", StrategyState.INITIALIZING))
         .thenReturn(Optional.of(existingEntity));
-    when(cloneUtil.clone(existingEntity, StrategyEntity.class)).thenReturn(clonedEntity);
-    doNothing().when(strategyMapper).merge(validRequest, clonedEntity);
-    when(strategyRepository.save(clonedEntity)).thenReturn(clonedEntity);
-    when(strategyMapper.entityToResponse(clonedEntity)).thenReturn(mockResponse);
+    doAnswer(
+            invocation -> {
+              StrategyEntity entity = invocation.getArgument(1);
+              entity.setId("changed-id");
+              return null;
+            })
+        .when(strategyMapper)
+        .merge(any(StrategyRequest.class), any(StrategyEntity.class));
+    when(strategyRepository.save(any(StrategyEntity.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
+    when(strategyMapper.entityToResponse(any(StrategyEntity.class))).thenReturn(mockResponse);
 
     StrategyResponse result = strategyService.createOrUpdate(validRequest);
     assertNotNull(result);
     assertEquals(mockResponse, result);
-    verify(strategyRepository, times(1)).save(clonedEntity);
+    verify(strategyRepository, times(1)).save(any(StrategyEntity.class));
   }
 }
