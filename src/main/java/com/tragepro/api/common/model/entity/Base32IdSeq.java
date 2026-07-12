@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document("sequence_counters")
+@Document("counter")
 public class Base32IdSeq {
 
   @Id private String id;

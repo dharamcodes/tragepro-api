@@ -17,11 +17,9 @@ public class MongoBase32IdGen {
 
   private final Base32IdGenService base32IdGenService;
 
-  public String generateId() {
-    long seq = base32IdGenService.getNextSequence("idGenerator");
-
+  public String generateId(String seqName) {
+    long seq = base32IdGenService.getNextSequence(seqName);
     String base36 = Long.toString(seq, 36).toUpperCase();
-
     if (base36.length() < BASE36_WIDTH) {
       base36 = "0".repeat(BASE36_WIDTH - base36.length()) + base36;
     } else if (base36.length() > BASE36_WIDTH) {

@@ -1,5 +1,6 @@
 package com.tragepro.api.strategy.model.response;
 
+import com.tragepro.api.common.model.TimeframeModel;
 import com.tragepro.api.strategy.model.*;
 import java.util.Set;
 import lombok.AllArgsConstructor;

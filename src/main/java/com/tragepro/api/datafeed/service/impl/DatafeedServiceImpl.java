@@ -6,7 +6,8 @@ import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.model.DatafeedModel;
 import com.tragepro.api.common.model.SymbolDataModel;
-import com.tragepro.api.datafeed.client.adopter.DataFeedAdopter;
+import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.datafeed.client.adapter.DataFeedAdapter;
 import com.tragepro.api.datafeed.model.request.FeedClientRequest;
 import com.tragepro.api.datafeed.model.request.LoadCandleRequest;
 import com.tragepro.api.datafeed.model.response.LoadCandleResponse;
@@ -15,12 +16,16 @@ import com.tragepro.api.datafeed.service.CandleService;
 import com.tragepro.api.datafeed.service.DatafeedService;
 import com.tragepro.api.datafeed.service.SecurityService;
 import com.tragepro.api.datafeed.service.WatchListService;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -31,9 +36,12 @@ public class DatafeedServiceImpl implements DatafeedService {
   private final WatchListService watchListService;
   private final SecurityService securityService;
   private final CandleService candleService;
-  private final DataFeedAdopter dataFeedAdopter;
+  private final DataFeedAdapter dataFeedAdapter;
   private final DatafeedContext datafeedContext;
   private final Executor datafeedThreadPoolExecutor;
+
+  @Value("${data.fetch.max-concurrency:10}")
+  private int maxConcurrency = 10;
 
   @Override
   public LoadCandleResponse loadData(LoadCandleRequest request) {
@@ -90,7 +98,7 @@ public class DatafeedServiceImpl implements DatafeedService {
             // Update state in context to PROCESSING
             updateContextState(stock, DatafeedState.PROCESSING, null);
 
-            // Fetch historical data from adaptor
+            // Fetch historical data from adapter
             var clientReq =
                 FeedClientRequest.builder()
                     .securityId(security.securityId())
@@ -99,35 +107,24 @@ public class DatafeedServiceImpl implements DatafeedService {
                     .toDate(LocalDate.now().toString())
                     .build();
 
-            var candles = dataFeedAdopter.historicalDataAdaptor(clientReq);
+            var candles = dataFeedAdapter.intradayDataAdapter(clientReq);
             log.info(
-                "Retrieved {} candles from adaptor for symbol: {}", candles.size(), stock.symbol());
+                "Retrieved {} candles from adapter for symbol: {}", candles.size(), stock.symbol());
 
             var enrichedSymbol =
                 SymbolDataModel.builder().symbol(stock.symbol()).name(stock.name()).build();
 
-            // Process and save candles using modern Java streams
-            candles.stream()
-                .map(
-                    candle ->
-                        com.tragepro.api.common.model.request.CandleRequest.builder()
-                            .symbolData(enrichedSymbol)
-                            .candleData(candle.candleData())
-                            .build())
-                .filter(
-                    enriched ->
-                        !candleService.isCandleExists(
-                            enrichedSymbol.name(), enriched.candleData().timestamp()))
-                .forEach(candleService::create);
+            // Process and save candles in parallel using virtual threads
+            processCandlesParallel(candles, enrichedSymbol, stock);
             var latestDate =
-                candles.stream().mapToLong(c -> c.candleData().timestamp()).max().stream()
+                candles.stream().mapToLong(candle -> candle.candleData().timestamp()).max().stream()
                     .mapToObj(
-                        ts ->
-                            ts > 1_000_000_000_000L
-                                ? java.time.Instant.ofEpochMilli(ts)
-                                    .atZone(java.time.ZoneId.systemDefault())
+                        timestamp ->
+                            timestamp > 1_000_000_000_000L
+                                ? Instant.ofEpochMilli(timestamp)
+                                    .atZone(ZoneId.systemDefault())
                                     .toLocalDate()
-                                : LocalDate.ofEpochDay(ts))
+                                : LocalDate.ofEpochDay(timestamp))
                     .findFirst()
                     .orElse(LocalDate.now());
 
@@ -154,6 +151,7 @@ public class DatafeedServiceImpl implements DatafeedService {
               if (timestamp != null) {
                 contextModel.setTimestamp(timestamp);
               }
+              log.info("updating the data-feed context for symbol: {}", contextModel.getSymbol());
               datafeedContext.updateStatus(key, state);
             },
             () ->
@@ -164,5 +162,28 @@ public class DatafeedServiceImpl implements DatafeedService {
                         .timestamp(timestamp)
                         .state(state)
                         .build()));
+  }
+
+  private void processCandlesParallel(
+      List<CandleRequest> candles, SymbolDataModel enrichedSymbol, SymbolDataModel stock) {
+    try (var executor =
+        java.util.concurrent.Executors.newFixedThreadPool(
+            maxConcurrency, Thread.ofVirtual().factory())) {
+      candles.forEach(
+          candle ->
+              executor.submit(
+                  () -> {
+                    long timestamp = candle.candleData().timestamp();
+                    if (!candleService.isCandleExists(enrichedSymbol.name(), timestamp)) {
+                      var enriched =
+                          com.tragepro.api.common.model.request.CandleRequest.builder()
+                              .symbolData(enrichedSymbol)
+                              .candleData(candle.candleData())
+                              .build();
+                      log.info("Loading symbol:: {} timestamp:: {}", stock.symbol(), timestamp);
+                      candleService.create(enriched);
+                    }
+                  }));
+    }
   }
 }

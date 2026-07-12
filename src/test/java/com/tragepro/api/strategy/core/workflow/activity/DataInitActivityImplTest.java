@@ -4,16 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import com.tragepro.api.common.constant.IndicatorType;
 import com.tragepro.api.common.constant.TimeUnit;
+import com.tragepro.api.common.constant.Timeframe;
 import com.tragepro.api.common.context.WatchlistContext;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
 import com.tragepro.api.common.model.SymbolDataModel;
-import com.tragepro.api.common.util.CloneUtil;
-import com.tragepro.api.strategy.constant.IndicatorType;
 import com.tragepro.api.strategy.constant.StrategyState;
 import com.tragepro.api.strategy.constant.StrategyStep;
-import com.tragepro.api.strategy.constant.Timeframe;
 import com.tragepro.api.strategy.context.StrategyContext;
 import com.tragepro.api.strategy.core.workflow.activity.impl.DataInitActivityImpl;
 import com.tragepro.api.strategy.model.StatusModel;
@@ -45,7 +44,6 @@ class DataInitActivityImplTest {
   @Mock private StrategyContext strategyContext;
   @Mock private StrategyService strategyService;
   @Mock private MapperFactory<StrategyMapper> mapperFactory;
-  @Mock private CloneUtil cloneUtil;
   @Mock private StrategyMapper strategyMapper;
 
   @InjectMocks private DataInitActivityImpl dataInitActivity;
@@ -128,8 +126,6 @@ class DataInitActivityImplTest {
   void testLoadSymbol() {
     SymbolDataModel symbolData = new SymbolDataModel("AAPL", "Apple");
     when(watchlistContext.getWatchlist("WL")).thenReturn(Set.of(symbolData));
-    when(cloneUtil.clone(eq(strategyRequest), eq(StrategyRequest.class)))
-        .thenReturn(strategyRequest);
 
     Set<StrategyRequest> result = dataInitActivity.loadSymbol(strategyRequest);
     assertNotNull(result);

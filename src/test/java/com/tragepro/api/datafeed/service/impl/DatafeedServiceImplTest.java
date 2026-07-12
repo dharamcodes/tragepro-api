@@ -9,7 +9,7 @@ import com.tragepro.api.common.model.CandleDataModel;
 import com.tragepro.api.common.model.DatafeedModel;
 import com.tragepro.api.common.model.SymbolDataModel;
 import com.tragepro.api.common.model.request.CandleRequest;
-import com.tragepro.api.datafeed.client.adopter.DataFeedAdopter;
+import com.tragepro.api.datafeed.client.adapter.DataFeedAdapter;
 import com.tragepro.api.datafeed.model.request.LoadCandleRequest;
 import com.tragepro.api.datafeed.model.response.LoadCandleResponse;
 import com.tragepro.api.datafeed.model.response.SecurityResponse;
@@ -32,7 +32,7 @@ class DatafeedServiceImplTest {
   @Mock private WatchListService watchListService;
   @Mock private SecurityService securityService;
   @Mock private CandleService candleService;
-  @Mock private DataFeedAdopter dataFeedAdopter;
+  @Mock private DataFeedAdapter dataFeedAdapter;
   @Mock private DatafeedContext datafeedContext;
 
   private Executor executor = Runnable::run; // Sync executor for tests
@@ -46,7 +46,7 @@ class DatafeedServiceImplTest {
             watchListService,
             securityService,
             candleService,
-            dataFeedAdopter,
+            dataFeedAdapter,
             datafeedContext,
             executor);
   }
@@ -68,7 +68,7 @@ class DatafeedServiceImplTest {
 
     when(watchListService.getAll()).thenReturn(Set.of(watchlist));
     when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(security);
-    when(dataFeedAdopter.historicalDataAdaptor(any())).thenReturn(List.of(mockCandle));
+    when(dataFeedAdapter.intradayDataAdapter(any())).thenReturn(List.of(mockCandle));
     when(candleService.isCandleExists(anyString(), anyLong())).thenReturn(false);
 
     LoadCandleResponse response = datafeedService.loadData(request);
@@ -116,11 +116,11 @@ class DatafeedServiceImplTest {
     LoadCandleResponse response = datafeedService.loadData(request);
 
     assertNotNull(response);
-    verify(dataFeedAdopter, never()).historicalDataAdaptor(any());
+    verify(dataFeedAdapter, never()).intradayDataAdapter(any());
   }
 
   @Test
-  void testLoadData_AdaptorThrowsException_RevertsState() {
+  void testLoadData_AdapterThrowsException_RevertsState() {
     LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
     SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
     WatchListResponse watchlist =
@@ -132,7 +132,7 @@ class DatafeedServiceImplTest {
     when(watchListService.getAll()).thenReturn(Set.of(watchlist));
     when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(security);
     when(datafeedContext.get(stock)).thenReturn(DatafeedModel.builder().build());
-    when(dataFeedAdopter.historicalDataAdaptor(any()))
+    when(dataFeedAdapter.intradayDataAdapter(any()))
         .thenThrow(new RuntimeException("Network Error"));
 
     LoadCandleResponse response = datafeedService.loadData(request);

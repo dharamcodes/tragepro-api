@@ -4,6 +4,7 @@ import com.tragepro.api.datafeed.model.request.WatchListRequest;
 import com.tragepro.api.datafeed.model.response.PagedResponse;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;
 import com.tragepro.api.datafeed.service.WatchListService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "3. WatchListController")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/watchlists")
