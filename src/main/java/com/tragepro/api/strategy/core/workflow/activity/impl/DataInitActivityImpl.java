@@ -5,7 +5,8 @@ import com.tragepro.api.common.context.WatchlistContext;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.common.mapper.MapperType;
 import com.tragepro.api.common.model.SymbolDataModel;
-import com.tragepro.api.common.util.CloneUtil;
+import com.tragepro.api.common.model.TimeframeModel;
+import com.tragepro.api.common.util.ObjectCloneUtil;
 import com.tragepro.api.strategy.context.StrategyContext;
 import com.tragepro.api.strategy.core.workflow.activity.BaseActivity;
 import com.tragepro.api.strategy.core.workflow.activity.DataInitActivity;
@@ -31,7 +32,6 @@ public class DataInitActivityImpl implements DataInitActivity {
   private final StrategyContext strategyContext;
   private final StrategyService strategyService;
   private final MapperFactory<StrategyMapper> mapperFactory;
-  private final CloneUtil cloneUtil;
 
   @Override
   public Set<StrategyResponse> run(Set<StrategyRequest> strategyRequests) {
@@ -60,7 +60,7 @@ public class DataInitActivityImpl implements DataInitActivity {
         .forEach(
             watchList -> {
               StrategyRequest strategyResponseClone =
-                  cloneUtil.clone(strategyRequest, StrategyRequest.class);
+                  ObjectCloneUtil.clone(strategyRequest, StrategyRequest.class);
               strategyResponseClone.setSymbolData(getSymbol(watchList));
               response.add(strategyResponseClone);
             });

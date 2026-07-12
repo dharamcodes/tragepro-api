@@ -12,7 +12,7 @@ class CandleRequestTest {
   @Test
   void testCandleRequestMethods() {
     SymbolDataModel symbol = new SymbolDataModel("AAPL", "Apple");
-    CandleDataModel candle = new CandleDataModel(1609459200000L, 100.0, 105.0, 95.0, 101.0, 10.0);
+    CandleDataModel candle = new CandleDataModel(1609459200000L, 100.0, 105.0, 95.0, 101.0, 10L);
 
     CandleRequest req = new CandleRequest(symbol, candle);
     assertNull(req.dataTimeType());

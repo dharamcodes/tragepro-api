@@ -4,6 +4,7 @@ import com.tragepro.api.journal.model.request.JournalRequest;
 import com.tragepro.api.journal.model.request.TradeFilter;
 import com.tragepro.api.journal.model.response.JournalResponse;
 import com.tragepro.api.journal.service.JournalService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "5. JournalController")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/journal")

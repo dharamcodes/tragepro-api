@@ -1,7 +1,7 @@
 package com.tragepro.api.strategy.core.workflow.activity;
 
+import com.tragepro.api.common.model.TimeframeModel;
 import com.tragepro.api.strategy.model.CandleModel;
-import com.tragepro.api.strategy.model.TimeframeModel;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
 import com.tragepro.api.strategy.model.response.StrategyResponse;
 import io.temporal.activity.ActivityInterface;

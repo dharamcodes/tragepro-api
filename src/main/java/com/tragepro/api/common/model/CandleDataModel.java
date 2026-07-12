@@ -4,4 +4,4 @@ import lombok.Builder;
 
 @Builder
 public record CandleDataModel(
-    long timestamp, double open, double high, double low, double close, double volume) {}
+    long timestamp, double open, double high, double low, double close, long volume) {}

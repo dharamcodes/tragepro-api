@@ -38,7 +38,10 @@ public class Base32IdGenListener extends AbstractMongoEventListener<Object> {
     try {
       field.setAccessible(true);
       if (field.get(entity) == null) {
-        field.set(entity, mongoBase32IdGen.generateId());
+        Identifier identifier = field.getAnnotation(Identifier.class);
+        String seqName =
+            "default".equals(identifier.value()) ? field.getName() : identifier.value();
+        field.set(entity, mongoBase32IdGen.generateId(seqName));
       }
     } catch (IllegalAccessException e) {
       throw new AppException(ErrorType.INTERNAL_ERROR);

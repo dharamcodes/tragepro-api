@@ -25,25 +25,13 @@ resilience4j:
 
 temporal:
   server:
-    target: localhost:7233   # Temporal frontend service address
-    namespace: tragepro-api
-
-  # Worker configuration
+    target: ${TEMPORAL_TARGET:localhost:7233}
+    namespace: ${TEMPORAL_NAMESPACE:tragepro-api}
+    enable-tls: ${TEMPORAL_ENABLE_TLS:false}
   worker:
-    task-queue: tragepro-api-task-queue
-    max-concurrent-workflow-task-pollers: 5
-    max-concurrent-activity-task-pollers: 10
-    sticky-cache-size: 100
-
-  # Workflow client options
+    task-queue: ${TEMPORAL_TASK_QUEUE:tragepro-api-task-queue}
   client:
     identity: ${spring.application.name}-${random.uuid}
-    retry-options:
-      maximum-attempts: 3
-      initial-interval: 1s
-      maximum-interval: 10s
-      backoff-coefficient: 2.0
-
 
 
 springdoc:
@@ -51,7 +39,8 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-    operationsSorter: method
+    operationsSorter: custom
+    tagsSorter: alpha
 data:
   watchlist:
     identifiers: 6a2ebec538bb66a3fe795919
@@ -64,6 +53,7 @@ data:
       evening: "0 0 16 * * ?"
   fetch:
     daysBack: 90
+    max-concurrency: 50
 
 
 jwt:

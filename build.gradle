@@ -20,14 +20,6 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-    configureEach {
-        resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == 'org.webjars' && details.requested.name == 'swagger-ui') {
-                details.useVersion swaggerUiVersion as String
-                details.because 'Pin to latest patched swagger-ui to resolve CVE in bundled version'
-            }
-        }
-    }
 }
 
 ext {
@@ -39,7 +31,7 @@ ext {
     swaggerUiVersion = "5.32.6"
     copperVersion = "8.0.0"
     lombokMapstruct = "0.2.0"
-    temporalVersion = "1.36.0"
+    temporalVersion = "1.36.1"
 }
 
 dependencies {
