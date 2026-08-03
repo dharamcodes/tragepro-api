@@ -1,0 +1,18 @@
+[
+  {
+    "strategy": {
+      "name": "JSON_STRATEGY",
+      "desc": "Strategy from JSON",
+      "watchlist": "WL_JSON_INIT"
+    },
+    "symbolData": {
+      "symbol": "JSON_STOCK",
+      "name": "Json Stock Corp",
+      "exchange": "NSE"
+    },
+    "currentState": {
+      "state": "EVALUATING",
+      "step": "EVALUATE"
+    }
+  }
+]

@@ -1,0 +1,39 @@
+meta {
+  name: 01-POST-strategy-200-Success
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/strategy
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "strategy": {
+      "name": "INTRADAY_VP_VWAP",
+      "desc": "Intraday strategy for nifty 50",
+      "watchlist": "NIFTY_50"
+    },
+    "symbolData": {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "exchange": "NSE"
+    },
+    "currentState": {
+      "state": "INITIALIZING",
+      "step": "INIT"
+    }
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.be.oneOf([200, 201]);
+  expect(res.body.strategy.name).to.equal("INTRADAY_VP_VWAP");
+  expect(res.body.symbolData.symbol).to.equal("AAPL");
+  expect(res.body.currentState.state).to.equal("INITIALIZING");
+  expect(res.body.id).to.not.be.empty;
+  bru.setVar("testStrategyId", res.body.id);
+}

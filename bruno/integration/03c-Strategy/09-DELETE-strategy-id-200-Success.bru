@@ -1,0 +1,15 @@
+meta {
+  name: 09-DELETE-strategy-id-200-Success
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/strategy/{{testStrategyId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.be.oneOf([200, 204]);
+}

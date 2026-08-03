@@ -1,13 +1,71 @@
 workflow:
   strategy:
     - name: INTRADAY_VP_VWAP
-      timeframe:
+      desc: Intraday strategy for nifty 50
+      timeframes:
+        - value: 1
+          uom: MINUTE
+          type: LOWER
         - value: 5
-          uom: MIN
+          uom: MINUTE
           type: LOWER
         - value: 15
-          uom: MIN
+          uom: MINUTE
           type: HIGHER
+      watchList: NIFTY_50
+      indicators:
+        - name: VOLUME_PROFILE
+          timeFrame: LOWER
+        - name: VWAP_LEVELS
+          timeFrame: LOWER
+        - name: LIQUIDITY_LEVELS
+          timeFrame: HIGHER
+        - name: BID_ASK_LEVELS
+          timeFrame: HIGHER
+      strategySteps:
+        strategyBuilder:
+          - name: BUILD_TIMEFRAME_DATA
+            time: 50
+            uom: DAY
+          - name: BUILD_VOLUME_PROFILE
+            time: 50
+            uom: DAY
+          - name: BUILD_BID_ASK_LEVELS
+            time: 50
+            uom: DAY
+          - name: BUILD_VWAP_LEVELS
+            time: 50
+            uom: DAY
+          - name: BUILD_LIQUIDITY_LEVELS
+            time: 50
+            uom: DAY
+        strategyEvaluator:
+          - name: EVALUATE_VOLUME_PROFILE
+            probability: 0.2
+          - name: EVALUATE_VOLUME_VWAP
+            probability: 0.1
+          - name: EVALUATE_LIQUIDITY_LEVELS
+            probability: 0.4
+        strategyExecutor:
+          - name: EXECUTE_BUY
+    - name: SWING_VP_VWAP
+      desc: Swing strategy for nifty 50
+      timeframes:
+        - value: 1
+          uom: MINUTE
+          type: LOWER
+        - value: 1
+          uom: HOUR
+          type: LOWER
+        - value: 1
+          uom: DAY
+          type: HIGHER
+      watchList: NIFTY_50
+      indicators:
+        - name: VOLUME_PROFILE
+          timeFrame: LOWER
+        - name: VWAP_LEVELS
+          timeFrame: LOWER
       strategySteps:
         strategyBuilder:
           - name: BUILD_TIMEFRAME_DATA

@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.diffplug.spotless' version "8.8.0"
+    id 'com.diffplug.spotless' version "8.9.0"
     id 'jacoco'
 }
 
@@ -31,7 +31,7 @@ ext {
     swaggerUiVersion = "5.32.6"
     copperVersion = "8.0.0"
     lombokMapstruct = "0.2.0"
-    temporalVersion = "1.36.1"
+    temporalVersion = "1.37.0"
 }
 
 dependencies {
@@ -81,6 +81,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 
+    testImplementation 'org.wiremock:wiremock-standalone:3.12.1'
+    testImplementation "io.temporal:temporal-testing:$temporalVersion"
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-mongodb'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -126,7 +128,6 @@ spotless {
 
 tasks.named('test') {
     useJUnitPlatform()
-    jvmArgs '--sun-misc-unsafe-memory-access=allow'
     finalizedBy jacocoTestReport
 }
 
@@ -139,10 +140,14 @@ tasks.withType(JavaCompile).configureEach {
 }
 
     def jacocoExcludes = [
-        'com/tragepro/api/**/model/**',
-        'com/tragepro/api/**/config/**',
-        'com/tragepro/api/common/**'
-]
+        '**/model/**',
+        '**/config/**',
+        '**/dto/**',
+        '**/entity/**',
+        '**/constant/**',
+        '**/mapper/**',
+        '**/common/**'
+    ]
 
 jacocoTestReport {
     dependsOn test, compileJava, processResources
