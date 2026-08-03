@@ -63,7 +63,7 @@ jobs:
       # Upload JaCoCo HTML report as a build artifact for review
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jacoco-report
           path: build/jacoco/test/html/
