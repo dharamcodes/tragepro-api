@@ -128,7 +128,6 @@ spotless {
 
 tasks.named('test') {
     useJUnitPlatform()
-    jvmArgs '--sun-misc-unsafe-memory-access=allow'
     finalizedBy jacocoTestReport
 }
 

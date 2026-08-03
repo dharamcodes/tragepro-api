@@ -5,18 +5,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.tragepro.api.common.ApiTestSetup;
 import com.tragepro.api.identity.dto.AccountDetailRequest;
+import com.tragepro.api.identity.internal.repository.AccountDetailRepository;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 class AccountDetailControllerTest extends ApiTestSetup {
+
+  @Autowired private AccountDetailRepository accountDetailRepository;
 
   private AccountDetailRequest accountDetailRequest;
 
   @BeforeEach
   void setUp() {
+    // Wipe the account collection before every test so reused-container data
+    // from a previous test or run cannot cause IncorrectResultSizeDataAccessException
+    accountDetailRepository.deleteAll();
+
     accountDetailRequest =
         AccountDetailRequest.builder()
             .name("Test Account")
@@ -26,6 +34,21 @@ class AccountDetailControllerTest extends ApiTestSetup {
             .isActive(true)
             .build();
   }
+
+  // ─── helpers ────────────────────────────────────────────────────────────────
+
+  /** POST /api/v1/account and assert 200. Used as a setup step in multi-step tests. */
+  private void createAccount() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/account")
+                .header("Authorization", authToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(accountDetailRequest)))
+        .andExpect(status().isOk());
+  }
+
+  // ─── create ─────────────────────────────────────────────────────────────────
 
   @Test
   void testCreateAccount_Success() throws Exception {
@@ -43,8 +66,13 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
   @Test
   void testCreateAccount_Exception() throws Exception {
+    // No auth header → 4xx
     mockMvc.perform(post("/api/v1/account")).andExpect(status().is4xxClientError());
 
+    // First creation succeeds (need account present for conflict check)
+    createAccount();
+
+    // Duplicate email → 409 Conflict
     mockMvc
         .perform(
             post("/api/v1/account")
@@ -53,6 +81,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
                 .content(objectMapper.writeValueAsString(accountDetailRequest)))
         .andExpect(status().isConflict());
 
+    // Missing body → 400
     mockMvc
         .perform(
             post("/api/v1/account")
@@ -60,6 +89,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
 
+    // Empty / invalid body → 400
     mockMvc
         .perform(
             post("/api/v1/account")
@@ -68,6 +98,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
                 .content(objectMapper.writeValueAsString(AccountDetailRequest.builder().build())))
         .andExpect(status().isBadRequest());
 
+    // Token without a matching user → 4xx
     var token = jwtTokenHelper.generateToken(UUID.randomUUID().toString(), Map.of());
     mockMvc
         .perform(
@@ -78,8 +109,11 @@ class AccountDetailControllerTest extends ApiTestSetup {
         .andExpect(status().is4xxClientError());
   }
 
+  // ─── get ────────────────────────────────────────────────────────────────────
+
   @Test
   void testGetAccount_Success() throws Exception {
+    createAccount();
 
     mockMvc
         .perform(
@@ -106,8 +140,12 @@ class AccountDetailControllerTest extends ApiTestSetup {
         .andExpect(jsonPath("$.errorCode").value("E0004"));
   }
 
+  // ─── update ─────────────────────────────────────────────────────────────────
+
   @Test
   void testUpdateAccount_Success() throws Exception {
+    createAccount();
+
     accountDetailRequest =
         AccountDetailRequest.builder()
             .name(accountDetailRequest.name())
@@ -116,6 +154,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
             .phoneNumber(accountDetailRequest.phoneNumber())
             .isActive(accountDetailRequest.isActive())
             .build();
+
     mockMvc
         .perform(
             put("/api/v1/account/{identifier}", "testAccount")
@@ -139,8 +178,12 @@ class AccountDetailControllerTest extends ApiTestSetup {
         .andExpect(status().isNotFound());
   }
 
+  // ─── deactivate ─────────────────────────────────────────────────────────────
+
   @Test
   void testDeactivateAccount_Success() throws Exception {
+    createAccount();
+
     mockMvc
         .perform(
             delete("/api/v1/account/{identifier}", "testAccount")
