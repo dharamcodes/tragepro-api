@@ -1,0 +1,16 @@
+meta {
+  name: 03-GET-strategy-200-Success
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/strategy
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body).to.be.an("array");
+}

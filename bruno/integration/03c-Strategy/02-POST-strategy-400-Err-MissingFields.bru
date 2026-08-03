@@ -1,0 +1,19 @@
+meta {
+  name: 02-POST-strategy-400-Err-MissingFields
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/strategy
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {}
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(400);
+}

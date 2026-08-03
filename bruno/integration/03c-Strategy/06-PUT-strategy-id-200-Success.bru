@@ -1,0 +1,35 @@
+meta {
+  name: 06-PUT-strategy-id-200-Success
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/api/v1/strategy/{{testStrategyId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "strategy": {
+      "name": "INTRADAY_VP_VWAP",
+      "desc": "Updated intraday strategy description",
+      "watchlist": "NIFTY_50"
+    },
+    "symbolData": {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "exchange": "NSE"
+    },
+    "currentState": {
+      "state": "BUILDING",
+      "step": "BUILD"
+    }
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.currentState.state).to.equal("BUILDING");
+}
