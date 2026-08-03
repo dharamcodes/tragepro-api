@@ -81,7 +81,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 
-    testImplementation 'org.wiremock:wiremock-standalone:3.12.1'
+    testImplementation 'org.wiremock:wiremock-standalone:3.13.2'
     testImplementation "io.temporal:temporal-testing:$temporalVersion"
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-mongodb'
