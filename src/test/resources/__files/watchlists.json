@@ -1,0 +1,12 @@
+[
+  {
+    "name": "WL_JSON_INIT",
+    "description": "JSON Init Watchlist",
+    "stocks": [
+      {
+        "symbol": "JSON_STOCK",
+        "name": "Json Stock Corp"
+      }
+    ]
+  }
+]

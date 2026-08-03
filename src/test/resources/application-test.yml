@@ -2,6 +2,10 @@ server:
   port: 8081
 
 spring:
+  config:
+    import:
+      - "optional:classpath:data-feed-config.yml"
+      - "optional:classpath:strategy-config.yml"
   mongodb:
     representation:
       uuid: standard

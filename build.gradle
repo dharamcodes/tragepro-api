@@ -81,6 +81,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 
+    testImplementation 'org.wiremock:wiremock-standalone:3.12.1'
+    testImplementation "io.temporal:temporal-testing:$temporalVersion"
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-mongodb'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -139,10 +141,14 @@ tasks.withType(JavaCompile).configureEach {
 }
 
     def jacocoExcludes = [
-        'com/tragepro/api/**/model/**',
-        'com/tragepro/api/**/config/**',
-        'com/tragepro/api/common/**'
-]
+        '**/model/**',
+        '**/config/**',
+        '**/dto/**',
+        '**/entity/**',
+        '**/constant/**',
+        '**/mapper/**',
+        '**/common/**'
+    ]
 
 jacocoTestReport {
     dependsOn test, compileJava, processResources

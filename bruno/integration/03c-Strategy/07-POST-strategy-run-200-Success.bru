@@ -1,0 +1,25 @@
+meta {
+  name: 07-POST-strategy-run-200-Success
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/v1/strategy/run
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "strategyId": "{{testStrategyId}}",
+    "symbol": "AAPL"
+  }
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.status).to.equal("SUCCESS");
+  expect(res.body.message).to.not.be.empty;
+  expect(res.body.results).to.be.an("array");
+}
