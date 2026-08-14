@@ -1,6 +1,6 @@
 package com.tragepro.api.strategy.model;
 
-import com.tragepro.api.common.constant.Exchange;
+import com.tragepro.api.datafeed.constant.Exchange;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -4,17 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import com.tragepro.api.common.constant.IndicatorType;
-import com.tragepro.api.common.constant.TimeUnit;
-import com.tragepro.api.common.constant.Timeframe;
-import com.tragepro.api.common.context.WatchlistContext;
 import com.tragepro.api.common.mapper.MapperFactory;
-import com.tragepro.api.common.mapper.MapperType;
-import com.tragepro.api.common.model.SymbolDataModel;
+import com.tragepro.api.datafeed.constant.TimeUnit;
+import com.tragepro.api.datafeed.constant.Timeframe;
+import com.tragepro.api.datafeed.context.WatchlistContext;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
+import com.tragepro.api.strategy.ConfigLoaderService;
+import com.tragepro.api.strategy.StrategyService;
+import com.tragepro.api.strategy.constant.IndicatorType;
 import com.tragepro.api.strategy.constant.StrategyState;
 import com.tragepro.api.strategy.constant.StrategyStep;
 import com.tragepro.api.strategy.context.StrategyContext;
-import com.tragepro.api.strategy.core.workflow.activity.impl.DataInitActivityImpl;
+import com.tragepro.api.strategy.internal.mapper.StrategyMapper;
 import com.tragepro.api.strategy.model.StatusModel;
 import com.tragepro.api.strategy.model.StrategyModel;
 import com.tragepro.api.strategy.model.SymbolModel;
@@ -24,9 +25,7 @@ import com.tragepro.api.strategy.model.response.StrategyResponse;
 import com.tragepro.api.strategy.props.IndicatorConfig;
 import com.tragepro.api.strategy.props.StrategyConfig;
 import com.tragepro.api.strategy.props.TimeframeConfig;
-import com.tragepro.api.strategy.service.ConfigLoaderService;
-import com.tragepro.api.strategy.service.StrategyService;
-import com.tragepro.api.strategy.service.mapper.StrategyMapper;
+import com.tragepro.api.strategy.workflow.activity.impl.DataInitActivityImpl;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +42,7 @@ class DataInitActivityImplTest {
   @Mock private WatchlistContext watchlistContext;
   @Mock private StrategyContext strategyContext;
   @Mock private StrategyService strategyService;
-  @Mock private MapperFactory<StrategyMapper> mapperFactory;
+  @Mock private MapperFactory mapperFactory;
   @Mock private StrategyMapper strategyMapper;
 
   @InjectMocks private DataInitActivityImpl dataInitActivity;
@@ -74,7 +73,7 @@ class DataInitActivityImplTest {
 
   @Test
   void testRun() {
-    when(mapperFactory.getMapper(MapperType.STRATEGY_BUILDER_MAPPER)).thenReturn(strategyMapper);
+    when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
     when(strategyMapper.requestToEntity(strategyRequest)).thenReturn(strategyEntity);
     when(strategyMapper.entityToResponse(strategyEntity)).thenReturn(strategyResponse);
 
@@ -87,7 +86,7 @@ class DataInitActivityImplTest {
   @Test
   void testStoreData() {
     when(strategyService.createOrUpdate(strategyRequest)).thenReturn(strategyResponse);
-    when(mapperFactory.getMapper(MapperType.STRATEGY_BUILDER_MAPPER)).thenReturn(strategyMapper);
+    when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
     when(strategyMapper.responseToRequest(strategyResponse)).thenReturn(strategyRequest);
 
     Set<StrategyRequest> result = dataInitActivity.storeData(Set.of(strategyRequest));
@@ -130,5 +129,11 @@ class DataInitActivityImplTest {
     Set<StrategyRequest> result = dataInitActivity.loadSymbol(strategyRequest);
     assertNotNull(result);
     assertEquals(1, result.size());
+  }
+
+  @Test
+  void testGlobalAndLocalActivities() {
+    assertNotNull(dataInitActivity.globalActivities());
+    assertNotNull(dataInitActivity.localActivities());
   }
 }

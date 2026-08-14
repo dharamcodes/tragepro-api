@@ -1,9 +1,9 @@
 package com.tragepro.api.datafeed.web;
 
+import com.tragepro.api.datafeed.WatchListService;
 import com.tragepro.api.datafeed.model.request.WatchListRequest;
 import com.tragepro.api.datafeed.model.response.PagedResponse;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;
-import com.tragepro.api.datafeed.service.WatchListService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

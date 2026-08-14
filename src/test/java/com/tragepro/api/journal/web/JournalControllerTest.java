@@ -3,7 +3,7 @@ package com.tragepro.api.journal.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.ApiTestSetup;
+import com.tragepro.api.core.ApiTestSetup;
 import com.tragepro.api.journal.model.entity.JournalEntity;
 import com.tragepro.api.journal.model.enums.TradeStatus;
 import com.tragepro.api.journal.model.enums.TradeType;

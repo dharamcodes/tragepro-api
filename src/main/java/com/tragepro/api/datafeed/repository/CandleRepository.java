@@ -1,6 +1,6 @@
 package com.tragepro.api.datafeed.repository;
 
-import com.tragepro.api.common.model.entity.CandleEntity;
+import com.tragepro.api.datafeed.model.entity.CandleEntity;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.mongodb.repository.Aggregation;

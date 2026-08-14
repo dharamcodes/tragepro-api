@@ -1,8 +1,8 @@
 package com.tragepro.api.datafeed.web;
 
+import com.tragepro.api.datafeed.DatafeedService;
 import com.tragepro.api.datafeed.model.request.LoadCandleRequest;
 import com.tragepro.api.datafeed.model.response.LoadCandleResponse;
-import com.tragepro.api.datafeed.service.DatafeedService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

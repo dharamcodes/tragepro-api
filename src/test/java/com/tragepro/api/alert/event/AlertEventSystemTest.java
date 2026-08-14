@@ -3,7 +3,7 @@ package com.tragepro.api.alert.event;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
-import com.tragepro.api.common.ContainerConfig;
+import com.tragepro.api.core.ContainerConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

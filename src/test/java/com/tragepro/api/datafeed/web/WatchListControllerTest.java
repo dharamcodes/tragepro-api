@@ -3,9 +3,9 @@ package com.tragepro.api.datafeed.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.ApiTestSetup;
-import com.tragepro.api.common.constant.Exchange;
-import com.tragepro.api.common.model.SymbolDataModel;
+import com.tragepro.api.core.ApiTestSetup;
+import com.tragepro.api.datafeed.constant.Exchange;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
 import com.tragepro.api.datafeed.model.entity.WatchListEntity;
 import com.tragepro.api.datafeed.model.request.WatchListRequest;
 import com.tragepro.api.datafeed.repository.WatchListRepository;

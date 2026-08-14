@@ -1,6 +1,6 @@
 package com.tragepro.api.datafeed.model.request;
 
-import com.tragepro.api.common.model.SymbolDataModel;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
 import lombok.Builder;
 import lombok.Data;
 

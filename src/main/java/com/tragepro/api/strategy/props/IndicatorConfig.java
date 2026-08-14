@@ -1,7 +1,7 @@
 package com.tragepro.api.strategy.props;
 
-import com.tragepro.api.common.constant.IndicatorType;
-import com.tragepro.api.common.constant.Timeframe;
+import com.tragepro.api.datafeed.constant.Timeframe;
+import com.tragepro.api.strategy.constant.IndicatorType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

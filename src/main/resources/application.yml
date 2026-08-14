@@ -24,6 +24,7 @@ resilience4j:
 
 
 temporal:
+  enabled: ${TEMPORAL_ENABLED:false}
   server:
     target: ${TEMPORAL_TARGET:localhost:7233}
     namespace: ${TEMPORAL_NAMESPACE:tragepro-api}

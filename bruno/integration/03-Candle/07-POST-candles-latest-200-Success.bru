@@ -1,0 +1,22 @@
+meta {
+  name: 07-POST-candles-latest-200-Success
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/v1/candles/latest
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+    "AAPL"
+  ]
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body).to.be.an('array');
+}

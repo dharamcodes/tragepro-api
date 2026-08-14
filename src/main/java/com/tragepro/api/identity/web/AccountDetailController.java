@@ -1,8 +1,8 @@
 package com.tragepro.api.identity.web;
 
+import com.tragepro.api.identity.AccountDetailService;
 import com.tragepro.api.identity.model.request.AccountDetailRequest;
 import com.tragepro.api.identity.model.response.AccountDetailResponse;
-import com.tragepro.api.identity.service.AccountDetailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,9 @@
 package com.tragepro.api.journal.web;
 
+import com.tragepro.api.journal.JournalService;
 import com.tragepro.api.journal.model.request.JournalRequest;
 import com.tragepro.api.journal.model.request.TradeFilter;
 import com.tragepro.api.journal.model.response.JournalResponse;
-import com.tragepro.api.journal.service.JournalService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

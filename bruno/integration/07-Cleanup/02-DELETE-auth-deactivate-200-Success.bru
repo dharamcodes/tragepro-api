@@ -1,0 +1,15 @@
+meta {
+  name: 02-DELETE-auth-deactivate-200-Success
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/auth/deactivate/{{testUserName}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(202);
+}

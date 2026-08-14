@@ -4,11 +4,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.tragepro.api.common.ApiTestSetup;
-import com.tragepro.api.common.model.SymbolDataModel;
+import com.tragepro.api.core.ApiTestSetup;
+import com.tragepro.api.datafeed.WatchListService;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
 import com.tragepro.api.datafeed.model.request.LoadCandleRequest;
 import com.tragepro.api.datafeed.model.request.WatchListRequest;
-import com.tragepro.api.datafeed.service.WatchListService;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

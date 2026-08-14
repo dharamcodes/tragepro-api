@@ -126,8 +126,9 @@ spotless {
 
 tasks.named('test') {
     useJUnitPlatform()
-    jvmArgs '--sun-misc-unsafe-memory-access=allow'
-    finalizedBy jacocoTestReport
+    maxParallelForks = 1
+    maxHeapSize = '1024m'
+    jvmArgs '--sun-misc-unsafe-memory-access=allow', '-XX:+EnableDynamicAgentLoading', '-Dnet.bytebuddy.experimental=true'
 }
 
 bootRun {
@@ -141,7 +142,11 @@ tasks.withType(JavaCompile).configureEach {
     def jacocoExcludes = [
         'com/tragepro/api/**/model/**',
         'com/tragepro/api/**/config/**',
-        'com/tragepro/api/common/**'
+        'com/tragepro/api/**/*Config*',
+        'com/tragepro/api/**/constant/**',
+        'com/tragepro/api/**/*MapperImpl*',
+        'com/tragepro/api/common/**',
+        'com/tragepro/api/Application*'
 ]
 
 jacocoTestReport {

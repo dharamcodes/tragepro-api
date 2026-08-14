@@ -1,9 +1,9 @@
 package com.tragepro.api.datafeed.web;
 
-import com.tragepro.api.common.model.request.CandleRequest;
-import com.tragepro.api.common.model.response.CandleResponse;
+import com.tragepro.api.datafeed.CandleService;
+import com.tragepro.api.datafeed.model.request.CandleRequest;
+import com.tragepro.api.datafeed.model.response.CandleResponse;
 import com.tragepro.api.datafeed.model.response.PagedResponse;
-import com.tragepro.api.datafeed.service.CandleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

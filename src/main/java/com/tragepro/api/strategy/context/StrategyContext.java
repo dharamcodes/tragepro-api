@@ -1,15 +1,15 @@
 package com.tragepro.api.strategy.context;
 
 import com.tragepro.api.strategy.model.response.StrategyResponse;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class StrategyContext {
-  private final Map<String, StrategyResponse> strategyContext = new HashMap<>();
+  private final Map<String, StrategyResponse> strategyContext = new ConcurrentHashMap<>();
 
   public StrategyResponse get(String strategyName) {
     return strategyContext.get(strategyName);

@@ -1,11 +1,11 @@
 package com.tragepro.api.identity.web;
 
+import com.tragepro.api.identity.AuthenticationService;
 import com.tragepro.api.identity.model.request.AuthenticationRequest;
 import com.tragepro.api.identity.model.request.LoginRequest;
 import com.tragepro.api.identity.model.request.ResetPasswordRequest;
 import com.tragepro.api.identity.model.response.AuthenticationResponse;
 import com.tragepro.api.identity.model.response.LoginResponse;
-import com.tragepro.api.identity.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

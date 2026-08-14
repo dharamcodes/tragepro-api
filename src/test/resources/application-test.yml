@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  main:
+    register-shutdown-hook: false
   mongodb:
     representation:
       uuid: standard

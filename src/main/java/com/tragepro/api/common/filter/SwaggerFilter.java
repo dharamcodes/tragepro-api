@@ -29,7 +29,7 @@ public class SwaggerFilter extends OncePerRequestFilter {
             """;
 
   @Override
-  protected void doFilterInternal(
+  public void doFilterInternal(
       HttpServletRequest request,
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain)

@@ -1,14 +1,14 @@
 package com.tragepro.api.datafeed.initializer;
 
-import com.tragepro.api.common.constant.DatafeedState;
-import com.tragepro.api.common.context.DatafeedContext;
-import com.tragepro.api.common.context.WatchlistContext;
-import com.tragepro.api.common.model.DatafeedModel;
-import com.tragepro.api.common.model.SymbolDataModel;
-import com.tragepro.api.common.model.response.CandleResponse;
+import com.tragepro.api.datafeed.CandleService;
+import com.tragepro.api.datafeed.WatchListService;
+import com.tragepro.api.datafeed.constant.DatafeedState;
+import com.tragepro.api.datafeed.context.DatafeedContext;
+import com.tragepro.api.datafeed.context.WatchlistContext;
+import com.tragepro.api.datafeed.model.DatafeedModel;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
+import com.tragepro.api.datafeed.model.response.CandleResponse;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;
-import com.tragepro.api.datafeed.service.CandleService;
-import com.tragepro.api.datafeed.service.WatchListService;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +68,7 @@ public class DatafeedInitializer implements CommandLineRunner {
           datafeedContext.put(
               candle.symbolData(),
               DatafeedModel.builder()
-                  .symbol(candle.symbolData().name())
+                  .symbol(candle.symbolData().symbol())
                   .timestamp(localDate)
                   .state(DatafeedState.INITIALIZED)
                   .build());

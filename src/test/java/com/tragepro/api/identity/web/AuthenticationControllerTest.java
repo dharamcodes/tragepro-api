@@ -3,7 +3,7 @@ package com.tragepro.api.identity.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.ApiTestSetup;
+import com.tragepro.api.core.ApiTestSetup;
 import com.tragepro.api.identity.constant.RoleType;
 import com.tragepro.api.identity.model.request.AuthenticationRequest;
 import com.tragepro.api.identity.model.request.LoginRequest;

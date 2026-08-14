@@ -7,14 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.tragepro.api.common.constant.IndicatorType;
-import com.tragepro.api.common.constant.StrategyType;
-import com.tragepro.api.common.constant.Timeframe;
+import com.tragepro.api.datafeed.constant.Timeframe;
+import com.tragepro.api.strategy.constant.IndicatorType;
 import com.tragepro.api.strategy.constant.StrategyBuilderStep;
 import com.tragepro.api.strategy.constant.StrategyEvaluatorStep;
 import com.tragepro.api.strategy.constant.StrategyExecutorStep;
 import com.tragepro.api.strategy.constant.StrategyState;
 import com.tragepro.api.strategy.constant.StrategyStep;
+import com.tragepro.api.strategy.constant.StrategyType;
+import com.tragepro.api.strategy.definition.IntradayStrategy;
+import com.tragepro.api.strategy.definition.SwingStrategy;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
 import org.junit.jupiter.api.Test;
 

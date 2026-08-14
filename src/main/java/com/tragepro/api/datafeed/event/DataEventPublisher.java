@@ -1,6 +1,5 @@
 package com.tragepro.api.datafeed.event;
 
-import com.tragepro.api.common.event.DataEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

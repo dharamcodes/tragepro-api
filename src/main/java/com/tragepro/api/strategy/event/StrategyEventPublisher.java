@@ -1,6 +1,5 @@
 package com.tragepro.api.strategy.event;
 
-import com.tragepro.api.common.event.StrategyEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

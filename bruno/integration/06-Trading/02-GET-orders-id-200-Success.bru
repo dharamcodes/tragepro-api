@@ -1,0 +1,17 @@
+meta {
+  name: 02-GET-orders-id-200-Success
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/orders/{{testOrderId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  expect(res.getStatus()).to.equal(200);
+  expect(res.body.id).to.equal(bru.getVar("testOrderId"));
+  expect(res.body.status).to.equal("SUBMITTED");
+}

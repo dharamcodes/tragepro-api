@@ -1,151 +1,138 @@
-### tragepro
+# TragePro Backend API (`tragepro-api`)
 
-Backend for auto trader app
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4%2B%20%2F%204.x-green.svg)]()
+[![Java Version](https://img.shields.io/badge/Java-21%2B%20%2F%2025-orange.svg)]()
+[![Architecture](https://img.shields.io/badge/Architecture-Spring%20Modulith-blue.svg)]()
 
-# Architecture
+Backend API service for **TragePro** — an automated domain-driven algorithmic trading platform built with Java, Spring Boot, Spring Modulith, Temporal SDK, and MongoDB.
 
-The system follows a **modular event-driven trading architecture**.
+---
 
-![TragePro Architecture](docs/architecture.png)
+## 🏛 Architecture & Design System
 
-## Architecture Overview
+The application follows a **Domain-Driven Flat Modulith Architecture**. Monolithic complexity is governed via Spring Modulith boundary rules, explicit module contracts (`@ApplicationModule(type = OPEN)`), and Gang-of-Four design patterns.
 
-The platform consists of several core components:
+![TragePro Architecture Diagram](docs/architecture.png)
 
-### Data Layer
-- **External Data Source** → provides market data
-- **Data Aggregator** → normalizes and processes incoming data
-- **Database** → persistent storage
+---
 
-### Strategy Layer
-- **Strategy Builder** → builds strategies from configuration
-- **Strategy Evaluator** → validates strategy conditions
-- **Strategy Executor** → triggers strategy execution
+## 📦 Core Modules
 
-### Trading Layer
-- **Trade Manager** → manages trade lifecycle
-- **Trade Journaling** → records trade history
-- **Workflow Executor** → orchestrates workflows
+```
+src/main/java/com/tragepro/api/
+├── core/                   # OPEN Core Foundation (BaseActivity, ActivityRegistry, Pipeline, Security, Temporal, Persistence, Web, Exceptions, Mappers, Primitives)
+├── marketdata/             # Market Data Feeds (FeedAdapterFactory, TimeframesUtil, Concurrent Contexts, Services, REST API)
+├── strategy/               # Algorithmic Trading (Pipeline Steps, Temporal Workflows/Activities, Definitions)
+├── identity/               # User Authentication & Profile Management
+├── journal/                # Trade Log Journaling & Historical Performance Notes
+├── trading/                # Order Lifecycle Management & Portfolio Position Tracking
+└── notification/           # Multi-Channel Alert Events & Message Dispatching
+```
 
-### Support Components
-- **Cache** → fast access to frequently used data
-- **Watch List** → tracks instruments for strategies
+### Module Breakdown & Design Patterns
 
-## Workflows
+| Module | Design Patterns Applied | Responsibilities |
+| :--- | :--- | :--- |
+| **`core`** | Template Method, Chain of Responsibility, Registry | Shared kernel (`@ApplicationModule(type = OPEN)`) containing `BaseActivity`, `Pipeline`, `ActivityRegistry`, `SecurityConfig`, `JWTAuthFilter`, `TemporalConfig`, global exception handling, base models, and class-based `MapperFactory`. |
+| **`marketdata`**| Factory, Profile Strategy | Market data feed ingestion (`DataFeedAdapter`, `FeedAdapterFactory`, `DummyFeedAdapter`, `FeedClientAdapter`), `TimeframesUtil`, thread-safe `ConcurrentHashMap` contexts (`DatafeedContext`, `WatchlistContext`). |
+| **`strategy`** | Chain of Responsibility, State Machine, Strategy | Pipeline processing (`builder/`, `evaluator/`, `executor/`), Temporal workflows (`DataInitWorkflowImpl`), and strategy implementations (`IntradayStrategy`, `SwingStrategy`). |
+| **`trading`** | Façade, Command | Portfolio position tracking (`TradingService`) and order execution (`OrderManager`). |
+| **`identity`** | Proxy, Service Layer | User authentication (`AuthenticationService`) and account management (`AccountDetailService`). |
+| **`journal`** | Repository, Filter | Trade log journaling (`JournalService`) and performance filtering. |
+| **`notification`**| Observer / Event Driven, Factory, Strategy | Spring Modulith `@ApplicationModuleListener` event handling (`AlertEventPublisher`, `AlertEventListener`) and multi-channel dispatchers (`NotificationChannelFactory`). |
 
-### 1. Scanning Stocks for Strategy Setup
-This flow runs continuously or on a schedule to filter the broader market universe for stocks matching your specific strategy parameters.
+---
+
+## 🔄 The 6 Core System Flows
 
 ```mermaid
 flowchart TD
-    %% Styling Definitions
-    classDef default fill:#f9f9f9,stroke:#e0e0e0,stroke-width:1px,color:#333
-    classDef trigger fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
-    classDef process fill:#ffffff,stroke:#9e9e9e,stroke-width:1px,color:#000
-    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
-
-    StartScan([Start Scan])
-    EndScan([End Scan])
-
-    subgraph Pipeline [Scan & Evaluate]
-        direction TD
-        FetchData[Fetch Market Data for Universe]
-        ApplyFilters[Apply Technical / Fundamental Filters]
-        EvaluateStrategy[Evaluate Strategy Conditions]
-        Decision{Setup Found?}
-
-        FetchData --> ApplyFilters --> EvaluateStrategy --> Decision
+    %% Flow 1: Security & Auth
+    subgraph Flow1 ["Flow 1: Core Security & JWT Authentication (core/security)"]
+        A1[HTTP Request] --> A2[JWTAuthFilter]
+        A2 --> A3[UserDetailServiceImpl / JwtTokenHelper]
+        A3 --> A4[Security Context Established]
     end
 
-    StartScan --> FetchData
+    %% Flow 2: Market Data Ingestion
+    subgraph Flow2 ["Flow 2: Market Data Ingestion (marketdata)"]
+        B1[Client / Cron] --> B2[DataFeedController]
+        B2 --> B3[DatafeedServiceImpl package-private]
+        B3 --> B4{FeedAdapterFactory}
+        B4 -->|Prod| B5[FeedClientAdapter]
+        B4 -->|Dev/Local| B6[DummyFeedAdapter]
+        B5 & B6 --> B7[DatafeedContext ConcurrentHashMap]
+        B7 --> B8[(MongoDB)]
+    end
 
-    Decision -- " Yes " --> AddWatchlist[Add Stock to Watchlist]
-    Decision -- " No " --> NextStock[Check Next Stock]
+    %% Flow 3: Temporal Worker Auto-Registration
+    subgraph Flow3 ["Flow 3: Temporal Worker Auto-Registration (core/temporal & core/workflow)"]
+        C1[Temporal Worker Engine] --> C2[TemporalConfig]
+        C2 --> C3[WorkflowRegistry & ActivityRegistry]
+        C3 --> C4[DataInitWorkflowImpl]
+        C4 --> C5[DataInitActivityImpl BaseActivity]
+        C5 --> C6[StrategyContext]
+    end
 
-    NextStock -.->|Loop| FetchData
-    AddWatchlist --> EndScan
+    %% Flow 4: Strategy Pipeline Execution
+    subgraph Flow4 ["Flow 4: Strategy Pipeline Chain (strategy/pipeline)"]
+        D1[Strategy Request] --> D2[StrategyBuilder Chain]
+        D2 --> D3[Build OHLCV, Volume, VWAP, Levels]
+        D3 --> D4[StrategyEvaluator]
+        D4 --> D5[StrategyExecutor Buy/Sell/Notify]
+        D5 --> D6[StrategyResponse Result]
+    end
 
-    class StartScan,EndScan trigger;
-    class FetchData,ApplyFilters,EvaluateStrategy,NextStock process;
-    class Decision decision;
-    class AddWatchlist action;
+    %% Flow 5: Trading & Order Execution
+    subgraph Flow5 ["Flow 5: Portfolio Position & Order Execution (trading)"]
+        E1[Client / Strategy Signal] --> E2[OrderController]
+        E2 --> E3[TradingServiceImpl package-private]
+        E3 --> E4[OrderManagerImpl package-private]
+        E4 --> E5[JournalService Trade Log]
+        E5 --> E6[(MongoDB Orders & Journal)]
+    end
+
+    %% Flow 6: Multi-Channel Alert Notification
+    subgraph Flow6 ["Flow 6: Event Alert Notification (notification)"]
+        F1[Domain Component Event] --> F2[AlertEventPublisher]
+        F2 --> F3[Spring ApplicationEvent]
+        F3 --> F4[AlertEventListener]
+        F4 --> F5[NotificationChannelFactory]
+        F5 --> F6[Email / Telegram / Webhook Channel]
+    end
 ```
 
-### 2. Observing for Correct Price Range
-Once a stock is on the Watchlist, it is observed in real-time. When the price hits the desired entry range, execution is triggered.
+---
 
-```mermaid
-flowchart TD
-    %% Styling Definitions
-    classDef trigger fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
-    classDef process fill:#ffffff,stroke:#9e9e9e,stroke-width:1px,color:#000
-    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    classDef action fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+## 🛠 Prerequisites & Local Setup
 
-    StartObs([Start Observation])
-    WaitTick[Wait for Next Tick]
-    TriggerTrade[Trigger Trade Execution]
+### Requirements
+- **Java 21** or **Java 25**
+- **Gradle 8.x+**
+- **MongoDB** (or Docker for Testcontainers)
 
-    subgraph Pipeline [Monitor & Validate]
-        direction TD
-        MonitorNode[Monitor Watchlist Stocks]
-        FetchPrice[Fetch Real-Time Price/Candles]
-        CheckRange{Price in Target Zone?}
-        ValidateNode[Validate Trigger Conditions]
-        ConfirmNode{Conditions Met?}
+### Build & Test Commands
 
-        MonitorNode --> FetchPrice --> CheckRange
-        CheckRange -- " Yes " --> ValidateNode --> ConfirmNode
-    end
+```bash
+# Code formatting check and auto-apply
+./gradlew spotlessApply
 
-    StartObs --> MonitorNode
-    ConfirmNode -- " Yes " --> TriggerTrade
+# Compile code across all modules
+./gradlew compileJava compileTestJava
 
-    CheckRange -- " No " --> WaitTick
-    ConfirmNode -- " No " --> WaitTick
-    WaitTick -.->|Loop| MonitorNode
+# Execute all unit, integration, and Testcontainers E2E tests
+./gradlew test
 
-    class StartObs trigger;
-    class WaitTick,MonitorNode,FetchPrice,ValidateNode process;
-    class CheckRange,ConfirmNode decision;
-    class TriggerTrade action;
+# Verify JaCoCo code coverage (Requires >= 95%)
+./gradlew jacocoTestCoverageVerification
+
+# Full build verification
+./gradlew clean check
 ```
 
-### 3. Trade Execution Flow
-The sequence of events from the moment a setup is triggered to the order being placed with the broker and recorded in the journal.
+---
 
-```mermaid
-sequenceDiagram
-    autonumber
+## 🧪 Bruno API Collection
 
-    box rgba(2, 136, 209, 0.05) Internal Trading System
-    participant SE as Strategy Executor
-    participant TM as Trade Manager
-    participant J as Trade Journal
-    end
-
-    box rgba(56, 142, 60, 0.05) External Integration
-    participant B as Broker API
-    end
-
-    SE->>TM: Send Execution Signal (Buy/Sell)
-    activate TM
-
-    TM->>B: Place Order (Limit/Market)
-    activate B
-    B-->>TM: Order Placed Acknowledgment
-    deactivate B
-
-    TM->>J: Log Pending Trade Entry
-
-    Note over TM,B: Active Order Monitoring Loop
-    loop Monitor Order Status
-        TM->>B: Check Order Status
-        B-->>TM: Status (Filled / Partial / Rejected)
-    end
-
-    TM->>J: Update Journal with Execution Price
-    TM-->>SE: Notify Execution Complete
-    deactivate TM
-```
+REST API requests are available in the [`bruno/`](bruno/) directory. Use [Bruno](https://www.usebruno.com/) to import the collection and test authentication, market data feed endpoints, strategy execution, and trade journaling.

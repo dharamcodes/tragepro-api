@@ -1,8 +1,8 @@
 package com.tragepro.api.strategy.model;
 
-import com.tragepro.api.common.constant.IndicatorType;
-import com.tragepro.api.common.constant.Timeframe;
-import com.tragepro.api.common.model.CandleDataModel;
+import com.tragepro.api.datafeed.constant.Timeframe;
+import com.tragepro.api.datafeed.model.CandleDataModel;
+import com.tragepro.api.strategy.constant.IndicatorType;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

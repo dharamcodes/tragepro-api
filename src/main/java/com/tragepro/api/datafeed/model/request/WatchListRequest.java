@@ -1,7 +1,7 @@
 package com.tragepro.api.datafeed.model.request;
 
-import com.tragepro.api.common.constant.Exchange;
-import com.tragepro.api.common.model.SymbolDataModel;
+import com.tragepro.api.datafeed.constant.Exchange;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
 import java.util.Set;
 import lombok.Builder;
 

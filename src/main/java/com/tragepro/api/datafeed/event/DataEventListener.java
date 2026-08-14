@@ -1,6 +1,5 @@
 package com.tragepro.api.datafeed.event;
 
-import com.tragepro.api.common.event.DataEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;

@@ -1,13 +1,16 @@
 package com.tragepro.api.datafeed.initializer;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
 
-import com.tragepro.api.common.context.DatafeedContext;
-import com.tragepro.api.common.context.WatchlistContext;
+import com.tragepro.api.datafeed.CandleService;
+import com.tragepro.api.datafeed.WatchListService;
+import com.tragepro.api.datafeed.context.DatafeedContext;
+import com.tragepro.api.datafeed.context.WatchlistContext;
+import com.tragepro.api.datafeed.model.CandleDataModel;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
+import com.tragepro.api.datafeed.model.response.CandleResponse;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;
-import com.tragepro.api.datafeed.service.CandleService;
-import com.tragepro.api.datafeed.service.WatchListService;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,13 +29,31 @@ class DatafeedInitializerTest {
   @InjectMocks private DatafeedInitializer initializer;
 
   @Test
-  void testRun() {
-    WatchListResponse watchlist = WatchListResponse.builder().name("WL1").stocks(Set.of()).build();
-    when(watchListService.getAll()).thenReturn(Set.of(watchlist));
-    when(candleService.getLatestCandlesBySymbols(any())).thenReturn(Set.of());
+  void testRun_WithCandles() {
+    SymbolDataModel symbol = SymbolDataModel.builder().symbol("AAPL").name("Apple").build();
+    WatchListResponse watchlist =
+        WatchListResponse.builder().name("WL1").stocks(Set.of(symbol)).build();
+
+    CandleResponse candleMillis =
+        CandleResponse.builder()
+            .symbolData(symbol)
+            .candleData(CandleDataModel.builder().timestamp(1_700_000_000_000L).build())
+            .build();
+
+    CandleResponse candleEpochDays =
+        CandleResponse.builder()
+            .symbolData(symbol)
+            .candleData(CandleDataModel.builder().timestamp(19000L).build())
+            .build();
+
+    org.mockito.Mockito.when(watchListService.getAll()).thenReturn(Set.of(watchlist));
+    org.mockito.Mockito.when(candleService.getLatestCandlesBySymbols(Set.of("AAPL")))
+        .thenReturn(Set.of(candleMillis, candleEpochDays));
 
     assertDoesNotThrow(() -> initializer.run());
 
-    verify(watchlistContext).addWatchlist("WL1", Set.of());
+    org.mockito.Mockito.verify(watchlistContext).addWatchlist("WL1", Set.of(symbol));
+    org.mockito.Mockito.verify(datafeedContext, org.mockito.Mockito.times(2))
+        .put(org.mockito.Mockito.eq(symbol), any());
   }
 }

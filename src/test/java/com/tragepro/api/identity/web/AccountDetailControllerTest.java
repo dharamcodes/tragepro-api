@@ -3,20 +3,25 @@ package com.tragepro.api.identity.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.ApiTestSetup;
+import com.tragepro.api.core.ApiTestSetup;
 import com.tragepro.api.identity.model.request.AccountDetailRequest;
+import com.tragepro.api.identity.repository.AccountDetailRepository;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 class AccountDetailControllerTest extends ApiTestSetup {
+
+  @Autowired private AccountDetailRepository accountDetailRepository;
 
   private AccountDetailRequest accountDetailRequest;
 
   @BeforeEach
   void setUp() {
+    accountDetailRepository.deleteAll();
     accountDetailRequest =
         AccountDetailRequest.builder()
             .name("Test Account")
@@ -25,6 +30,16 @@ class AccountDetailControllerTest extends ApiTestSetup {
             .phoneNumber(9555318046L)
             .isActive(true)
             .build();
+  }
+
+  private void createAccount() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/account")
+                .header("Authorization", authToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(accountDetailRequest)))
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -43,6 +58,8 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
   @Test
   void testCreateAccount_Exception() throws Exception {
+    createAccount();
+
     mockMvc.perform(post("/api/v1/account")).andExpect(status().is4xxClientError());
 
     mockMvc
@@ -80,7 +97,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
   @Test
   void testGetAccount_Success() throws Exception {
-
+    createAccount();
     mockMvc
         .perform(
             get("/api/v1/account/{identifier}", accountDetailRequest.identifier())
@@ -108,6 +125,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
   @Test
   void testUpdateAccount_Success() throws Exception {
+    createAccount();
     accountDetailRequest =
         AccountDetailRequest.builder()
             .name(accountDetailRequest.name())
@@ -141,6 +159,7 @@ class AccountDetailControllerTest extends ApiTestSetup {
 
   @Test
   void testDeactivateAccount_Success() throws Exception {
+    createAccount();
     mockMvc
         .perform(
             delete("/api/v1/account/{identifier}", "testAccount")

@@ -2,10 +2,10 @@ package com.tragepro.api.strategy.core;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.tragepro.api.strategy.core.builder.*;
-import com.tragepro.api.strategy.core.evaluator.*;
-import com.tragepro.api.strategy.core.executor.*;
 import com.tragepro.api.strategy.model.request.StrategyRequest;
+import com.tragepro.api.strategy.pipeline.builder.*;
+import com.tragepro.api.strategy.pipeline.evaluator.*;
+import com.tragepro.api.strategy.pipeline.executor.*;
 import org.junit.jupiter.api.Test;
 
 class StrategyCoreComponentsTest {

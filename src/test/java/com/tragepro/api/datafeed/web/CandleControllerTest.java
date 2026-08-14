@@ -3,11 +3,11 @@ package com.tragepro.api.datafeed.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.tragepro.api.common.ApiTestSetup;
-import com.tragepro.api.common.model.CandleDataModel;
-import com.tragepro.api.common.model.SymbolDataModel;
-import com.tragepro.api.common.model.entity.CandleEntity;
-import com.tragepro.api.common.model.request.CandleRequest;
+import com.tragepro.api.core.ApiTestSetup;
+import com.tragepro.api.datafeed.model.CandleDataModel;
+import com.tragepro.api.datafeed.model.SymbolDataModel;
+import com.tragepro.api.datafeed.model.entity.CandleEntity;
+import com.tragepro.api.datafeed.model.request.CandleRequest;
 import com.tragepro.api.datafeed.repository.CandleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

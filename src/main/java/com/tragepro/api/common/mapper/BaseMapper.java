@@ -10,5 +10,12 @@ public interface BaseMapper<E, R, O> {
 
   void merge(R source, @MappingTarget E target);
 
-  MapperType getType();
+  default Class<?> getMapperClass() {
+    for (Class<?> iface : getClass().getInterfaces()) {
+      if (BaseMapper.class.isAssignableFrom(iface) && iface != BaseMapper.class) {
+        return iface;
+      }
+    }
+    return getClass();
+  }
 }

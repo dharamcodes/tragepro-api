@@ -1,6 +1,6 @@
 package com.tragepro.api.strategy.model;
 
-import com.tragepro.api.common.model.CandleDataModel;
+import com.tragepro.api.datafeed.model.CandleDataModel;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

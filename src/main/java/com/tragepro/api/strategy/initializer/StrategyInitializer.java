@@ -1,7 +1,7 @@
 package com.tragepro.api.strategy.initializer;
 
+import com.tragepro.api.strategy.StrategyService;
 import com.tragepro.api.strategy.context.StrategyContext;
-import com.tragepro.api.strategy.service.StrategyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
