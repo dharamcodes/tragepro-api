@@ -2,7 +2,6 @@ package com.tragepro.api.strategy.internal;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
-import com.tragepro.api.strategy.ConfigLoaderService;
 import com.tragepro.api.strategy.props.StrategyConfig;
 import com.tragepro.api.strategy.props.WorkflowConfig;
 import lombok.RequiredArgsConstructor;

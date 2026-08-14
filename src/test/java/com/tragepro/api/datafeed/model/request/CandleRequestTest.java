@@ -2,9 +2,9 @@ package com.tragepro.api.datafeed.model.request;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.tragepro.api.datafeed.constant.DataTimeType;
 import com.tragepro.api.datafeed.model.CandleDataModel;
 import com.tragepro.api.datafeed.model.SymbolDataModel;
-import com.tragepro.api.strategy.constant.DataTimeType;
 import org.junit.jupiter.api.Test;
 
 class CandleRequestTest {

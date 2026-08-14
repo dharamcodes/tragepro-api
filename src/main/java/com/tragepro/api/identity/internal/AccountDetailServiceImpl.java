@@ -4,8 +4,6 @@ import com.tragepro.api.common.config.JwtTokenHelper;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
-import com.tragepro.api.identity.AccountDetailService;
-import com.tragepro.api.identity.internal.mapper.AccountDetailMapper;
 import com.tragepro.api.identity.model.request.AccountDetailRequest;
 import com.tragepro.api.identity.model.response.AccountDetailResponse;
 import com.tragepro.api.identity.repository.AccountDetailRepository;

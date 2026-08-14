@@ -2,7 +2,6 @@ package com.tragepro.api.trading.internal;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
-import com.tragepro.api.trading.OrderManager;
 import com.tragepro.api.trading.model.OrderRequest;
 import com.tragepro.api.trading.model.OrderResponse;
 import java.time.Instant;

@@ -42,7 +42,7 @@ echo -e "${GREEN}Done${NC}"
 
 # 4. Boot Spring Boot Application in the background
 echo -ne "${YELLOW}[4/6] ☕ Booting Spring Boot Application via bootRun\t\t${NC}"
-./gradlew bootRun --no-daemon > build/bootRun.log 2>&1 &
+./gradlew bootRun -Dspring.devtools.restart.enabled=false --no-daemon > build/bootRun.log 2>&1 &
 BOOT_PID=$!
 echo -e "${GREEN}Started (PID: $BOOT_PID)${NC}"
 

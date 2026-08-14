@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
-import com.tragepro.api.datafeed.internal.mapper.SecurityMapper;
 import com.tragepro.api.datafeed.model.entity.SecurityEntity;
 import com.tragepro.api.datafeed.model.response.SecurityResponse;
 import com.tragepro.api.datafeed.repository.SecurityRepository;

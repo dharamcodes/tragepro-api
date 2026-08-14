@@ -1,8 +1,8 @@
 package com.tragepro.api.datafeed.model.response;
 
+import com.tragepro.api.datafeed.constant.DataTimeType;
 import com.tragepro.api.datafeed.model.CandleDataModel;
 import com.tragepro.api.datafeed.model.SymbolDataModel;
-import com.tragepro.api.strategy.constant.DataTimeType;
 import lombok.Builder;
 
 @Builder

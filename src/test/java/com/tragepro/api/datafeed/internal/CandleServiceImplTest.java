@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.mapper.MapperFactory;
-import com.tragepro.api.datafeed.internal.mapper.CandleMapper;
 import com.tragepro.api.datafeed.model.entity.CandleEntity;
 import com.tragepro.api.datafeed.model.request.CandleRequest;
 import com.tragepro.api.datafeed.model.response.CandleResponse;

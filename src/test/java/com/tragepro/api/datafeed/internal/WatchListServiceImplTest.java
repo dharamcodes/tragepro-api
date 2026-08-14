@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.mapper.MapperFactory;
-import com.tragepro.api.datafeed.internal.mapper.WatchListMapper;
 import com.tragepro.api.datafeed.model.entity.WatchListEntity;
 import com.tragepro.api.datafeed.model.request.WatchListRequest;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;

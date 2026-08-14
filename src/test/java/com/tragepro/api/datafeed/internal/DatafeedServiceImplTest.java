@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
-import com.tragepro.api.datafeed.CandleService;
-import com.tragepro.api.datafeed.SecurityService;
-import com.tragepro.api.datafeed.WatchListService;
 import com.tragepro.api.datafeed.context.DatafeedContext;
 import com.tragepro.api.datafeed.feed.DataFeedAdapter;
 import com.tragepro.api.datafeed.feed.FeedAdapterFactory;

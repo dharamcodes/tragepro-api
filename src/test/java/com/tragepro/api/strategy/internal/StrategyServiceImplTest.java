@@ -8,7 +8,6 @@ import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.strategy.constant.StrategyState;
-import com.tragepro.api.strategy.internal.mapper.StrategyMapper;
 import com.tragepro.api.strategy.model.StatusModel;
 import com.tragepro.api.strategy.model.StrategyModel;
 import com.tragepro.api.strategy.model.SymbolModel;

@@ -3,8 +3,6 @@ package com.tragepro.api.datafeed.internal;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.common.mapper.MapperFactory;
-import com.tragepro.api.datafeed.WatchListService;
-import com.tragepro.api.datafeed.internal.mapper.WatchListMapper;
 import com.tragepro.api.datafeed.model.request.WatchListRequest;
 import com.tragepro.api.datafeed.model.response.WatchListResponse;
 import com.tragepro.api.datafeed.repository.WatchListRepository;

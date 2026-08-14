@@ -7,7 +7,6 @@ import com.tragepro.api.common.config.JwtTokenHelper;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.mapper.MapperFactory;
 import com.tragepro.api.identity.constant.RoleType;
-import com.tragepro.api.identity.internal.mapper.AuthenticationMapper;
 import com.tragepro.api.identity.model.entity.AuthenticationEntity;
 import com.tragepro.api.identity.model.request.AuthenticationRequest;
 import com.tragepro.api.identity.model.request.LoginRequest;

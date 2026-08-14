@@ -1,6 +1,5 @@
 package com.tragepro.api.identity.internal;
 
-import com.tragepro.api.identity.UserDetailService;
 import com.tragepro.api.identity.repository.AuthenticationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

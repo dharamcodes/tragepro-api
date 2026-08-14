@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
-import com.tragepro.api.journal.internal.mapper.JournalMapper;
 import com.tragepro.api.journal.model.entity.JournalEntity;
 import com.tragepro.api.journal.model.enums.TradeStatus;
 import com.tragepro.api.journal.model.enums.TradeType;
