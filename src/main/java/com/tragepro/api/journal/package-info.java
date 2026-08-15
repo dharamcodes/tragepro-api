@@ -1,2 +1,2 @@
-/** Trade records and annotations (journal). */
+@org.springframework.modulith.ApplicationModule(allowedDependencies = {"domain", "common"})
 package com.tragepro.api.journal;

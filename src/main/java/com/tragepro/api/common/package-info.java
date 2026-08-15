@@ -1,4 +1,3 @@
-@ApplicationModule(type = ApplicationModule.Type.OPEN)
+@org.springframework.modulith.ApplicationModule(
+    type = org.springframework.modulith.ApplicationModule.Type.OPEN)
 package com.tragepro.api.common;
-
-import org.springframework.modulith.ApplicationModule;

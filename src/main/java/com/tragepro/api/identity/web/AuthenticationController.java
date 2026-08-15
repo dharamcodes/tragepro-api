@@ -1,0 +1,71 @@
+package com.tragepro.api.identity.web;
+
+import com.tragepro.api.domain.identity.request.AuthenticationRequest;
+import com.tragepro.api.domain.identity.request.LoginRequest;
+import com.tragepro.api.domain.identity.request.ResetPasswordRequest;
+import com.tragepro.api.domain.identity.response.AuthenticationResponse;
+import com.tragepro.api.domain.identity.response.LoginResponse;
+import com.tragepro.api.identity.adapter.AuthenticationAdapter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@Tag(name = "1. AuthenticationController")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/auth")
+public class AuthenticationController {
+
+  private final AuthenticationAdapter authenticationAdapter;
+
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    return ResponseEntity.ok().body(authenticationAdapter.loginUser(loginRequest));
+  }
+
+  @PostMapping("/signup")
+  public ResponseEntity<AuthenticationResponse> signup(
+      @Valid @RequestBody AuthenticationRequest authenticationRequest) {
+    return ResponseEntity.ok().body(authenticationAdapter.signup(authenticationRequest));
+  }
+
+  @GetMapping("/find/{userName}")
+  public ResponseEntity<AuthenticationResponse> get(@PathVariable String userName) {
+    return ResponseEntity.ok().body(authenticationAdapter.getByUserName(userName));
+  }
+
+  @PutMapping("/update/{userName}")
+  public ResponseEntity<AuthenticationResponse> update(
+      @PathVariable String userName,
+      @Valid @RequestBody AuthenticationRequest authenticationRequest) {
+    return ResponseEntity.ok()
+        .body(authenticationAdapter.updateAuthenticationDetails(userName, authenticationRequest));
+  }
+
+  @DeleteMapping("/deactivate/{userName}")
+  public ResponseEntity<Void> deactivate(@PathVariable String userName) {
+    authenticationAdapter.deactivateAuthentication(userName);
+    return ResponseEntity.accepted().build();
+  }
+
+  @PutMapping("/password")
+  public ResponseEntity<Void> changePassword(
+      @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    authenticationAdapter.changePassword(resetPasswordRequest);
+    return ResponseEntity.accepted().build();
+  }
+
+  @PostMapping("/reset-password/{userName}")
+  public ResponseEntity<Void> resetPassword(@PathVariable String userName) {
+    authenticationAdapter.resetPassword(userName);
+    return ResponseEntity.accepted().build();
+  }
+
+  @DeleteMapping("/delete/{userName}")
+  public ResponseEntity<Void> delete(@PathVariable String userName) {
+    authenticationAdapter.deleteAuthentication(userName);
+    return ResponseEntity.accepted().build();
+  }
+}

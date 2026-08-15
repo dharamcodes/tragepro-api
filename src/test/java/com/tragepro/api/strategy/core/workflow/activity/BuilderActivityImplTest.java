@@ -2,9 +2,9 @@ package com.tragepro.api.strategy.core.workflow.activity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tragepro.api.strategy.model.request.StrategyRequest;
-import com.tragepro.api.strategy.model.response.StrategyResponse;
-import com.tragepro.api.strategy.workflow.activity.impl.BuilderActivityImpl;
+import com.tragepro.api.domain.strategy.request.StrategyRequest;
+import com.tragepro.api.domain.strategy.response.StrategyResponse;
+import com.tragepro.api.strategy.core.workflow.activity.impl.BuilderActivityImpl;
 import org.junit.jupiter.api.Test;
 
 class BuilderActivityImplTest {

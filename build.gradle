@@ -140,7 +140,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
     def jacocoExcludes = [
-        'com/tragepro/api/**/model/**',
+        'com/tragepro/api/**/domain/**',
         'com/tragepro/api/**/config/**',
         'com/tragepro/api/**/*Config*',
         'com/tragepro/api/**/constant/**',

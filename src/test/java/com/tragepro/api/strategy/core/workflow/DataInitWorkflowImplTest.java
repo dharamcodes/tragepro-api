@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import com.tragepro.api.strategy.model.request.StrategyRequest;
-import com.tragepro.api.strategy.model.response.StrategyResponse;
-import com.tragepro.api.strategy.workflow.activity.DataInitActivity;
-import com.tragepro.api.strategy.workflow.impl.DataInitWorkflowImpl;
+import com.tragepro.api.domain.strategy.request.StrategyRequest;
+import com.tragepro.api.domain.strategy.response.StrategyResponse;
+import com.tragepro.api.strategy.core.workflow.activity.DataInitActivity;
+import com.tragepro.api.strategy.core.workflow.impl.DataInitWorkflowImpl;
 import io.temporal.workflow.Workflow;
 import java.util.Set;
 import org.junit.jupiter.api.Test;

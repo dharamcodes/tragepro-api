@@ -11,9 +11,9 @@ Backend API service for **TragePro** — an automated domain-driven algorithmic 
 
 ## 🏛 Architecture & Design System
 
-The application follows a **Domain-Driven Flat Modulith Architecture**. Monolithic complexity is governed via Spring Modulith boundary rules, explicit module contracts (`@ApplicationModule(type = OPEN)`), and Gang-of-Four design patterns.
+The application follows a **Modular Monolith (Spring Modulith)** architecture. System encapsulation is governed by explicit Spring Modulith boundary rules, dedicated single-responsibility Adapters acting as public entry points (`@NamedInterface("adapter")`), and open domain models.
 
-![TragePro Architecture Diagram](docs/architecture.png)
+![TragePro Architecture Diagram](/docs/architecture.png)
 
 ---
 
@@ -21,26 +21,34 @@ The application follows a **Domain-Driven Flat Modulith Architecture**. Monolith
 
 ```
 src/main/java/com/tragepro/api/
-├── core/                   # OPEN Core Foundation (BaseActivity, ActivityRegistry, Pipeline, Security, Temporal, Persistence, Web, Exceptions, Mappers, Primitives)
-├── marketdata/             # Market Data Feeds (FeedAdapterFactory, TimeframesUtil, Concurrent Contexts, Services, REST API)
-├── strategy/               # Algorithmic Trading (Pipeline Steps, Temporal Workflows/Activities, Definitions)
-├── identity/               # User Authentication & Profile Management
-├── journal/                # Trade Log Journaling & Historical Performance Notes
-├── trading/                # Order Lifecycle Management & Portfolio Position Tracking
-└── notification/           # Multi-Channel Alert Events & Message Dispatching
+├── domain/                 # OPEN Domain Layer (Entities, DTO Requests/Responses, Domain Models, Enums)
+├── common/                 # OPEN Common Kernel (Shared Utilities, Exceptions, Base Models, Mappers)
+├── identity/               # User Authentication & Profile Management (Adapters, Web, Service, Core)
+├── datafeed/               # Market Data Feeds & Watchlists (Adapters, Web, Service, Core)
+├── strategy/               # Algorithmic Trading Strategies & Workflows (Adapters, Web, Service, Core)
+├── trading/                # Order Lifecycle Management & Portfolio Tracking (Adapters, Web, Service, Core)
+├── journal/                # Trade Log Journaling & Notes (Adapters, Web, Service, Core)
+└── alert/                  # Multi-Channel Alert Events & Message Dispatching (Adapters, Web, Service, Core)
 ```
 
-### Module Breakdown & Design Patterns
+### Module Structure & Exposed Adapters
 
-| Module | Design Patterns Applied | Responsibilities |
+Each feature module is organized into 4 uniform internal layers:
+- **`adapter/`**: Exposed Public Adapter entry points (`<Module>Adapter.java`).
+- **`web/`**: REST Controllers (`@RestController`) consuming Adapters.
+- **`service/`**: Service interfaces, private implementations (`service.impl`), and MapStruct mappers (`service.mapper`).
+- **`core/`**: Internal business logic, repositories, contexts, events, and workflows.
+
+| Module | Exposed Public Adapters (`@NamedInterface("adapter")`) | Responsibilities |
 | :--- | :--- | :--- |
-| **`core`** | Template Method, Chain of Responsibility, Registry | Shared kernel (`@ApplicationModule(type = OPEN)`) containing `BaseActivity`, `Pipeline`, `ActivityRegistry`, `SecurityConfig`, `JWTAuthFilter`, `TemporalConfig`, global exception handling, base models, and class-based `MapperFactory`. |
-| **`marketdata`**| Factory, Profile Strategy | Market data feed ingestion (`DataFeedAdapter`, `FeedAdapterFactory`, `DummyFeedAdapter`, `FeedClientAdapter`), `TimeframesUtil`, thread-safe `ConcurrentHashMap` contexts (`DatafeedContext`, `WatchlistContext`). |
-| **`strategy`** | Chain of Responsibility, State Machine, Strategy | Pipeline processing (`builder/`, `evaluator/`, `executor/`), Temporal workflows (`DataInitWorkflowImpl`), and strategy implementations (`IntradayStrategy`, `SwingStrategy`). |
-| **`trading`** | Façade, Command | Portfolio position tracking (`TradingService`) and order execution (`OrderManager`). |
-| **`identity`** | Proxy, Service Layer | User authentication (`AuthenticationService`) and account management (`AccountDetailService`). |
-| **`journal`** | Repository, Filter | Trade log journaling (`JournalService`) and performance filtering. |
-| **`notification`**| Observer / Event Driven, Factory, Strategy | Spring Modulith `@ApplicationModuleListener` event handling (`AlertEventPublisher`, `AlertEventListener`) and multi-channel dispatchers (`NotificationChannelFactory`). |
+| **`domain`** | Open Module (`@ApplicationModule(type = OPEN)`) | Central domain entities, request DTOs, response DTOs, models, and enums open to all modules. |
+| **`common`** | Open Module (`@ApplicationModule(type = OPEN)`) | Shared kernel containing global exception handling, common mappers, object cloning, and base utilities. |
+| **`identity`** | `AuthenticationAdapter`, `AccountDetailAdapter`, `UserDetailAdapter` | User authentication, account management, and profile details. |
+| **`datafeed`** | `CandleAdapter`, `SecurityAdapter`, `WatchListAdapter`, `DatafeedAdapter` | Market data feed ingestion, historical candle querying, and watchlist management. |
+| **`strategy`** | `StrategyAdapter`, `ConfigLoaderAdapter` | Algorithmic strategy evaluation, config loading, and workflow activity orchestrations. |
+| **`trading`** | `TradingAdapter`, `OrderAdapter` | Order lifecycle execution (`OrderManager`) and portfolio position tracking (`TradingService`). |
+| **`journal`** | `JournalAdapter` | Trade log journaling and performance note filtering. |
+| **`alert`** | `NotificationAdapter` | Event-driven alert publishing (`AlertEventPublisher`), listeners, and multi-channel notification dispatchers. |
 
 ---
 
@@ -49,53 +57,53 @@ src/main/java/com/tragepro/api/
 ```mermaid
 flowchart TD
     %% Flow 1: Security & Auth
-    subgraph Flow1 ["Flow 1: Core Security & JWT Authentication (core/security)"]
+    subgraph Flow1 ["Flow 1: Core Security & JWT Authentication (identity)"]
         A1[HTTP Request] --> A2[JWTAuthFilter]
-        A2 --> A3[UserDetailServiceImpl / JwtTokenHelper]
+        A2 --> A3[AuthenticationAdapter / UserDetailAdapter]
         A3 --> A4[Security Context Established]
     end
 
     %% Flow 2: Market Data Ingestion
-    subgraph Flow2 ["Flow 2: Market Data Ingestion (marketdata)"]
+    subgraph Flow2 ["Flow 2: Market Data Ingestion (datafeed)"]
         B1[Client / Cron] --> B2[DataFeedController]
-        B2 --> B3[DatafeedServiceImpl package-private]
-        B3 --> B4{FeedAdapterFactory}
-        B4 -->|Prod| B5[FeedClientAdapter]
-        B4 -->|Dev/Local| B6[DummyFeedAdapter]
-        B5 & B6 --> B7[DatafeedContext ConcurrentHashMap]
-        B7 --> B8[(MongoDB)]
+        B2 --> B3[DatafeedAdapter]
+        B3 --> B4[DatafeedServiceImpl]
+        B4 --> B5{FeedAdapterFactory}
+        B5 -->|Prod| B6[FeedClientAdapter]
+        B5 -->|Dev/Local| B7[DummyFeedAdapter]
+        B6 & B7 --> B8[DatafeedContext]
+        B8 --> B9[(MongoDB)]
     end
 
     %% Flow 3: Temporal Worker Auto-Registration
-    subgraph Flow3 ["Flow 3: Temporal Worker Auto-Registration (core/temporal & core/workflow)"]
+    subgraph Flow3 ["Flow 3: Workflow Orchestration (strategy/core/workflow)"]
         C1[Temporal Worker Engine] --> C2[TemporalConfig]
-        C2 --> C3[WorkflowRegistry & ActivityRegistry]
-        C3 --> C4[DataInitWorkflowImpl]
-        C4 --> C5[DataInitActivityImpl BaseActivity]
+        C2 --> C3[ActivityRegistry]
+        C3 --> C4[DataInitActivityImpl BaseActivity]
+        C4 --> C5[WatchListAdapter]
         C5 --> C6[StrategyContext]
     end
 
-    %% Flow 4: Strategy Pipeline Execution
-    subgraph Flow4 ["Flow 4: Strategy Pipeline Chain (strategy/pipeline)"]
-        D1[Strategy Request] --> D2[StrategyBuilder Chain]
-        D2 --> D3[Build OHLCV, Volume, VWAP, Levels]
-        D3 --> D4[StrategyEvaluator]
-        D4 --> D5[StrategyExecutor Buy/Sell/Notify]
-        D5 --> D6[StrategyResponse Result]
+    %% Flow 4: Strategy Execution
+    subgraph Flow4 ["Flow 4: Strategy Execution (strategy)"]
+        D1[Strategy Request] --> D2[StrategyController]
+        D2 --> D3[StrategyAdapter]
+        D3 --> D4[StrategyServiceImpl]
+        D4 --> D5[StrategyResponse Result]
     end
 
     %% Flow 5: Trading & Order Execution
     subgraph Flow5 ["Flow 5: Portfolio Position & Order Execution (trading)"]
         E1[Client / Strategy Signal] --> E2[OrderController]
-        E2 --> E3[TradingServiceImpl package-private]
-        E3 --> E4[OrderManagerImpl package-private]
-        E4 --> E5[JournalService Trade Log]
+        E2 --> E3[OrderAdapter / TradingAdapter]
+        E3 --> E4[OrderManagerImpl]
+        E4 --> E5[JournalAdapter Trade Log]
         E5 --> E6[(MongoDB Orders & Journal)]
     end
 
     %% Flow 6: Multi-Channel Alert Notification
-    subgraph Flow6 ["Flow 6: Event Alert Notification (notification)"]
-        F1[Domain Component Event] --> F2[AlertEventPublisher]
+    subgraph Flow6 ["Flow 6: Event Alert Notification (alert)"]
+        F1[Domain Event] --> F2[AlertEventPublisher]
         F2 --> F3[Spring ApplicationEvent]
         F3 --> F4[AlertEventListener]
         F4 --> F5[NotificationChannelFactory]
@@ -121,11 +129,8 @@ flowchart TD
 # Compile code across all modules
 ./gradlew compileJava compileTestJava
 
-# Execute all unit, integration, and Testcontainers E2E tests
+# Execute all unit, integration, and Spring Modulith verification tests
 ./gradlew test
-
-# Verify JaCoCo code coverage (Requires >= 95%)
-./gradlew jacocoTestCoverageVerification
 
 # Full build verification
 ./gradlew clean check

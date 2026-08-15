@@ -1,11 +1,11 @@
 package com.tragepro.api.datafeed;
 
-import com.tragepro.api.datafeed.model.request.CandleRequest;
-import com.tragepro.api.datafeed.model.request.LoadCandleRequest;
-import com.tragepro.api.datafeed.model.request.WatchListRequest;
-import com.tragepro.api.datafeed.model.response.CandleResponse;
-import com.tragepro.api.datafeed.model.response.LoadCandleResponse;
-import com.tragepro.api.datafeed.model.response.WatchListResponse;
+import com.tragepro.api.domain.datafeed.request.CandleRequest;
+import com.tragepro.api.domain.datafeed.request.LoadCandleRequest;
+import com.tragepro.api.domain.datafeed.request.WatchListRequest;
+import com.tragepro.api.domain.datafeed.response.CandleResponse;
+import com.tragepro.api.domain.datafeed.response.LoadCandleResponse;
+import com.tragepro.api.domain.datafeed.response.WatchListResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

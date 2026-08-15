@@ -1,6 +1,6 @@
 package com.tragepro.api;
 
-import com.tragepro.api.core.ContainerConfig;
+import com.tragepro.api.common.ContainerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

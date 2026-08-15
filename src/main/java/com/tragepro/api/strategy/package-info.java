@@ -1,4 +1,3 @@
-@ApplicationModule(type = ApplicationModule.Type.OPEN)
+@org.springframework.modulith.ApplicationModule(
+    allowedDependencies = {"domain", "common", "datafeed::adapter"})
 package com.tragepro.api.strategy;
-
-import org.springframework.modulith.ApplicationModule;

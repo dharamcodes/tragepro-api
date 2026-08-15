@@ -1,4 +1,2 @@
-@ApplicationModule(allowedDependencies = "common")
+@org.springframework.modulith.ApplicationModule(allowedDependencies = {"domain", "common"})
 package com.tragepro.api.alert;
-
-import org.springframework.modulith.ApplicationModule;
