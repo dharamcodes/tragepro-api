@@ -21,8 +21,6 @@ resilience4j:
         limitRefreshPeriod: 10s
         timeoutDuration: 0ms
 
-
-
 temporal:
   enabled: ${TEMPORAL_ENABLED:false}
   server:
@@ -42,20 +40,6 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: custom
     tagsSorter: alpha
-data:
-  watchlist:
-    identifiers: 6a2ebec538bb66a3fe795919
-  scheduler:
-    fromDateDays: 90
-    enableHistorical: false
-    enableIntraday: true
-    jobs:
-      morning: "0 0 8 * * ?"
-      evening: "0 0 16 * * ?"
-  fetch:
-    daysBack: 90
-    max-concurrency: 50
-
 
 jwt:
   secret: ${JWT_SECRET:UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=}

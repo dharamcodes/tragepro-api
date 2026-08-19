@@ -6,4 +6,5 @@ import lombok.Data;
 public class ServerProperties {
   private String target;
   private String namespace;
+  private String enableTls;
 }
