@@ -54,62 +54,45 @@ Each feature module is organized into 4 uniform internal layers:
 
 ## 🔄 The 6 Core System Flows
 
-```mermaid
-flowchart TD
-    %% Flow 1: Security & Auth
-    subgraph Flow1 ["Flow 1: Core Security & JWT Authentication (identity)"]
-        A1[HTTP Request] --> A2[JWTAuthFilter]
-        A2 --> A3[AuthenticationAdapter / UserDetailAdapter]
-        A3 --> A4[Security Context Established]
-    end
+### Flow 1: Core Security & JWT Authentication
+Incoming HTTP requests pass through `JWTAuthFilter`, authenticating user credentials via `AuthenticationAdapter` / `UserDetailAdapter` and establishing the Spring Security Context.
 
-    %% Flow 2: Market Data Ingestion
-    subgraph Flow2 ["Flow 2: Market Data Ingestion (datafeed)"]
-        B1[Client / Cron] --> B2[DataFeedController]
-        B2 --> B3[DatafeedAdapter]
-        B3 --> B4[DatafeedServiceImpl]
-        B4 --> B5{FeedAdapterFactory}
-        B5 -->|Prod| B6[FeedClientAdapter]
-        B5 -->|Dev/Local| B7[DummyFeedAdapter]
-        B6 & B7 --> B8[DatafeedContext]
-        B8 --> B9[(MongoDB)]
-    end
+![Flow 1: Core Security & JWT Authentication](docs/flow_1_security_auth.png)
 
-    %% Flow 3: Temporal Worker Auto-Registration
-    subgraph Flow3 ["Flow 3: Workflow Orchestration (strategy/core/workflow)"]
-        C1[Temporal Worker Engine] --> C2[TemporalConfig]
-        C2 --> C3[ActivityRegistry]
-        C3 --> C4[DataInitActivityImpl BaseActivity]
-        C4 --> C5[WatchListAdapter]
-        C5 --> C6[StrategyContext]
-    end
+---
 
-    %% Flow 4: Strategy Execution
-    subgraph Flow4 ["Flow 4: Strategy Execution (strategy)"]
-        D1[Strategy Request] --> D2[StrategyController]
-        D2 --> D3[StrategyAdapter]
-        D3 --> D4[StrategyServiceImpl]
-        D4 --> D5[StrategyResponse Result]
-    end
+### Flow 2: Market Data Ingestion
+`DataFeedController` receives feed requests and delegates to `DatafeedAdapter`. The internal `FeedAdapterFactory` routes execution dynamically to `FeedClientAdapter` (in Production) or `DummyFeedAdapter` (in Local/Dev), caching ticks in `DatafeedContext` before MongoDB persistence.
 
-    %% Flow 5: Trading & Order Execution
-    subgraph Flow5 ["Flow 5: Portfolio Position & Order Execution (trading)"]
-        E1[Client / Strategy Signal] --> E2[OrderController]
-        E2 --> E3[OrderAdapter / TradingAdapter]
-        E3 --> E4[OrderManagerImpl]
-        E4 --> E5[JournalAdapter Trade Log]
-        E5 --> E6[(MongoDB Orders & Journal)]
-    end
+![Flow 2: Market Data Ingestion](docs/flow_2_market_data.png)
 
-    %% Flow 6: Multi-Channel Alert Notification
-    subgraph Flow6 ["Flow 6: Event Alert Notification (alert)"]
-        F1[Domain Event] --> F2[AlertEventPublisher]
-        F2 --> F3[Spring ApplicationEvent]
-        F3 --> F4[AlertEventListener]
-        F4 --> F5[NotificationChannelFactory]
-        F5 --> F6[Email / Telegram / Webhook Channel]
-    end
-```
+---
+
+### Flow 3: Temporal Workflow Orchestration
+The Temporal Worker Engine registers workflow activities (`DataInitActivityImpl`) using `ActivityRegistry`. The activity fetches symbol watchlists via `WatchListAdapter` from the `datafeed` module and updates `StrategyContext`.
+
+![Flow 3: Workflow Orchestration](docs/flow_3_workflow_orchestration.png)
+
+---
+
+### Flow 4: Strategy Execution Pipeline
+Strategy execution requests received by `StrategyController` invoke `StrategyAdapter`. The `StrategyServiceImpl` processes the strategy chain through Builder, Evaluator, and Executor activity components to produce a `StrategyResponse`.
+
+![Flow 4: Strategy Pipeline Execution](docs/flow_4_strategy_execution.png)
+
+---
+
+### Flow 5: Portfolio Position & Order Execution
+Trading signals or client requests hit `OrderController`, passing through `OrderAdapter` and `TradingAdapter` to `OrderManagerImpl` and `TradingServiceImpl`. Executed orders are logged to trade journals via `JournalAdapter` and persisted in MongoDB.
+
+![Flow 5: Portfolio Position & Order Execution](docs/flow_5_trading_order.png)
+
+---
+
+### Flow 6: Event-Driven Multi-Channel Alert Notification
+Domain events trigger `AlertEventPublisher`, broadcasting events over Spring's ApplicationEvent bus. `AlertEventListener` receives events and delegates to `NotificationChannelFactory`, routing alerts dynamically to Email, Telegram, or Webhook channels.
+
+![Flow 6: Event-Driven Multi-Channel Alert Notification](docs/flow_6_alert_notification.png)
 
 ---
 
