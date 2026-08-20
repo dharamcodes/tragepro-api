@@ -13,7 +13,7 @@ Backend API service for **TragePro** — an automated domain-driven algorithmic 
 
 The application follows a **Modular Monolith (Spring Modulith)** architecture. System encapsulation is governed by explicit Spring Modulith boundary rules, dedicated single-responsibility Adapters acting as public entry points (`@NamedInterface("adapter")`), and open domain models.
 
-![TragePro Architecture Diagram](/docs/architecture.png)
+![TragePro Architecture Diagram](docs/architecture.svg)
 
 ---
 
@@ -57,42 +57,42 @@ Each feature module is organized into 4 uniform internal layers:
 ### Flow 1: Core Security & JWT Authentication
 Incoming HTTP requests pass through `JWTAuthFilter`, authenticating user credentials via `AuthenticationAdapter` / `UserDetailAdapter` and establishing the Spring Security Context.
 
-![Flow 1: Core Security & JWT Authentication](docs/flow_1_security_auth.png)
+![Flow 1: Core Security & JWT Authentication](docs/flow_1_security_auth.svg)
 
 ---
 
 ### Flow 2: Market Data Ingestion
 `DataFeedController` receives feed requests and delegates to `DatafeedAdapter`. The internal `FeedAdapterFactory` routes execution dynamically to `FeedClientAdapter` (in Production) or `DummyFeedAdapter` (in Local/Dev), caching ticks in `DatafeedContext` before MongoDB persistence.
 
-![Flow 2: Market Data Ingestion](docs/flow_2_market_data.png)
+![Flow 2: Market Data Ingestion](docs/flow_2_market_data.svg)
 
 ---
 
 ### Flow 3: Temporal Workflow Orchestration
 The Temporal Worker Engine registers workflow activities (`DataInitActivityImpl`) using `ActivityRegistry`. The activity fetches symbol watchlists via `WatchListAdapter` from the `datafeed` module and updates `StrategyContext`.
 
-![Flow 3: Workflow Orchestration](docs/flow_3_workflow_orchestration.png)
+![Flow 3: Workflow Orchestration](docs/flow_3_workflow_orchestration.svg)
 
 ---
 
 ### Flow 4: Strategy Execution Pipeline
 Strategy execution requests received by `StrategyController` invoke `StrategyAdapter`. The `StrategyServiceImpl` processes the strategy chain through Builder, Evaluator, and Executor activity components to produce a `StrategyResponse`.
 
-![Flow 4: Strategy Pipeline Execution](docs/flow_4_strategy_execution.png)
+![Flow 4: Strategy Pipeline Execution](docs/flow_4_strategy_execution.svg)
 
 ---
 
 ### Flow 5: Portfolio Position & Order Execution
 Trading signals or client requests hit `OrderController`, passing through `OrderAdapter` and `TradingAdapter` to `OrderManagerImpl` and `TradingServiceImpl`. Executed orders are logged to trade journals via `JournalAdapter` and persisted in MongoDB.
 
-![Flow 5: Portfolio Position & Order Execution](docs/flow_5_trading_order.png)
+![Flow 5: Portfolio Position & Order Execution](docs/flow_5_trading_order.svg)
 
 ---
 
 ### Flow 6: Event-Driven Multi-Channel Alert Notification
 Domain events trigger `AlertEventPublisher`, broadcasting events over Spring's ApplicationEvent bus. `AlertEventListener` receives events and delegates to `NotificationChannelFactory`, routing alerts dynamically to Email, Telegram, or Webhook channels.
 
-![Flow 6: Event-Driven Multi-Channel Alert Notification](docs/flow_6_alert_notification.png)
+![Flow 6: Event-Driven Multi-Channel Alert Notification](docs/flow_6_alert_notification.svg)
 
 ---
 

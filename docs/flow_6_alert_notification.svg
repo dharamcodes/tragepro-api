@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 430" width="100%" height="100%">
+  <defs>
+    <!-- Markers -->
+    <marker id="arrow-sky" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38BDF8"/>
+    </marker>
+    <marker id="arrow-indigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#818CF8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34D399"/>
+    </marker>
+  </defs>
+
+  <!-- Flow Header -->
+  <g transform="translate(45, 25)">
+    <rect x="0" y="0" width="90" height="24" rx="12" fill="#0F172A" stroke="#38BDF8" stroke-width="1.5"/>
+    <text x="45" y="16" fill="#38BDF8" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="1">FLOW 06</text>
+    <text x="105" y="19" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800">Event-Driven Multi-Channel Alert Notification</text>
+    <text x="0" y="44" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="12">Domain event publication via Spring ApplicationEvents and dynamic routing to Email, Telegram, and Webhook channels</text>
+  </g>
+
+  <!-- Connectors -->
+  <path d="M 215 230 L 260 230" fill="none" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+  <path d="M 440 230 L 485 230" fill="none" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+  <path d="M 675 230 L 720 230" fill="none" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+  <path d="M 910 230 L 955 230" fill="none" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+  
+  <!-- Fork Branches from Factory to Channels -->
+  <!-- Top Branch: Email -->
+  <path d="M 1155 200 L 1190 200 L 1190 145 L 1225 145" fill="none" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+  <!-- Middle Branch: Telegram -->
+  <path d="M 1155 230 L 1225 230" fill="none" stroke="#818CF8" stroke-width="2" marker-end="url(#arrow-indigo)"/>
+  <!-- Bottom Branch: Webhook -->
+  <path d="M 1155 260 L 1190 260 L 1190 315 L 1225 315" fill="none" stroke="#34D399" stroke-width="2" marker-end="url(#arrow-emerald)"/>
+
+  <!-- Step 1: Domain Component Event -->
+  <g transform="translate(45, 160)">
+    <rect x="0" y="0" width="170" height="140" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+    <circle cx="85" cy="40" r="16" fill="#0F172A" stroke="#38BDF8" stroke-width="1.5"/>
+    <!-- Bell Icon -->
+    <path d="M 85 28 A 6 6 0 0 0 79 34 L 77 44 L 93 44 L 91 34 A 6 6 0 0 0 85 28 M 82 46 A 3 3 0 0 0 88 46" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
+    <text x="85" y="80" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Domain</text>
+    <text x="85" y="98" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Component Event</text>
+    <text x="85" y="120" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="9" text-anchor="middle">Trading / System Event</text>
+  </g>
+
+  <!-- Step 2: AlertEventPublisher -->
+  <g transform="translate(260, 160)">
+    <rect x="0" y="0" width="180" height="140" rx="10" fill="#1E293B" stroke="#F59E0B" stroke-width="2"/>
+    <circle cx="90" cy="40" r="16" fill="#0F172A" stroke="#FBBF24" stroke-width="1.5"/>
+    <!-- Lightning Icon -->
+    <polygon points="92,28 83,39 89,39 88,48 97,37 91,37" fill="#FBBF24"/>
+    <text x="90" y="80" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">AlertEvent</text>
+    <text x="90" y="98" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Publisher</text>
+    <text x="90" y="120" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="9" text-anchor="middle">Broadcast Entrypoint</text>
+  </g>
+
+  <!-- Step 3: Spring ApplicationEvent Bus -->
+  <g transform="translate(485, 160)">
+    <rect x="0" y="0" width="190" height="140" rx="10" fill="#1E293B" stroke="#059669" stroke-width="2"/>
+    <circle cx="95" cy="40" r="16" fill="#0F172A" stroke="#34D399" stroke-width="1.5"/>
+    <!-- Spring Leaf Icon -->
+    <path d="M 88 46 C 88 34 100 30 102 30 C 102 42 90 46 88 46 Z M 90 44 C 95 40 98 35 101 31" fill="none" stroke="#34D399" stroke-width="1.5"/>
+    <text x="95" y="78" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Spring</text>
+    <text x="95" y="96" fill="#34D399" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="700" text-anchor="middle">ApplicationEvent Bus</text>
+    <text x="95" y="120" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="9" text-anchor="middle">Async In-Memory Bus</text>
+  </g>
+
+  <!-- Step 4: AlertEventListener -->
+  <g transform="translate(720, 160)">
+    <rect x="0" y="0" width="190" height="140" rx="10" fill="#1E293B" stroke="#6366F1" stroke-width="2"/>
+    <circle cx="95" cy="40" r="16" fill="#0F172A" stroke="#818CF8" stroke-width="1.5"/>
+    <!-- Listener Icon -->
+    <path d="M 95 28 A 6 6 0 0 0 89 34 L 87 44 L 103 44 L 101 34 A 6 6 0 0 0 95 28 M 92 46 A 3 3 0 0 0 98 46" fill="none" stroke="#818CF8" stroke-width="1.5"/>
+    <text x="95" y="78" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">AlertEvent</text>
+    <text x="95" y="96" fill="#818CF8" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Listener</text>
+    <text x="95" y="120" fill="#94A3B8" font-family="monospace" font-size="9" text-anchor="middle">@EventListener Handler</text>
+  </g>
+
+  <!-- Step 5: NotificationChannelFactory -->
+  <g transform="translate(955, 160)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#1E293B" stroke="#0284C7" stroke-width="2"/>
+    <circle cx="100" cy="40" r="16" fill="#0F172A" stroke="#38BDF8" stroke-width="1.5"/>
+    <!-- Dispatch Fork Icon -->
+    <path d="M 94 34 L 100 40 L 106 34 M 100 40 L 100 48 M 92 48 L 108 48" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
+    <text x="100" y="78" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="700" text-anchor="middle">NotificationChannel</text>
+    <text x="100" y="96" fill="#38BDF8" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Factory</text>
+    <text x="100" y="120" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="9" text-anchor="middle">Dynamic Channel Router</text>
+  </g>
+
+  <!-- Step 6: 3 Channel Targets -->
+  <!-- Channel 1: Email -->
+  <g transform="translate(1225, 110)">
+    <rect x="0" y="0" width="145" height="70" rx="8" fill="#1E293B" stroke="#0284C7" stroke-width="1.8"/>
+    <path d="M 22 25 L 37 36 L 52 25 M 22 25 L 52 25 L 52 45 L 22 45 Z" fill="none" stroke="#38BDF8" stroke-width="1.3"/>
+    <text x="94" y="38" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">Email</text>
+    <text x="94" y="54" fill="#38BDF8" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="600" text-anchor="middle">Channel</text>
+  </g>
+
+  <!-- Channel 2: Telegram -->
+  <g transform="translate(1225, 195)">
+    <rect x="0" y="0" width="145" height="70" rx="8" fill="#1E293B" stroke="#6366F1" stroke-width="1.8"/>
+    <path d="M 22 37 L 48 25 L 39 45 L 33 38 L 22 37 Z" fill="none" stroke="#818CF8" stroke-width="1.3"/>
+    <text x="94" y="38" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">Telegram</text>
+    <text x="94" y="54" fill="#818CF8" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="600" text-anchor="middle">Channel</text>
+  </g>
+
+  <!-- Channel 3: Webhook -->
+  <g transform="translate(1225, 280)">
+    <rect x="0" y="0" width="145" height="70" rx="8" fill="#1E293B" stroke="#059669" stroke-width="1.8"/>
+    <circle cx="30" cy="35" r="4" fill="none" stroke="#34D399" stroke-width="1.3"/>
+    <circle cx="46" cy="27" r="4" fill="none" stroke="#34D399" stroke-width="1.3"/>
+    <circle cx="46" cy="43" r="4" fill="none" stroke="#34D399" stroke-width="1.3"/>
+    <path d="M 34 35 L 42 29 M 34 35 L 42 41" fill="none" stroke="#34D399" stroke-width="1.3"/>
+    <text x="94" y="38" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">Webhook</text>
+    <text x="94" y="54" fill="#34D399" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="600" text-anchor="middle">Channel</text>
+  </g>
+
+</svg>

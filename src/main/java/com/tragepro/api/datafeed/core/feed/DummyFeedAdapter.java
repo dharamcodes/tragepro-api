@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DummyFeedAdapter implements DataFeedAdapter {
 
-  private static final int ENTRIES = 19800;
+  private static final int ENTRIES = 1000; // 19800;
   private static final double BASE_PRICE = 100.0;
   private static final long START_TIME_STAMP = 60_000L;
   private static final double VOLATILE_START = -2.0;
