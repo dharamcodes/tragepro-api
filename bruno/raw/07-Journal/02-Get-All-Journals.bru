@@ -1,0 +1,17 @@
+meta {
+  name: 02-Get-All-Journals
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/journal?accountId=ACC-12345&page=0&size=20
+  body: none
+  auth: inherit
+}
+
+params:query {
+  accountId: ACC-12345
+  page: 0
+  size: 20
+}

@@ -1,0 +1,15 @@
+meta {
+  name: 03-Get-Journal-By-Id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/journal/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: sample-journal-id
+}

@@ -1,0 +1,25 @@
+meta {
+  name: 01-Submit-Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/orders
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "accountId": "ACC-12345",
+    "symbol": "RELIANCE",
+    "exchange": "NSE",
+    "orderType": "LIMIT",
+    "transactionType": "BUY",
+    "quantity": 10,
+    "price": 2500.0,
+    "triggerPrice": 0.0,
+    "product": "CNC"
+  }
+}

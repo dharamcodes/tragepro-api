@@ -13,7 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "3. WatchListController")
+@Tag(name = "2. Market Data & Feeds", description = "Watchlist creation, management, and symbol tracking")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/watchlists")

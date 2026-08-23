@@ -35,14 +35,14 @@ public class DatafeedContext {
     public void transitionTo(SymbolDataModel symbol, DatafeedState state, LocalDate timestamp) {
         datafeedContext.compute(symbol, (key, existing) -> {
             if (existing == null) {
-                log.info("Initializing data-feed context state to {} for symbol: {}", state, symbol.symbol());
+                log.info("Initializing data-client context state to {} for symbol: {}", state, symbol.symbol());
                 return DatafeedModel.builder()
                         .symbol(symbol.symbol())
                         .timestamp(timestamp)
                         .state(state)
                         .build();
             }
-            log.info("Updating data-feed context state to {} for symbol: {}", state, symbol.symbol());
+            log.info("Updating data-client context state to {} for symbol: {}", state, symbol.symbol());
             return DatafeedModel.builder()
                     .symbol(existing.getSymbol())
                     .timestamp(timestamp != null ? timestamp : existing.getTimestamp())

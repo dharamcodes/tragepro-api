@@ -1,0 +1,19 @@
+meta {
+  name: 01-Create-Watchlist
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/watchlists
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Nifty High Beta",
+    "description": "High beta stocks watchlist",
+    "symbols": ["RELIANCE", "INFY", "TCS", "HDFCBANK"]
+  }
+}

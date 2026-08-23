@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Trading")
+@Tag(name = "3. Trading & Execution", description = "Order placement, execution status, and cancellations")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/orders")

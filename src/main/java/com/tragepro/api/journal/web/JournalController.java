@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "5. JournalController")
+@Tag(name = "4. Trade Journal & Analytics", description = "Trading journals, logs, and performance filtering")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/journal")

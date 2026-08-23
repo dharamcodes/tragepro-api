@@ -1,0 +1,21 @@
+meta {
+  name: 01-Signup
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/signup
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "trader01@tragepro.com",
+    "userName": "trader01",
+    "password": "Password123!",
+    "role": "APP_USER",
+    "isActive": true
+  }
+}

@@ -14,7 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "3. CandleController")
+@Tag(name = "2. Market Data & Feeds", description = "Historical and intraday OHLCV candlestick data")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/candles")

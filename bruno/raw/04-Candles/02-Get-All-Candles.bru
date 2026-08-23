@@ -1,0 +1,19 @@
+meta {
+  name: 02-Get-All-Candles
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/candles?symbol=RELIANCE&exchange=NSE&interval=1D&page=0&size=50
+  body: none
+  auth: inherit
+}
+
+params:query {
+  symbol: RELIANCE
+  exchange: NSE
+  interval: 1D
+  page: 0
+  size: 50
+}

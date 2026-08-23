@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "2. AccountDetailController")
+@Tag(name = "1. Identity & Access Management", description = "User account profile and broker configurations")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/account")

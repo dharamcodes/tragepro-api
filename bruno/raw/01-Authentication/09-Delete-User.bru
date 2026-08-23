@@ -1,0 +1,15 @@
+meta {
+  name: 09-Delete-User
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/auth/delete/:userName
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userName: trader01
+}

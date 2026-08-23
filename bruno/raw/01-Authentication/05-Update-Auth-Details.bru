@@ -1,0 +1,25 @@
+meta {
+  name: 05-Update-Auth-Details
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/v1/auth/update/:userName
+  body: json
+  auth: inherit
+}
+
+params:path {
+  userName: trader01
+}
+
+body:json {
+  {
+    "email": "updated.trader01@tragepro.com",
+    "userName": "trader01",
+    "password": "NewPassword123!",
+    "role": "APP_USER",
+    "isActive": true
+  }
+}

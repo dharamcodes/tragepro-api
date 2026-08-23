@@ -1,0 +1,21 @@
+meta {
+  name: 05-Patch-Watchlist
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/watchlists/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: sample-watchlist-id
+}
+
+body:json {
+  {
+    "name": "Nifty Tech Leaders"
+  }
+}

@@ -1,0 +1,31 @@
+meta {
+  name: 04-Update-Journal
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/journal/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: sample-journal-id
+}
+
+body:json {
+  {
+    "accountId": "ACC-12345",
+    "symbol": "RELIANCE",
+    "entryPrice": 2500.0,
+    "exitPrice": 2560.0,
+    "quantity": 10,
+    "pnl": 600.0,
+    "notes": "Updated exit price with trailing SL",
+    "tags": [
+      "breakout",
+      "trailing-sl"
+    ]
+  }
+}

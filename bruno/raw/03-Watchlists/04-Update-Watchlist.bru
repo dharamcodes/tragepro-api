@@ -1,0 +1,23 @@
+meta {
+  name: 04-Update-Watchlist
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/watchlists/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: sample-watchlist-id
+}
+
+body:json {
+  {
+    "name": "Nifty Tech",
+    "description": "Technology sector watchlist",
+    "symbols": ["INFY", "TCS", "WIPRO", "HCLTECH"]
+  }
+}

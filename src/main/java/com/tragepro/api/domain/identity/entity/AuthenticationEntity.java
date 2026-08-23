@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Document(collection = "authentication")
+@Document(collection = "identity")
 public class AuthenticationEntity extends BaseEntity {
 
     @Id

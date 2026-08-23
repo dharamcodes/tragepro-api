@@ -2,8 +2,8 @@ package com.tragepro.api.datafeed.service.impl;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
+import com.tragepro.api.datafeed.core.client.adapter.CandleIngestAdapter;
 import com.tragepro.api.datafeed.core.context.DatafeedContext;
-import com.tragepro.api.datafeed.core.feed.CandleIngestAdapter;
 import com.tragepro.api.datafeed.service.DatafeedService;
 import com.tragepro.api.datafeed.service.SecurityService;
 import com.tragepro.api.datafeed.service.WatchListService;
@@ -42,12 +42,13 @@ public class DatafeedServiceImpl implements DatafeedService {
             return buildResponse(request.watchListName(), "No symbols found in watchlist to process");
         }
 
-        try {
-            loadWatchlistData(stocks, request.daysBack());
-        } catch (Exception e) {
-            log.error("Error loading stocks from watchlist :: {}", request.watchListName(), e);
-            throw new AppException(ErrorType.INTERNAL_ERROR);
-        }
+        Thread.ofVirtual().name("datafeed-load-" + request.watchListName()).start(() -> {
+            try {
+                loadWatchlistData(stocks, request.daysBack());
+            } catch (Exception e) {
+                log.error("Error while processing the watchlist :: {}", request.watchListName(), e);
+            }
+        });
 
         return buildResponse(request.watchListName(), "Data load initiated successfully");
     }

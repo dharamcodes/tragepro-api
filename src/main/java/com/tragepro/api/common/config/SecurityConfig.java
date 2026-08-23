@@ -38,8 +38,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JWTAuthFilter jwtAuthFilter;
 
-    @Value(
-            "${cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173}")
+    @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
     @Bean
@@ -47,7 +46,15 @@ public class SecurityConfig {
             throws Exception {
         return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenHandler()))
+                        .csrfTokenRequestHandler(new CsrfTokenHandler())
+                        .ignoringRequestMatchers(request -> {
+                            String uri = request.getRequestURI();
+                            String authHeader = request.getHeader("Authorization");
+                            return (authHeader != null && authHeader.startsWith("Bearer "))
+                                    || uri.startsWith("/swagger-ui")
+                                    || uri.startsWith("/api-docs")
+                                    || uri.startsWith("/api/v1/auth");
+                        }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/**", "/api-docs/**")
                         .permitAll()
@@ -56,6 +63,10 @@ public class SecurityConfig {
                                 "/api/v1/auth/login",
                                 "/api/v1/auth/signup",
                                 "/api/v1/auth/reset-password/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/auth/csrf")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -73,7 +84,7 @@ public class SecurityConfig {
                 .filter(s -> !s.isEmpty())
                 .toList();
         configuration.setAllowedOriginPatterns(origins.isEmpty() ? List.of("*") : origins);
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "X-XSRF-TOKEN", "Content-Disposition"));
         configuration.setAllowCredentials(true);

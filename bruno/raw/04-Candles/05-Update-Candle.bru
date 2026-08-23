@@ -1,0 +1,31 @@
+meta {
+  name: 05-Update-Candle
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/v1/candles/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: sample-candle-id
+}
+
+body:json {
+  {
+    "symbol": "RELIANCE",
+    "exchange": "NSE",
+    "interval": "1D",
+    "epoch": 1700000000,
+    "date": "2026-08-20",
+    "time": "09:15:00",
+    "open": 2500.5,
+    "high": 2550.0,
+    "low": 2490.0,
+    "close": 2545.0,
+    "volume": 1300000
+  }
+}

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
+import com.tragepro.api.datafeed.core.client.adapter.CandleIngestAdapter;
 import com.tragepro.api.datafeed.core.context.DatafeedContext;
-import com.tragepro.api.datafeed.core.feed.CandleIngestAdapter;
 import com.tragepro.api.datafeed.service.SecurityService;
 import com.tragepro.api.datafeed.service.WatchListService;
 import com.tragepro.api.domain.datafeed.SymbolDataModel;
@@ -70,9 +70,9 @@ class DatafeedServiceImplTest {
         assertEquals("MyWatchlist", response.watchList());
         assertEquals("Data load initiated successfully", response.message());
 
-        verify(datafeedContext).transitionTo(stock, DatafeedState.PROCESSING);
-        verify(datafeedContext).transitionTo(eq(stock), eq(DatafeedState.COMPLETED), any());
-        verify(datafeedContext).transitionTo(stock, DatafeedState.INITIALIZED);
+        verify(datafeedContext, timeout(3000)).transitionTo(stock, DatafeedState.PROCESSING);
+        verify(datafeedContext, timeout(3000)).transitionTo(eq(stock), eq(DatafeedState.COMPLETED), any());
+        verify(datafeedContext, timeout(3000)).transitionTo(stock, DatafeedState.INITIALIZED);
     }
 
     @Test
@@ -138,6 +138,7 @@ class DatafeedServiceImplTest {
         LoadCandleResponse response = datafeedService.loadData(request);
 
         assertNotNull(response);
+        verify(securityService, timeout(3000)).fetSecurityBySymbol("AAPL");
         verify(candleIngestAdapter, never()).fetchAndIngest(any(), any(), anyInt());
     }
 
@@ -163,7 +164,7 @@ class DatafeedServiceImplTest {
         LoadCandleResponse response = datafeedService.loadData(request);
 
         assertNotNull(response);
-        verify(datafeedContext).transitionTo(stock, DatafeedState.PROCESSING);
-        verify(datafeedContext).transitionTo(stock, DatafeedState.INITIALIZED);
+        verify(datafeedContext, timeout(3000)).transitionTo(stock, DatafeedState.PROCESSING);
+        verify(datafeedContext, timeout(3000)).transitionTo(stock, DatafeedState.INITIALIZED);
     }
 }

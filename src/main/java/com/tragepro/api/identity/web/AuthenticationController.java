@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "1. AuthenticationController")
+@Tag(
+        name = "1. Identity & Access Management",
+        description = "User authentication, registration, password lifecycle, and credentials")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -33,6 +35,12 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> signup(
             @Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok().body(authenticationService.signup(authenticationRequest));
+    }
+
+    @GetMapping("/csrf")
+    public ResponseEntity<org.springframework.security.web.csrf.CsrfToken> getCsrfToken(
+            org.springframework.security.web.csrf.CsrfToken csrfToken) {
+        return ResponseEntity.ok().body(csrfToken);
     }
 
     @PreAuthorize("hasRole('APP_ADMIN') or #userName == authentication.name")

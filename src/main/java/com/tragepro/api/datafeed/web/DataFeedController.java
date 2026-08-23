@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "4. DataFeedController")
+@Tag(name = "2. Market Data & Feeds", description = "Datafeed ingestion pipelines and symbol sync")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/datafeed")

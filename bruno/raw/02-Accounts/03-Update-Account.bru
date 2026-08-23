@@ -1,0 +1,26 @@
+meta {
+  name: 03-Update-Account
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/api/v1/account/:identifier
+  body: json
+  auth: inherit
+}
+
+params:path {
+  identifier: trader01
+}
+
+body:json {
+  {
+    "broker": "DHAN",
+    "clientId": "1000000001",
+    "password": "UpdatedBrokerPassword123",
+    "accessToken": "updated-broker-access-token",
+    "identifier": "trader01",
+    "isActive": true
+  }
+}

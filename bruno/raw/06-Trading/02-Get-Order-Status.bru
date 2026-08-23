@@ -1,0 +1,15 @@
+meta {
+  name: 02-Get-Order-Status
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/orders/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: sample-order-id
+}

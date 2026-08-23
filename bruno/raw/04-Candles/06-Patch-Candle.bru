@@ -1,0 +1,21 @@
+meta {
+  name: 06-Patch-Candle
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/candles/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: sample-candle-id
+}
+
+body:json {
+  {
+    "close": 2548.0
+  }
+}

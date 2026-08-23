@@ -1,0 +1,18 @@
+meta {
+  name: 01-Load-Datafeed
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/datafeed/load
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "watchListName": "NIFTY_50",
+    "daysBack": 3
+  }
+}

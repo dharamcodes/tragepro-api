@@ -1,0 +1,15 @@
+meta {
+  name: 06-Delete-Watchlist
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/watchlists/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: sample-watchlist-id
+}
