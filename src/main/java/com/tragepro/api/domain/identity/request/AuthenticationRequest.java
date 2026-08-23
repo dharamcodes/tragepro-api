@@ -3,7 +3,6 @@ package com.tragepro.api.domain.identity.request;
 import com.tragepro.api.domain.identity.constant.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
@@ -18,5 +17,5 @@ public record AuthenticationRequest(
         @Size(min = 8, message = "Password must be at least 8 characters long")
         String password,
 
-        @NotNull(message = "Role cannot be null") RoleType role,
+        RoleType role,
         Boolean isActive) {}

@@ -20,6 +20,10 @@ resilience4j:
         limitForPeriod: 5
         limitRefreshPeriod: 10s
         timeoutDuration: 0ms
+      authLimiter:
+        limitForPeriod: 20
+        limitRefreshPeriod: 1m
+        timeoutDuration: 0ms
 
 temporal:
   enabled: ${TEMPORAL_ENABLED:false}

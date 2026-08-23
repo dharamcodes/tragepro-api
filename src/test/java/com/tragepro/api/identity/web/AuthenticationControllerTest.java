@@ -8,7 +8,6 @@ import com.tragepro.api.domain.identity.constant.RoleType;
 import com.tragepro.api.domain.identity.request.AuthenticationRequest;
 import com.tragepro.api.domain.identity.request.LoginRequest;
 import com.tragepro.api.domain.identity.request.ResetPasswordRequest;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,7 +72,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
     @Test
     void testGetByUserName_NotFound() throws Exception {
         mockMvc.perform(get("/api/v1/auth/find/{userName}", "nonexistentUser").header("Authorization", authToken))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -109,7 +108,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
                         .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedRequest)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -130,7 +129,7 @@ class AuthenticationControllerTest extends ApiTestSetup {
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(nonexistentRequest)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
 
         LoginRequest wrongPasswordRequest =
                 LoginRequest.builder().userName(uuid).password("wrongpass").build();
@@ -158,22 +157,15 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testChangePassword_Success() throws Exception {
-        var passwordResetToken = "Bearer "
-                + jwtTokenHelper.generateResetPasswordToken(
-                        uuid,
-                        Map.of(
-                                "passwordReset",
-                                PASSWORD_RESET_CLAIM,
-                                "role",
-                                RoleType.PASSWORD_RESET_CLAIM.getValue()));
         ResetPasswordRequest resetPasswordRequest = ResetPasswordRequest.builder()
                 .userName(uuid)
+                .currentPassword("TestPassword123")
                 .password("NewPassword123!")
                 .confirmPassword("NewPassword123!")
                 .build();
 
-        mockMvc.perform(put("/api/v1/auth/password", uuid)
-                        .header("Authorization", passwordResetToken)
+        mockMvc.perform(put("/api/v1/auth/password")
+                        .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(resetPasswordRequest)))
                 .andExpect(status().isAccepted());
@@ -181,36 +173,29 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testChangePassword_Exception() throws Exception {
-        var passwordResetToken = "Bearer "
-                + jwtTokenHelper.generateResetPasswordToken(
-                        uuid,
-                        Map.of(
-                                "passwordReset",
-                                PASSWORD_RESET_CLAIM,
-                                "role",
-                                RoleType.PASSWORD_RESET_CLAIM.getValue()));
         ResetPasswordRequest resetPasswordRequest = ResetPasswordRequest.builder()
                 .userName(uuid)
+                .currentPassword("TestPassword123")
                 .password("NewPassword123!")
                 .confirmPassword("NewPassword123")
                 .build();
 
-        mockMvc.perform(put("/api/v1/auth/password", uuid)
-                        .header("Authorization", passwordResetToken)
+        mockMvc.perform(put("/api/v1/auth/password")
+                        .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(resetPasswordRequest)))
                 .andExpect(status().isBadRequest());
 
-        ResetPasswordRequest resetPasswordRequestInactive = ResetPasswordRequest.builder()
+        ResetPasswordRequest resetPasswordRequestOtherUser = ResetPasswordRequest.builder()
                 .userName(UUID.randomUUID().toString())
                 .password("NewPassword123!")
                 .confirmPassword("NewPassword123!")
                 .build();
-        mockMvc.perform(put("/api/v1/auth/password", UUID.randomUUID().toString())
-                        .header("Authorization", passwordResetToken)
+        mockMvc.perform(put("/api/v1/auth/password")
+                        .header("Authorization", authToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(resetPasswordRequestInactive)))
-                .andExpect(status().isNotFound());
+                        .content(objectMapper.writeValueAsString(resetPasswordRequestOtherUser)))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -226,8 +211,9 @@ class AuthenticationControllerTest extends ApiTestSetup {
 
     @Test
     void testDeactivateUser_Exception() throws Exception {
-        mockMvc.perform(delete("/api/v1/auth/deactivate/{userName}", "userName").header("Authorization", authToken))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(delete("/api/v1/auth/deactivate/{userName}", "otherUser")
+                        .header("Authorization", authToken))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -241,6 +227,6 @@ class AuthenticationControllerTest extends ApiTestSetup {
     void testDeleteUser_Exception() throws Exception {
         mockMvc.perform(delete("/api/v1/auth/delete/{userName}", "nonexistentUser")
                         .header("Authorization", authToken))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 }

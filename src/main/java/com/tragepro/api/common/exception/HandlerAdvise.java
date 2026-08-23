@@ -7,12 +7,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Locale;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class HandlerAdvise {
 
@@ -74,12 +76,13 @@ public class HandlerAdvise {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<AppErrorDto> handle(RuntimeException runtimeException) {
+        log.error("Unhandled runtime exception occurred", runtimeException);
         ErrorType errorType = ErrorType.INTERNAL_ERROR;
         return ResponseEntity.status(errorType.getCode())
                 .body(AppErrorDto.builder()
                         .errorCode(errorType.getErrorCode())
                         .timestamp(LocalDateTime.now())
-                        .message(runtimeException.getLocalizedMessage())
+                        .message(messageSource.getMessage(errorType.getMessage(), null, Locale.ENGLISH))
                         .build());
     }
 }

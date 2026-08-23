@@ -60,18 +60,19 @@ class AuthenticationServiceImplTest {
     void testLogin_Success() {
         LoginRequest req = new LoginRequest("user1", "pass1");
         when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
-        when(bCryptPasswordEncoder.matches("pass1", "hashedPass")).thenReturn(true);
         when(jwtTokenHelper.generateToken(anyString(), anyMap())).thenReturn("token123");
 
         LoginResponse response = authenticationService.login(req);
         assertEquals("user1", response.userName());
         assertEquals("token123", response.token());
+        verify(authenticationManager).authenticate(any());
     }
 
     @Test
     void testLogin_UserNotFound() {
         LoginRequest req = new LoginRequest("user1", "pass1");
-        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
+        when(authenticationManager.authenticate(any()))
+                .thenThrow(new org.springframework.security.authentication.BadCredentialsException("Bad credentials"));
 
         assertThrows(AppException.class, () -> authenticationService.login(req));
     }
@@ -79,8 +80,8 @@ class AuthenticationServiceImplTest {
     @Test
     void testLogin_InvalidPassword() {
         LoginRequest req = new LoginRequest("user1", "pass1");
-        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
-        when(bCryptPasswordEncoder.matches("pass1", "hashedPass")).thenReturn(false);
+        when(authenticationManager.authenticate(any()))
+                .thenThrow(new org.springframework.security.authentication.BadCredentialsException("Bad credentials"));
 
         assertThrows(AppException.class, () -> authenticationService.login(req));
     }
@@ -91,6 +92,7 @@ class AuthenticationServiceImplTest {
                 .userName("user1")
                 .password("pass1")
                 .email("user1@test.com")
+                .role(RoleType.SUPER_USER)
                 .build();
 
         when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
@@ -103,6 +105,7 @@ class AuthenticationServiceImplTest {
 
         AuthenticationResponse response = authenticationService.signup(req);
         assertEquals("user1", response.userName());
+        assertEquals(RoleType.APP_USER, user.getRole());
     }
 
     @Test
@@ -187,13 +190,33 @@ class AuthenticationServiceImplTest {
 
     @Test
     void testChangePassword_Success() {
-        ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "newPass");
+        ResetPasswordRequest req = ResetPasswordRequest.builder()
+                .userName("user1")
+                .currentPassword("oldPass")
+                .password("newPass")
+                .confirmPassword("newPass")
+                .build();
         when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
         when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+        when(bCryptPasswordEncoder.matches("oldPass", "hashedPass")).thenReturn(true);
         when(bCryptPasswordEncoder.encode("newPass")).thenReturn("encodedNew");
 
         assertDoesNotThrow(() -> authenticationService.changePassword(req));
         verify(authenticationRepository).save(user);
+    }
+
+    @Test
+    void testChangePassword_InvalidCurrentPassword() {
+        ResetPasswordRequest req = ResetPasswordRequest.builder()
+                .userName("user1")
+                .currentPassword("wrongPass")
+                .password("newPass")
+                .confirmPassword("newPass")
+                .build();
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+        when(bCryptPasswordEncoder.matches("wrongPass", "hashedPass")).thenReturn(false);
+
+        assertThrows(AppException.class, () -> authenticationService.changePassword(req));
     }
 
     @Test
@@ -205,7 +228,6 @@ class AuthenticationServiceImplTest {
     @Test
     void testChangePassword_UserNotFound() {
         ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "newPass");
-        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
         when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
 
         assertThrows(AppException.class, () -> authenticationService.changePassword(req));

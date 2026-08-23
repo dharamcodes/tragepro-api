@@ -19,6 +19,9 @@ public class UserDetailServiceImpl implements UserDetailService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var userDetail = authenticationRepository.findByUserNameAndIsActive(username, true);
+        if (userDetail == null) {
+            throw new UsernameNotFoundException("User not found or inactive: " + username);
+        }
         return User.builder()
                 .username(userDetail.getUserName())
                 .password(userDetail.getPassword())

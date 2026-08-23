@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -29,7 +30,7 @@ import org.springframework.util.ObjectUtils;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final String ROLE = "role";
-    private static final String PASSWORD_RESET_CLAIM = "resetPassword";
+    private static final String PASSWORD_RESET_CLAIM = "passwordReset";
 
     private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -39,22 +40,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        var userDetails = authenticationRepository.findByUserNameAndIsActive(loginRequest.userName(), true);
-        if (ObjectUtils.isEmpty(userDetails)) {
-            log.error("User with userName {} does not exist", loginRequest.userName());
-            throw new AppException(ErrorType.DATA_NOT_FOUND);
-        } else if (!bCryptPasswordEncoder.matches(loginRequest.password(), userDetails.getPassword())) {
-            log.error("Invalid userName :: {}", loginRequest.userName());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.userName(), loginRequest.password()));
+            var userDetails = authenticationRepository.findByUserNameAndIsActive(loginRequest.userName(), true);
+            if (ObjectUtils.isEmpty(userDetails)) {
+                log.error("User with userName {} is inactive or not found", loginRequest.userName());
+                throw new AppException(ErrorType.ACCESS_DENIED);
+            }
+            var token = jwtTokenHelper.generateToken(
+                    loginRequest.userName(), Map.of(ROLE, userDetails.getRole().getValue()));
+            return LoginResponse.builder()
+                    .userName(loginRequest.userName())
+                    .token(token)
+                    .build();
+        } catch (AuthenticationException ex) {
+            log.error("Authentication failed for userName :: {}", loginRequest.userName());
             throw new AppException(ErrorType.ACCESS_DENIED);
         }
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.userName(), loginRequest.password()));
-        var token = jwtTokenHelper.generateToken(
-                loginRequest.userName(), Map.of(ROLE, userDetails.getRole().getValue()));
-        return LoginResponse.builder()
-                .userName(loginRequest.userName())
-                .token(token)
-                .build();
     }
 
     @Override
@@ -67,6 +70,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var encodedPassword = bCryptPasswordEncoder.encode(authenticationRequest.password());
         var userEntity = mapper.requestToEntity(authenticationRequest);
         userEntity.setPassword(encodedPassword);
+        userEntity.setRole(RoleType.APP_USER);
+        userEntity.setIsActive(true);
 
         String userName = authenticationRequest.userName();
         if (userName == null || userName.isBlank()) {
@@ -111,15 +116,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.error("Password mismatch while resetting password for userName:: {} ", userName);
             throw new AppException(ErrorType.PASSWORD_MISMATCH);
         }
-        var password = resetPasswordRequest.password();
-        var mapper = mapperFactory.getMapper(AuthenticationMapper.class);
         var authDetails = authenticationRepository.findByUserNameAndIsActive(userName, true);
         if (ObjectUtils.isEmpty(authDetails)) {
-            log.error("Any active user with userName {} does not exists", userName);
+            log.error("Active user with userName {} does not exist", userName);
             throw new AppException(ErrorType.USER_NOT_FOUND);
         }
+        if (resetPasswordRequest.currentPassword() != null) {
+            if (!bCryptPasswordEncoder.matches(resetPasswordRequest.currentPassword(), authDetails.getPassword())) {
+                log.error("Invalid current password for userName:: {}", userName);
+                throw new AppException(ErrorType.ACCESS_DENIED);
+            }
+        }
+        var mapper = mapperFactory.getMapper(AuthenticationMapper.class);
         var mergeRequest = AuthenticationRequest.builder()
-                .password(bCryptPasswordEncoder.encode(password))
+                .password(bCryptPasswordEncoder.encode(resetPasswordRequest.password()))
                 .isActive(true)
                 .build();
         mapper.merge(mergeRequest, authDetails);

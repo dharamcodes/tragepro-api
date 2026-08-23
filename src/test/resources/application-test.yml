@@ -40,3 +40,15 @@ jwt:
   secret: UVVETsBqGWkYVZrM+VWTEMPn/aHp+HLjJL8hQlFyytQ=
   expirationMinutes: 7200
   resetPasswordExpirationMinutes: 15
+
+resilience4j:
+  ratelimiter:
+    instances:
+      backendService:
+        limitForPeriod: 1000
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0ms
+      authLimiter:
+        limitForPeriod: 1000
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0ms
