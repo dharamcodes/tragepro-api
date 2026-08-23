@@ -1,6 +1,6 @@
 package com.tragepro.api.datafeed.web;
 
-import com.tragepro.api.datafeed.adapter.DatafeedAdapter;
+import com.tragepro.api.datafeed.service.DatafeedService;
 import com.tragepro.api.domain.datafeed.request.LoadCandleRequest;
 import com.tragepro.api.domain.datafeed.response.LoadCandleResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/datafeed")
 public class DataFeedController {
 
-  private final DatafeedAdapter datafeedAdapter;
+  private final DatafeedService datafeedService;
 
   @PostMapping("/load")
   public ResponseEntity<LoadCandleResponse> loadData(@RequestBody LoadCandleRequest request) {
-    LoadCandleResponse response = datafeedAdapter.loadData(request);
+    LoadCandleResponse response = datafeedService.loadData(request);
     return ResponseEntity.ok().body(response);
   }
 }

@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.tragepro.api.common.ApiTestSetup;
-import com.tragepro.api.datafeed.adapter.WatchListAdapter;
+import com.tragepro.api.datafeed.service.WatchListService;
 import com.tragepro.api.domain.datafeed.SymbolDataModel;
 import com.tragepro.api.domain.datafeed.request.LoadCandleRequest;
 import com.tragepro.api.domain.datafeed.request.WatchListRequest;
@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 
 class DataFeedControllerTest extends ApiTestSetup {
 
-  @Autowired private WatchListAdapter watchListAdapter;
+  @Autowired private WatchListService watchListService;
 
   @BeforeEach
   void setUp() {
@@ -28,7 +28,7 @@ class DataFeedControllerTest extends ApiTestSetup {
               .description("Test Watchlist")
               .stocks(Set.of(new SymbolDataModel("AAPL", "Apple Inc.")))
               .build();
-      watchListAdapter.create(wlRequest);
+      watchListService.create(wlRequest);
     } catch (Exception e) {
       // Ignored if already created
     }

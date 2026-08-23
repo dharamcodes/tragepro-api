@@ -33,7 +33,7 @@ class JournalAdapterTest {
   }
 
   @Test
-  void testLogTrade() {
+  void testCreateJournal() {
     JournalRequest request = JournalRequest.builder().notes("Good trade").build();
     JournalResponse expectedResponse =
         JournalResponse.builder().id("j-1").notes("Good trade").build();
@@ -47,7 +47,20 @@ class JournalAdapterTest {
   }
 
   @Test
-  void testGetJournals() {
+  void testGetJournalById() {
+    JournalResponse expectedResponse =
+        JournalResponse.builder().id("j-1").notes("Good trade").build();
+    when(journalService.getJournalById("j-1")).thenReturn(expectedResponse);
+
+    JournalResponse response = journalAdapter.getJournalById("j-1");
+
+    assertNotNull(response);
+    assertEquals("j-1", response.getId());
+    verify(journalService).getJournalById("j-1");
+  }
+
+  @Test
+  void testGetAllJournals() {
     TradeFilter filter = new TradeFilter("AAPL", null, null, null, null, null);
     Pageable pageable = PageRequest.of(0, 10);
     JournalResponse item = JournalResponse.builder().id("j-1").symbol("AAPL").build();
@@ -61,5 +74,19 @@ class JournalAdapterTest {
     assertEquals(1, response.getContent().size());
     assertEquals("j-1", response.getContent().get(0).getId());
     verify(journalService).getAllJournals(any(), any());
+  }
+
+  @Test
+  void testUpdateJournal() {
+    JournalRequest request = JournalRequest.builder().notes("Updated trade").build();
+    JournalResponse expectedResponse =
+        JournalResponse.builder().id("j-1").notes("Updated trade").build();
+    when(journalService.updateJournal("j-1", request)).thenReturn(expectedResponse);
+
+    JournalResponse response = journalAdapter.updateJournal("j-1", request);
+
+    assertNotNull(response);
+    assertEquals("j-1", response.getId());
+    verify(journalService).updateJournal("j-1", request);
   }
 }

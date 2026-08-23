@@ -1,7 +1,7 @@
 package com.tragepro.api.datafeed.web;
 
 import com.tragepro.api.common.model.response.PagedResponse;
-import com.tragepro.api.datafeed.adapter.CandleAdapter;
+import com.tragepro.api.datafeed.service.CandleService;
 import com.tragepro.api.domain.datafeed.request.CandleRequest;
 import com.tragepro.api.domain.datafeed.response.CandleResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,16 +20,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/candles")
 public class CandleController {
 
-  private final CandleAdapter candleAdapter;
+  private final CandleService candleService;
 
   @PostMapping
   public ResponseEntity<CandleResponse> create(@Valid @RequestBody CandleRequest candleRequest) {
-    return ResponseEntity.ok().body(candleAdapter.create(candleRequest));
+    return ResponseEntity.ok().body(candleService.create(candleRequest));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<CandleResponse> getById(@PathVariable String id) {
-    return candleAdapter
+    return candleService
         .getById(id)
         .map(response -> ResponseEntity.ok().body(response))
         .orElse(ResponseEntity.notFound().build());
@@ -38,24 +38,24 @@ public class CandleController {
   @GetMapping
   public ResponseEntity<PagedResponse<CandleResponse>> getAll(
       @PageableDefault(size = 20) Pageable pageable) {
-    return ResponseEntity.ok().body(PagedResponse.of(candleAdapter.getAll(pageable)));
+    return ResponseEntity.ok().body(PagedResponse.of(candleService.getAll(pageable)));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<CandleResponse> update(
       @NotNull @PathVariable String id, @Valid @RequestBody CandleRequest candleRequest) {
-    return ResponseEntity.ok().body(candleAdapter.update(id, candleRequest));
+    return ResponseEntity.ok().body(candleService.update(id, candleRequest));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@NotNull @PathVariable String id) {
-    candleAdapter.delete(id);
+    candleService.delete(id);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/latest")
   public ResponseEntity<Set<CandleResponse>> getLatestCandlesBySymbols(
       @RequestBody Set<String> symbols) {
-    return ResponseEntity.ok().body(candleAdapter.getLatestCandlesBySymbols(symbols));
+    return ResponseEntity.ok().body(candleService.getLatestCandlesBySymbols(symbols));
   }
 }

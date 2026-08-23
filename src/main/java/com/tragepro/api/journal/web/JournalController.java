@@ -3,7 +3,7 @@ package com.tragepro.api.journal.web;
 import com.tragepro.api.domain.journal.request.JournalRequest;
 import com.tragepro.api.domain.journal.request.TradeFilter;
 import com.tragepro.api.domain.journal.response.JournalResponse;
-import com.tragepro.api.journal.adapter.JournalAdapter;
+import com.tragepro.api.journal.service.JournalService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,28 +27,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/journal")
 public class JournalController {
 
-  private final JournalAdapter journalAdapter;
+  private final JournalService journalService;
 
   @PostMapping
   public ResponseEntity<JournalResponse> createJournal(@Valid @RequestBody JournalRequest request) {
-    return ResponseEntity.ok(journalAdapter.createJournal(request));
+    return ResponseEntity.ok(journalService.createJournal(request));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<JournalResponse> getJournalById(@PathVariable String id) {
-    return ResponseEntity.ok(journalAdapter.getJournalById(id));
+    return ResponseEntity.ok(journalService.getJournalById(id));
   }
 
   @GetMapping
   public ResponseEntity<Page<JournalResponse>> getAllJournals(
       @ModelAttribute TradeFilter filter,
       @PageableDefault(sort = "entryTime", direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(journalAdapter.getAllJournals(filter, pageable));
+    return ResponseEntity.ok(journalService.getAllJournals(filter, pageable));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<JournalResponse> updateJournal(
       @PathVariable String id, @Valid @RequestBody JournalRequest request) {
-    return ResponseEntity.ok(journalAdapter.updateJournal(id, request));
+    return ResponseEntity.ok(journalService.updateJournal(id, request));
   }
 }

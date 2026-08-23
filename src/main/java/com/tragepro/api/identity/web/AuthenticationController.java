@@ -5,7 +5,7 @@ import com.tragepro.api.domain.identity.request.LoginRequest;
 import com.tragepro.api.domain.identity.request.ResetPasswordRequest;
 import com.tragepro.api.domain.identity.response.AuthenticationResponse;
 import com.tragepro.api.domain.identity.response.LoginResponse;
-import com.tragepro.api.identity.adapter.AuthenticationAdapter;
+import com.tragepro.api.identity.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,22 +18,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
-  private final AuthenticationAdapter authenticationAdapter;
+  private final AuthenticationService authenticationService;
 
   @PostMapping("/login")
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-    return ResponseEntity.ok().body(authenticationAdapter.loginUser(loginRequest));
+    return ResponseEntity.ok().body(authenticationService.login(loginRequest));
   }
 
   @PostMapping("/signup")
   public ResponseEntity<AuthenticationResponse> signup(
       @Valid @RequestBody AuthenticationRequest authenticationRequest) {
-    return ResponseEntity.ok().body(authenticationAdapter.signup(authenticationRequest));
+    return ResponseEntity.ok().body(authenticationService.signup(authenticationRequest));
   }
 
   @GetMapping("/find/{userName}")
   public ResponseEntity<AuthenticationResponse> get(@PathVariable String userName) {
-    return ResponseEntity.ok().body(authenticationAdapter.getByUserName(userName));
+    return ResponseEntity.ok().body(authenticationService.getByUserName(userName));
   }
 
   @PutMapping("/update/{userName}")
@@ -41,31 +41,31 @@ public class AuthenticationController {
       @PathVariable String userName,
       @Valid @RequestBody AuthenticationRequest authenticationRequest) {
     return ResponseEntity.ok()
-        .body(authenticationAdapter.updateAuthenticationDetails(userName, authenticationRequest));
+        .body(authenticationService.updateAuthenticationDetails(userName, authenticationRequest));
   }
 
   @DeleteMapping("/deactivate/{userName}")
   public ResponseEntity<Void> deactivate(@PathVariable String userName) {
-    authenticationAdapter.deactivateAuthentication(userName);
+    authenticationService.deactivateAuthentication(userName);
     return ResponseEntity.accepted().build();
   }
 
   @PutMapping("/password")
   public ResponseEntity<Void> changePassword(
       @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-    authenticationAdapter.changePassword(resetPasswordRequest);
+    authenticationService.changePassword(resetPasswordRequest);
     return ResponseEntity.accepted().build();
   }
 
   @PostMapping("/reset-password/{userName}")
   public ResponseEntity<Void> resetPassword(@PathVariable String userName) {
-    authenticationAdapter.resetPassword(userName);
+    authenticationService.resetPassword(userName);
     return ResponseEntity.accepted().build();
   }
 
   @DeleteMapping("/delete/{userName}")
   public ResponseEntity<Void> delete(@PathVariable String userName) {
-    authenticationAdapter.deleteAuthentication(userName);
+    authenticationService.deleteAuthentication(userName);
     return ResponseEntity.accepted().build();
   }
 }

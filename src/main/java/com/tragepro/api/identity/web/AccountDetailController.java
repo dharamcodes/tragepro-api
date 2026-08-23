@@ -2,7 +2,7 @@ package com.tragepro.api.identity.web;
 
 import com.tragepro.api.domain.identity.request.AccountDetailRequest;
 import com.tragepro.api.domain.identity.response.AccountDetailResponse;
-import com.tragepro.api.identity.adapter.AccountDetailAdapter;
+import com.tragepro.api.identity.service.AccountDetailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/account")
 public class AccountDetailController {
 
-  private final AccountDetailAdapter accountDetailAdapter;
+  private final AccountDetailService accountDetailService;
 
   @PostMapping
   public ResponseEntity<AccountDetailResponse> create(
       @Valid @RequestBody AccountDetailRequest accountDetailRequest) {
-    return ResponseEntity.ok().body(accountDetailAdapter.createAccount(accountDetailRequest));
+    return ResponseEntity.ok().body(accountDetailService.createAccount(accountDetailRequest));
   }
 
   @GetMapping("/{identifier}")
   public ResponseEntity<AccountDetailResponse> get(@PathVariable String identifier) {
-    return ResponseEntity.ok().body(accountDetailAdapter.getAccount(identifier));
+    return ResponseEntity.ok().body(accountDetailService.getAccount(identifier));
   }
 
   @PutMapping("/{identifier}")
@@ -33,12 +33,12 @@ public class AccountDetailController {
       @PathVariable String identifier,
       @Valid @RequestBody AccountDetailRequest accountDetailRequest) {
     return ResponseEntity.ok()
-        .body(accountDetailAdapter.updateAccountDetails(identifier, accountDetailRequest));
+        .body(accountDetailService.updateAccountDetails(identifier, accountDetailRequest));
   }
 
   @DeleteMapping("/{identifier}")
   public ResponseEntity<Void> deactivate(@PathVariable String identifier) {
-    accountDetailAdapter.deactivateAccount(identifier);
+    accountDetailService.deactivateAccount(identifier);
     return ResponseEntity.ok().build();
   }
 }
