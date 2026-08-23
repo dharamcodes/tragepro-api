@@ -26,95 +26,104 @@ import org.springframework.security.core.userdetails.UserDetails;
 @ExtendWith(MockitoExtension.class)
 class IdentityAdapterTest {
 
-  @Mock private AuthenticationService authenticationService;
-  @Mock private AccountDetailService accountDetailService;
-  @Mock private UserDetailService userDetailService;
+    @Mock
+    private AuthenticationService authenticationService;
 
-  private AuthenticationAdapterImpl authenticationAdapter;
-  private AccountDetailAdapterImpl accountDetailAdapter;
-  private UserDetailAdapterImpl userDetailAdapter;
+    @Mock
+    private AccountDetailService accountDetailService;
 
-  @BeforeEach
-  void setUp() {
-    authenticationAdapter = new AuthenticationAdapterImpl(authenticationService);
-    accountDetailAdapter = new AccountDetailAdapterImpl(accountDetailService);
-    userDetailAdapter = new UserDetailAdapterImpl(userDetailService);
-  }
+    @Mock
+    private UserDetailService userDetailService;
 
-  @Test
-  void testAuthenticationAdapterMethods() {
-    LoginRequest loginRequest = LoginRequest.builder().userName("trader").password("pass").build();
-    LoginResponse loginResponse =
-        LoginResponse.builder().userName("trader").token("jwt-token").build();
+    private AuthenticationAdapterImpl authenticationAdapter;
+    private AccountDetailAdapterImpl accountDetailAdapter;
+    private UserDetailAdapterImpl userDetailAdapter;
 
-    when(authenticationService.login(loginRequest)).thenReturn(loginResponse);
-    LoginResponse response = authenticationAdapter.loginUser(loginRequest);
-    assertNotNull(response);
-    assertEquals("trader", response.userName());
+    @BeforeEach
+    void setUp() {
+        authenticationAdapter = new AuthenticationAdapterImpl(authenticationService);
+        accountDetailAdapter = new AccountDetailAdapterImpl(accountDetailService);
+        userDetailAdapter = new UserDetailAdapterImpl(userDetailService);
+    }
 
-    AuthenticationRequest authRequest =
-        AuthenticationRequest.builder().userName("trader").email("t@t.com").build();
-    AuthenticationResponse authResponse =
-        AuthenticationResponse.builder()
-            .userName("trader")
-            .role(RoleType.APP_USER)
-            .isActive(true)
-            .build();
+    @Test
+    void testAuthenticationAdapterMethods() {
+        LoginRequest loginRequest =
+                LoginRequest.builder().userName("trader").password("pass").build();
+        LoginResponse loginResponse =
+                LoginResponse.builder().userName("trader").token("jwt-token").build();
 
-    when(authenticationService.signup(authRequest)).thenReturn(authResponse);
-    assertEquals(authResponse, authenticationAdapter.signup(authRequest));
+        when(authenticationService.login(loginRequest)).thenReturn(loginResponse);
+        LoginResponse response = authenticationAdapter.loginUser(loginRequest);
+        assertNotNull(response);
+        assertEquals("trader", response.userName());
 
-    when(authenticationService.getByUserName("trader")).thenReturn(authResponse);
-    assertEquals(authResponse, authenticationAdapter.getByUserName("trader"));
+        AuthenticationRequest authRequest = AuthenticationRequest.builder()
+                .userName("trader")
+                .email("t@t.com")
+                .build();
+        AuthenticationResponse authResponse = AuthenticationResponse.builder()
+                .userName("trader")
+                .role(RoleType.APP_USER)
+                .isActive(true)
+                .build();
 
-    when(authenticationService.updateAuthenticationDetails("trader", authRequest))
-        .thenReturn(authResponse);
-    assertEquals(
-        authResponse, authenticationAdapter.updateAuthenticationDetails("trader", authRequest));
+        when(authenticationService.signup(authRequest)).thenReturn(authResponse);
+        assertEquals(authResponse, authenticationAdapter.signup(authRequest));
 
-    ResetPasswordRequest resetReq =
-        ResetPasswordRequest.builder().userName("trader").password("newP").build();
-    authenticationAdapter.changePassword(resetReq);
-    verify(authenticationService).changePassword(resetReq);
+        when(authenticationService.getByUserName("trader")).thenReturn(authResponse);
+        assertEquals(authResponse, authenticationAdapter.getByUserName("trader"));
 
-    authenticationAdapter.deactivateAuthentication("trader");
-    verify(authenticationService).deactivateAuthentication("trader");
+        when(authenticationService.updateAuthenticationDetails("trader", authRequest))
+                .thenReturn(authResponse);
+        assertEquals(authResponse, authenticationAdapter.updateAuthenticationDetails("trader", authRequest));
 
-    authenticationAdapter.resetPassword("trader");
-    verify(authenticationService).resetPassword("trader");
+        ResetPasswordRequest resetReq = ResetPasswordRequest.builder()
+                .userName("trader")
+                .password("newP")
+                .build();
+        authenticationAdapter.changePassword(resetReq);
+        verify(authenticationService).changePassword(resetReq);
 
-    authenticationAdapter.deleteAuthentication("trader");
-    verify(authenticationService).deleteAuthentication("trader");
-  }
+        authenticationAdapter.deactivateAuthentication("trader");
+        verify(authenticationService).deactivateAuthentication("trader");
 
-  @Test
-  void testAccountDetailAdapterMethods() {
-    AccountDetailRequest request = AccountDetailRequest.builder().identifier("acc-123").build();
-    AccountDetailResponse expectedAccount =
-        AccountDetailResponse.builder().identifier("acc-123").build();
+        authenticationAdapter.resetPassword("trader");
+        verify(authenticationService).resetPassword("trader");
 
-    when(accountDetailService.createAccount(request)).thenReturn(expectedAccount);
-    assertEquals(expectedAccount, accountDetailAdapter.createAccount(request));
+        authenticationAdapter.deleteAuthentication("trader");
+        verify(authenticationService).deleteAuthentication("trader");
+    }
 
-    when(accountDetailService.getAccount("acc-123")).thenReturn(expectedAccount);
-    AccountDetailResponse response = accountDetailAdapter.getAccount("acc-123");
-    assertNotNull(response);
-    assertEquals("acc-123", response.identifier());
+    @Test
+    void testAccountDetailAdapterMethods() {
+        AccountDetailRequest request =
+                AccountDetailRequest.builder().identifier("acc-123").build();
+        AccountDetailResponse expectedAccount =
+                AccountDetailResponse.builder().identifier("acc-123").build();
 
-    when(accountDetailService.updateAccountDetails("acc-123", request)).thenReturn(expectedAccount);
-    assertEquals(expectedAccount, accountDetailAdapter.updateAccountDetails("acc-123", request));
+        when(accountDetailService.createAccount(request)).thenReturn(expectedAccount);
+        assertEquals(expectedAccount, accountDetailAdapter.createAccount(request));
 
-    accountDetailAdapter.deactivateAccount("acc-123");
-    verify(accountDetailService).deactivateAccount("acc-123");
-  }
+        when(accountDetailService.getAccount("acc-123")).thenReturn(expectedAccount);
+        AccountDetailResponse response = accountDetailAdapter.getAccount("acc-123");
+        assertNotNull(response);
+        assertEquals("acc-123", response.identifier());
 
-  @Test
-  void testUserDetailAdapterMethods() {
-    UserDetails userDetails =
-        User.builder().username("trader").password("pass").roles("USER").build();
-    when(userDetailService.loadUserByUsername("trader")).thenReturn(userDetails);
+        when(accountDetailService.updateAccountDetails("acc-123", request)).thenReturn(expectedAccount);
+        assertEquals(expectedAccount, accountDetailAdapter.updateAccountDetails("acc-123", request));
 
-    assertEquals(userDetails, userDetailAdapter.loadUserByUsername("trader"));
-    verify(userDetailService).loadUserByUsername("trader");
-  }
+        accountDetailAdapter.deactivateAccount("acc-123");
+        verify(accountDetailService).deactivateAccount("acc-123");
+    }
+
+    @Test
+    void testUserDetailAdapterMethods() {
+        UserDetails userDetails =
+                User.builder().username("trader").password("pass").roles("USER").build();
+        when(userDetailService.loadUserByUsername("trader")).thenReturn(userDetails);
+
+        assertEquals(userDetails, userDetailAdapter.loadUserByUsername("trader"));
+        verify(userDetailService).loadUserByUsername("trader");
+    }
 }

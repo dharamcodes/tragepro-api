@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class StrategyAdapterImpl implements StrategyAdapter {
-  private final StrategyService strategyService;
+    private final StrategyService strategyService;
 
-  @Override
-  public StrategyResponse create(StrategyRequest strategyRequest) {
-    return strategyService.create(strategyRequest);
-  }
+    @Override
+    public StrategyResponse create(StrategyRequest strategyRequest) {
+        return strategyService.create(strategyRequest);
+    }
 
-  @Override
-  public StrategyResponse createOrUpdate(StrategyRequest strategyRequest) {
-    return strategyService.createOrUpdate(strategyRequest);
-  }
+    @Override
+    public StrategyResponse createOrUpdate(StrategyRequest strategyRequest) {
+        return strategyService.createOrUpdate(strategyRequest);
+    }
 
-  @Override
-  public Set<StrategyResponse> getAll() {
-    return strategyService.getAll();
-  }
+    @Override
+    public Set<StrategyResponse> getAll() {
+        return strategyService.getAll();
+    }
 }

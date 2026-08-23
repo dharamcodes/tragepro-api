@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component("EVALUATE_VOLUME_PROFILE")
 public class EvaluateVolumeProfile implements StrategyEvaluator {
 
-  @Override
-  public StrategyResponse evaluate(StrategyRequest strategyRequest) {
-    return null;
-  }
+    @Override
+    public StrategyResponse evaluate(StrategyRequest strategyRequest) {
+        return null;
+    }
 }

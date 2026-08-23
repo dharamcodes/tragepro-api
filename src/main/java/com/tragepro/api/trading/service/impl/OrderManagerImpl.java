@@ -16,57 +16,55 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderManagerImpl implements OrderManager {
 
-  private final Map<String, OrderResponse> orders = new ConcurrentHashMap<>();
+    private final Map<String, OrderResponse> orders = new ConcurrentHashMap<>();
 
-  @Override
-  public OrderResponse submitOrder(OrderRequest request) {
-    if (request == null) {
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+    @Override
+    public OrderResponse submitOrder(OrderRequest request) {
+        if (request == null) {
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+        log.info("Submitting order for symbol: {}", request.symbol());
+        String id = UUID.randomUUID().toString();
+        OrderResponse response = new OrderResponse(
+                id,
+                request.symbol(),
+                request.quantity(),
+                request.price(),
+                request.orderType(),
+                request.side(),
+                "SUBMITTED",
+                Instant.now());
+        orders.put(id, response);
+        return response;
     }
-    log.info("Submitting order for symbol: {}", request.symbol());
-    String id = UUID.randomUUID().toString();
-    OrderResponse response =
-        new OrderResponse(
-            id,
-            request.symbol(),
-            request.quantity(),
-            request.price(),
-            request.orderType(),
-            request.side(),
-            "SUBMITTED",
-            Instant.now());
-    orders.put(id, response);
-    return response;
-  }
 
-  @Override
-  public OrderResponse cancelOrder(String orderId) {
-    log.info("Cancelling order with id: {}", orderId);
-    OrderResponse existing = getOrderStatus(orderId);
-    OrderResponse cancelled =
-        new OrderResponse(
-            existing.id(),
-            existing.symbol(),
-            existing.quantity(),
-            existing.price(),
-            existing.orderType(),
-            existing.side(),
-            "CANCELLED",
-            existing.createdAt());
-    orders.put(orderId, cancelled);
-    return cancelled;
-  }
+    @Override
+    public OrderResponse cancelOrder(String orderId) {
+        log.info("Cancelling order with id: {}", orderId);
+        OrderResponse existing = getOrderStatus(orderId);
+        OrderResponse cancelled = new OrderResponse(
+                existing.id(),
+                existing.symbol(),
+                existing.quantity(),
+                existing.price(),
+                existing.orderType(),
+                existing.side(),
+                "CANCELLED",
+                existing.createdAt());
+        orders.put(orderId, cancelled);
+        return cancelled;
+    }
 
-  @Override
-  public OrderResponse getOrderStatus(String orderId) {
-    log.info("Fetching order status for id: {}", orderId);
-    if (orderId == null) {
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+    @Override
+    public OrderResponse getOrderStatus(String orderId) {
+        log.info("Fetching order status for id: {}", orderId);
+        if (orderId == null) {
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+        OrderResponse order = orders.get(orderId);
+        if (order == null) {
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        return order;
     }
-    OrderResponse order = orders.get(orderId);
-    if (order == null) {
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
-    }
-    return order;
-  }
 }

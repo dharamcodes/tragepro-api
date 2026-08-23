@@ -12,19 +12,22 @@ import org.springframework.context.ApplicationEventPublisher;
 @ExtendWith(MockitoExtension.class)
 class StrategyEventSystemTest {
 
-  @Mock private ApplicationEventPublisher applicationEventPublisher;
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
-  @InjectMocks private StrategyEventPublisher publisher;
+    @InjectMocks
+    private StrategyEventPublisher publisher;
 
-  @InjectMocks private StrategyEventListener listener;
+    @InjectMocks
+    private StrategyEventListener listener;
 
-  @Test
-  void testPublishAndListen() {
-    StrategyEvent event = new StrategyEvent("test-id", "test-message");
+    @Test
+    void testPublishAndListen() {
+        StrategyEvent event = new StrategyEvent("test-id", "test-message");
 
-    publisher.publish(event);
-    verify(applicationEventPublisher).publishEvent(event);
+        publisher.publish(event);
+        verify(applicationEventPublisher).publishEvent(event);
 
-    listener.on(event);
-  }
+        listener.on(event);
+    }
 }

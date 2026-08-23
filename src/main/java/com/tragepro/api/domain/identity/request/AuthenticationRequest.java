@@ -9,11 +9,14 @@ import lombok.Builder;
 
 @Builder
 public record AuthenticationRequest(
-    @Email(message = "Invalid email format") @NotBlank(message = "Email cannot be blank")
+        @Email(message = "Invalid email format") @NotBlank(message = "Email cannot be blank")
         String email,
-    @NotBlank(message = "User name cannot be blank") String userName,
-    @NotBlank(message = "Password cannot be blank")
+
+        @NotBlank(message = "User name cannot be blank") String userName,
+
+        @NotBlank(message = "Password cannot be blank")
         @Size(min = 8, message = "Password must be at least 8 characters long")
         String password,
-    @NotNull(message = "Role cannot be null") RoleType role,
-    Boolean isActive) {}
+
+        @NotNull(message = "Role cannot be null") RoleType role,
+        Boolean isActive) {}

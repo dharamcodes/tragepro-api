@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component("BUILD_VOLUME_PROFILE")
 public class BuildVolumeProfile implements StrategyBuilder {
 
-  @Override
-  public StrategyResponse build(StrategyRequest strategyRequest) {
-    return null;
-  }
+    @Override
+    public StrategyResponse build(StrategyRequest strategyRequest) {
+        return null;
+    }
 }

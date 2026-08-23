@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ConfigLoaderAdapterImpl implements ConfigLoaderAdapter {
-  private final ConfigLoaderService configLoaderService;
+    private final ConfigLoaderService configLoaderService;
 
-  @Override
-  public StrategyConfig getStrategyByName(String name) {
-    return configLoaderService.getStrategyByName(name);
-  }
+    @Override
+    public StrategyConfig getStrategyByName(String name) {
+        return configLoaderService.getStrategyByName(name);
+    }
 }

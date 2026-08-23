@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ClientHeaderModel {
-  private String name;
-  private String value;
+    private String name;
+    private String value;
 }

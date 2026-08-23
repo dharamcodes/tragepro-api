@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BuilderConfig {
-  private StrategyBuilderStep name;
-  private int time;
-  private TimeUnit uom;
+    private StrategyBuilderStep name;
+    private int time;
+    private TimeUnit uom;
 }

@@ -5,5 +5,5 @@ import com.tragepro.api.domain.strategy.response.StrategyResponse;
 
 /** Pipeline step for building strategy data (indicators, levels, OHLCV timeframe aggregation). */
 public interface StrategyBuilder {
-  StrategyResponse build(StrategyRequest strategyRequest);
+    StrategyResponse build(StrategyRequest strategyRequest);
 }

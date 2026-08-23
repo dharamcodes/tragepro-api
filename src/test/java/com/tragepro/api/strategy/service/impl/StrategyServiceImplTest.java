@@ -27,142 +27,141 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class StrategyServiceImplTest {
 
-  @Mock private StrategyRepository strategyRepository;
-  @Mock private MapperFactory mapperFactory;
-  @Mock private StrategyMapper strategyMapper;
+    @Mock
+    private StrategyRepository strategyRepository;
 
-  @InjectMocks private StrategyServiceImpl strategyService;
+    @Mock
+    private MapperFactory mapperFactory;
 
-  private StrategyRequest validRequest;
-  private StrategyEntity mockEntity;
-  private StrategyResponse mockResponse;
+    @Mock
+    private StrategyMapper strategyMapper;
 
-  @BeforeEach
-  void setUp() {
-    lenient().when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
+    @InjectMocks
+    private StrategyServiceImpl strategyService;
 
-    validRequest =
-        StrategyRequest.builder()
-            .strategy(StrategyModel.builder().watchlist("WL").build())
-            .symbolData(SymbolModel.builder().symbol("SYM").build())
-            .currentState(StatusModel.builder().state(StrategyState.INITIALIZING).build())
-            .build();
+    private StrategyRequest validRequest;
+    private StrategyEntity mockEntity;
+    private StrategyResponse mockResponse;
 
-    mockEntity = new StrategyEntity();
-    mockResponse = StrategyResponse.builder().build();
-  }
+    @BeforeEach
+    void setUp() {
+        lenient().when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
 
-  @Test
-  void testCreate_NullRequest_ThrowsException() {
-    AppException exception = assertThrows(AppException.class, () -> strategyService.create(null));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+        validRequest = StrategyRequest.builder()
+                .strategy(StrategyModel.builder().watchlist("WL").build())
+                .symbolData(SymbolModel.builder().symbol("SYM").build())
+                .currentState(
+                        StatusModel.builder().state(StrategyState.INITIALIZING).build())
+                .build();
 
-  @Test
-  void testCreate_Success() {
-    when(strategyMapper.requestToEntity(validRequest)).thenReturn(mockEntity);
-    when(strategyRepository.save(mockEntity)).thenReturn(mockEntity);
-    when(strategyMapper.entityToResponse(mockEntity)).thenReturn(mockResponse);
+        mockEntity = new StrategyEntity();
+        mockResponse = StrategyResponse.builder().build();
+    }
 
-    StrategyResponse result = strategyService.create(validRequest);
-    assertNotNull(result);
-    assertEquals(mockResponse, result);
-    verify(strategyRepository, times(1)).save(mockEntity);
-  }
+    @Test
+    void testCreate_NullRequest_ThrowsException() {
+        AppException exception = assertThrows(AppException.class, () -> strategyService.create(null));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-  @Test
-  void testCreateOrUpdate_NullRequest_ThrowsException() {
-    AppException exception =
-        assertThrows(AppException.class, () -> strategyService.createOrUpdate(null));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+    @Test
+    void testCreate_Success() {
+        when(strategyMapper.requestToEntity(validRequest)).thenReturn(mockEntity);
+        when(strategyRepository.save(mockEntity)).thenReturn(mockEntity);
+        when(strategyMapper.entityToResponse(mockEntity)).thenReturn(mockResponse);
 
-  @Test
-  void testCreateOrUpdate_NullStrategy_ThrowsException() {
-    validRequest.setStrategy(null);
-    AppException exception =
-        assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+        StrategyResponse result = strategyService.create(validRequest);
+        assertNotNull(result);
+        assertEquals(mockResponse, result);
+        verify(strategyRepository, times(1)).save(mockEntity);
+    }
 
-  @Test
-  void testCreateOrUpdate_NullSymbolData_ThrowsException() {
-    validRequest.setSymbolData(null);
-    AppException exception =
-        assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+    @Test
+    void testCreateOrUpdate_NullRequest_ThrowsException() {
+        AppException exception = assertThrows(AppException.class, () -> strategyService.createOrUpdate(null));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-  @Test
-  void testCreateOrUpdate_NullCurrentState_ThrowsException() {
-    validRequest.setCurrentState(null);
-    AppException exception =
-        assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+    @Test
+    void testCreateOrUpdate_NullStrategy_ThrowsException() {
+        validRequest.setStrategy(null);
+        AppException exception = assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-  @Test
-  void testCreateOrUpdate_NullNestedValues_ThrowsException() {
-    validRequest.getStrategy().setWatchlist(null);
-    AppException exception =
-        assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+    @Test
+    void testCreateOrUpdate_NullSymbolData_ThrowsException() {
+        validRequest.setSymbolData(null);
+        AppException exception = assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-  @Test
-  void testCreateOrUpdate_NotFound_CreatesNew() {
-    when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
-            "WL", "SYM", StrategyState.INITIALIZING))
-        .thenReturn(Optional.empty());
+    @Test
+    void testCreateOrUpdate_NullCurrentState_ThrowsException() {
+        validRequest.setCurrentState(null);
+        AppException exception = assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-    when(strategyMapper.requestToEntity(validRequest)).thenReturn(mockEntity);
-    when(strategyRepository.save(mockEntity)).thenReturn(mockEntity);
-    when(strategyMapper.entityToResponse(mockEntity)).thenReturn(mockResponse);
+    @Test
+    void testCreateOrUpdate_NullNestedValues_ThrowsException() {
+        validRequest.getStrategy().setWatchlist(null);
+        AppException exception = assertThrows(AppException.class, () -> strategyService.createOrUpdate(validRequest));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-    StrategyResponse result = strategyService.createOrUpdate(validRequest);
-    assertNotNull(result);
-    assertEquals(mockResponse, result);
-    verify(strategyRepository, times(1)).save(mockEntity);
-  }
+    @Test
+    void testCreateOrUpdate_NotFound_CreatesNew() {
+        when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
+                        "WL", "SYM", StrategyState.INITIALIZING))
+                .thenReturn(Optional.empty());
 
-  @Test
-  void testCreateOrUpdate_FoundIdentical_BypassesSave() {
-    StrategyEntity existingEntity = new StrategyEntity();
+        when(strategyMapper.requestToEntity(validRequest)).thenReturn(mockEntity);
+        when(strategyRepository.save(mockEntity)).thenReturn(mockEntity);
+        when(strategyMapper.entityToResponse(mockEntity)).thenReturn(mockResponse);
 
-    when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
-            "WL", "SYM", StrategyState.INITIALIZING))
-        .thenReturn(Optional.of(existingEntity));
-    doNothing().when(strategyMapper).merge(any(StrategyRequest.class), any(StrategyEntity.class));
-    when(strategyMapper.entityToResponse(existingEntity)).thenReturn(mockResponse);
+        StrategyResponse result = strategyService.createOrUpdate(validRequest);
+        assertNotNull(result);
+        assertEquals(mockResponse, result);
+        verify(strategyRepository, times(1)).save(mockEntity);
+    }
 
-    StrategyResponse result = strategyService.createOrUpdate(validRequest);
-    assertNotNull(result);
-    assertEquals(mockResponse, result);
-    verify(strategyRepository, never()).save(any());
-  }
+    @Test
+    void testCreateOrUpdate_FoundIdentical_BypassesSave() {
+        StrategyEntity existingEntity = new StrategyEntity();
 
-  @Test
-  void testCreateOrUpdate_FoundDifferent_SavesMerged() {
-    StrategyEntity existingEntity = new StrategyEntity();
+        when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
+                        "WL", "SYM", StrategyState.INITIALIZING))
+                .thenReturn(Optional.of(existingEntity));
+        doNothing().when(strategyMapper).merge(any(StrategyRequest.class), any(StrategyEntity.class));
+        when(strategyMapper.entityToResponse(existingEntity)).thenReturn(mockResponse);
 
-    when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
-            "WL", "SYM", StrategyState.INITIALIZING))
-        .thenReturn(Optional.of(existingEntity));
-    doAnswer(
-            invocation -> {
-              StrategyEntity entity = invocation.getArgument(1);
-              entity.setId("changed-id");
-              return null;
-            })
-        .when(strategyMapper)
-        .merge(any(StrategyRequest.class), any(StrategyEntity.class));
-    when(strategyRepository.save(any(StrategyEntity.class)))
-        .thenAnswer(invocation -> invocation.getArgument(0));
-    when(strategyMapper.entityToResponse(any(StrategyEntity.class))).thenReturn(mockResponse);
+        StrategyResponse result = strategyService.createOrUpdate(validRequest);
+        assertNotNull(result);
+        assertEquals(mockResponse, result);
+        verify(strategyRepository, never()).save(any());
+    }
 
-    StrategyResponse result = strategyService.createOrUpdate(validRequest);
-    assertNotNull(result);
-    assertEquals(mockResponse, result);
-    verify(strategyRepository, times(1)).save(any(StrategyEntity.class));
-  }
+    @Test
+    void testCreateOrUpdate_FoundDifferent_SavesMerged() {
+        StrategyEntity existingEntity = new StrategyEntity();
+
+        when(strategyRepository.findByStrategyWatchlistAndSymbolDataSymbolAndCurrentStateState(
+                        "WL", "SYM", StrategyState.INITIALIZING))
+                .thenReturn(Optional.of(existingEntity));
+        doAnswer(invocation -> {
+                    StrategyEntity entity = invocation.getArgument(1);
+                    entity.setId("changed-id");
+                    return null;
+                })
+                .when(strategyMapper)
+                .merge(any(StrategyRequest.class), any(StrategyEntity.class));
+        when(strategyRepository.save(any(StrategyEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(strategyMapper.entityToResponse(any(StrategyEntity.class))).thenReturn(mockResponse);
+
+        StrategyResponse result = strategyService.createOrUpdate(validRequest);
+        assertNotNull(result);
+        assertEquals(mockResponse, result);
+        verify(strategyRepository, times(1)).save(any(StrategyEntity.class));
+    }
 }

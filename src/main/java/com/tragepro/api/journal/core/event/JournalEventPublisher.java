@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JournalEventPublisher {
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void publish(JournalEvent event) {
-    log.info("Publishing JournalEvent: {}", event.eventId());
-    applicationEventPublisher.publishEvent(event);
-  }
+    public void publish(JournalEvent event) {
+        log.info("Publishing JournalEvent: {}", event.eventId());
+        applicationEventPublisher.publishEvent(event);
+    }
 }

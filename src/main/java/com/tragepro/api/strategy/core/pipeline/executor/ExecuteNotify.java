@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component("EXECUTE_NOTIFY")
 public class ExecuteNotify implements StrategyExecutor {
 
-  @Override
-  public StrategyResponse execute(StrategyRequest strategyRequest) {
-    return null;
-  }
+    @Override
+    public StrategyResponse execute(StrategyRequest strategyRequest) {
+        return null;
+    }
 }

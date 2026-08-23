@@ -3,195 +3,119 @@ package com.tragepro.api.datafeed.service.impl;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.datafeed.core.context.DatafeedContext;
-import com.tragepro.api.datafeed.core.feed.FeedAdapterFactory;
-import com.tragepro.api.datafeed.service.CandleService;
+import com.tragepro.api.datafeed.core.feed.CandleIngestAdapter;
 import com.tragepro.api.datafeed.service.DatafeedService;
 import com.tragepro.api.datafeed.service.SecurityService;
 import com.tragepro.api.datafeed.service.WatchListService;
-import com.tragepro.api.domain.datafeed.DatafeedModel;
 import com.tragepro.api.domain.datafeed.SymbolDataModel;
 import com.tragepro.api.domain.datafeed.constant.DatafeedState;
-import com.tragepro.api.domain.datafeed.request.CandleRequest;
-import com.tragepro.api.domain.datafeed.request.FeedClientRequest;
 import com.tragepro.api.domain.datafeed.request.LoadCandleRequest;
 import com.tragepro.api.domain.datafeed.response.LoadCandleResponse;
 import com.tragepro.api.domain.datafeed.response.SecurityResponse;
-import java.time.Instant;
+import com.tragepro.api.domain.datafeed.response.WatchListResponse;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Executor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DatafeedServiceImpl implements DatafeedService {
 
-  private final WatchListService watchListService;
-  private final SecurityService securityService;
-  private final CandleService candleService;
-  private final FeedAdapterFactory feedAdapterFactory;
-  private final DatafeedContext datafeedContext;
-  private final Executor datafeedThreadPoolExecutor;
+    private final WatchListService watchListService;
+    private final SecurityService securityService;
+    private final CandleIngestAdapter candleIngestAdapter;
+    private final DatafeedContext datafeedContext;
 
-  @Value("${data.fetch.max-concurrency:10}")
-  private int maxConcurrency = 10;
+    @Override
+    public LoadCandleResponse loadData(LoadCandleRequest request) {
+        validateRequest(request);
 
-  public DatafeedServiceImpl(
-      WatchListService watchListService,
-      SecurityService securityService,
-      CandleService candleService,
-      FeedAdapterFactory feedAdapterFactory,
-      DatafeedContext datafeedContext,
-      @Qualifier("applicationTaskExecutor") Executor datafeedThreadPoolExecutor) {
-    this.watchListService = watchListService;
-    this.securityService = securityService;
-    this.candleService = candleService;
-    this.feedAdapterFactory = feedAdapterFactory;
-    this.datafeedContext = datafeedContext;
-    this.datafeedThreadPoolExecutor = datafeedThreadPoolExecutor;
-  }
+        WatchListResponse watchlist = findWatchlistByName(request.watchListName());
+        Set<SymbolDataModel> stocks = watchlist.stocks();
 
-  @Override
-  public LoadCandleResponse loadData(LoadCandleRequest request) {
-    if (request == null || request.watchListName() == null) {
-      log.error("Invalid load request");
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+        if (stocks == null || stocks.isEmpty()) {
+            log.info("No stocks defined in watchlist :: {}", request.watchListName());
+            return buildResponse(request.watchListName(), "No symbols found in watchlist to process");
+        }
+
+        try {
+            loadWatchlistData(stocks, request.daysBack());
+        } catch (Exception e) {
+            log.error("Error loading stocks from watchlist :: {}", request.watchListName(), e);
+            throw new AppException(ErrorType.INTERNAL_ERROR);
+        }
+
+        return buildResponse(request.watchListName(), "Data load initiated successfully");
     }
 
-    var watchlist =
-        watchListService.getAll().stream()
-            .filter(w -> w.name().equalsIgnoreCase(request.watchListName()))
-            .findFirst()
-            .orElseThrow(
-                () -> {
-                  log.error("Watchlist not found :: {}", request.watchListName());
-                  return new AppException(ErrorType.DATA_NOT_FOUND);
+    private void validateRequest(LoadCandleRequest request) {
+        if (request == null || request.watchListName() == null) {
+            log.error("Invalid load request");
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+    }
+
+    private WatchListResponse findWatchlistByName(String watchListName) {
+        return watchListService.getAll().stream()
+                .filter(w -> w.name().equalsIgnoreCase(watchListName))
+                .findFirst()
+                .orElseThrow(() -> {
+                    log.error("Watchlist not found :: {}", watchListName);
+                    return new AppException(ErrorType.DATA_NOT_FOUND);
                 });
-
-    var stocks = watchlist.stocks();
-    if (stocks == null || stocks.isEmpty()) {
-      log.info("No stocks defined in watchlist :: {}", request.watchListName());
-      return LoadCandleResponse.builder()
-          .watchList(request.watchListName())
-          .message("No symbols found in watchlist to process")
-          .build();
     }
-    datafeedThreadPoolExecutor.execute(() -> asyncDataLoad(stocks, request.daysBack()));
 
-    return LoadCandleResponse.builder()
-        .watchList(request.watchListName())
-        .message("Data load initiated successfully")
-        .build();
-  }
+    private void loadWatchlistData(Set<SymbolDataModel> stocks, int daysBack) {
+        log.info("Starting data load for {} symbols with daysBack={}", stocks.size(), daysBack);
+        stocks.forEach(stock -> processStockDataLoad(stock, daysBack));
+        log.info("Data load process completed for all watchlist symbols");
+    }
 
-  private void asyncDataLoad(Set<SymbolDataModel> stocks, int daysBack) {
-    log.info(
-        "Starting asynchronous data load for {} symbols with daysBack={}", stocks.size(), daysBack);
+    private void processStockDataLoad(SymbolDataModel stock, int daysBack) {
+        log.info("Processing data load for stock symbol: {}", stock.symbol());
+        Optional<SecurityResponse> securityOpt = resolveSecurity(stock.symbol());
+        if (securityOpt.isEmpty()) {
+            return;
+        }
 
-    stocks.forEach(
-        stock -> {
-          try {
-            log.info("Processing data load for stock symbol: {}", stock.symbol());
+        datafeedContext.transitionTo(stock, DatafeedState.PROCESSING);
 
-            SecurityResponse security;
-            try {
-              security = securityService.fetSecurityBySymbol(stock.symbol());
-            } catch (Exception ex) {
-              log.warn("Security not found for symbol: {}, skipping", stock.symbol(), ex);
-              return;
-            }
-
-            updateContextState(stock, DatafeedState.PROCESSING, null);
-
-            var clientReq =
-                FeedClientRequest.builder()
-                    .securityId(security.securityId())
-                    .instrument(security.symbol())
-                    .fromDate(LocalDate.now().minusDays(daysBack).toString())
-                    .toDate(LocalDate.now().toString())
-                    .build();
-
-            var candles = feedAdapterFactory.get().intradayDataAdapter(clientReq);
-            log.info(
-                "Retrieved {} candles from adapter for symbol: {}", candles.size(), stock.symbol());
-
-            var enrichedSymbol =
-                SymbolDataModel.builder().symbol(stock.symbol()).name(stock.name()).build();
-
-            processCandlesParallel(candles, enrichedSymbol, stock);
-            var latestDate =
-                candles.stream().mapToLong(candle -> candle.candleData().timestamp()).max().stream()
-                    .mapToObj(
-                        timestamp ->
-                            timestamp > 1_000_000_000_000L
-                                ? Instant.ofEpochMilli(timestamp)
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate()
-                                : LocalDate.ofEpochDay(timestamp))
-                    .findFirst()
-                    .orElse(LocalDate.now());
-
-            updateContextState(stock, DatafeedState.COMPLETED, latestDate);
+        try {
+            LocalDate latestDate = candleIngestAdapter.fetchAndIngest(securityOpt.get(), stock, daysBack);
+            datafeedContext.transitionTo(stock, DatafeedState.COMPLETED, latestDate);
             log.info("Data load completed successfully for symbol: {}", stock.symbol());
-
-          } catch (Exception e) {
-            log.error("Failed to perform data load for symbol: {}", stock.symbol(), e);
-            try {
-              updateContextState(stock, DatafeedState.INITIALIZED, null);
-            } catch (Exception ex) {
-              log.error("Failed to revert state for symbol: {}", stock.symbol(), ex);
-            }
-          }
-        });
-    log.info("Asynchronous data load process finished.");
-  }
-
-  private void updateContextState(SymbolDataModel key, DatafeedState state, LocalDate timestamp) {
-    Optional.ofNullable(datafeedContext.get(key))
-        .ifPresentOrElse(
-            contextModel -> {
-              if (timestamp != null) {
-                contextModel.setTimestamp(timestamp);
-              }
-              log.info("updating the data-feed context for symbol: {}", contextModel.getSymbol());
-              datafeedContext.updateStatus(key, state);
-            },
-            () ->
-                datafeedContext.put(
-                    key,
-                    DatafeedModel.builder()
-                        .symbol(key.symbol())
-                        .timestamp(timestamp)
-                        .state(state)
-                        .build()));
-  }
-
-  private void processCandlesParallel(
-      List<CandleRequest> candles, SymbolDataModel enrichedSymbol, SymbolDataModel stock) {
-    try (var executor =
-        java.util.concurrent.Executors.newFixedThreadPool(
-            maxConcurrency, Thread.ofVirtual().factory())) {
-      candles.forEach(
-          candle ->
-              executor.submit(
-                  () -> {
-                    long timestamp = candle.candleData().timestamp();
-                    if (!candleService.isCandleExists(enrichedSymbol.name(), timestamp)) {
-                      var enriched =
-                          CandleRequest.builder()
-                              .symbolData(enrichedSymbol)
-                              .candleData(candle.candleData())
-                              .build();
-                      log.info("Loading symbol:: {} timestamp:: {}", stock.symbol(), timestamp);
-                      candleService.create(enriched);
-                    }
-                  }));
+        } catch (Exception ex) {
+            log.error("Failed to ingest candle data for symbol: {}", stock.symbol(), ex);
+        } finally {
+            safeRevertToInitialized(stock);
+        }
     }
-  }
+
+    private Optional<SecurityResponse> resolveSecurity(String symbol) {
+        try {
+            return Optional.of(securityService.fetSecurityBySymbol(symbol));
+        } catch (Exception ex) {
+            log.warn("Security not found for symbol: {}, skipping", symbol, ex);
+            return Optional.empty();
+        }
+    }
+
+    private void safeRevertToInitialized(SymbolDataModel stock) {
+        try {
+            datafeedContext.transitionTo(stock, DatafeedState.INITIALIZED);
+        } catch (Exception ex) {
+            log.error("Failed to revert state for symbol: {}", stock.symbol(), ex);
+        }
+    }
+
+    private LoadCandleResponse buildResponse(String watchListName, String message) {
+        return LoadCandleResponse.builder()
+                .watchList(watchListName)
+                .message(message)
+                .build();
+    }
 }

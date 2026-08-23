@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "workflow")
 public class WorkflowConfig {
-  private List<StrategyConfig> strategy;
+    private List<StrategyConfig> strategy;
 
-  public StrategyConfig getStrategyByName(String name) {
-    return strategy.stream()
-        .filter(cfg -> cfg.getName().equalsIgnoreCase(name))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Strategy not found: " + name));
-  }
+    public StrategyConfig getStrategyByName(String name) {
+        return strategy.stream()
+                .filter(cfg -> cfg.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Strategy not found: " + name));
+    }
 }

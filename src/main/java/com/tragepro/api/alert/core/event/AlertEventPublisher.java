@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AlertEventPublisher {
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void publish(AlertEvent event) {
-    log.info("Publishing AlertEvent: {}", event.eventId());
-    applicationEventPublisher.publishEvent(event);
-  }
+    public void publish(AlertEvent event) {
+        log.info("Publishing AlertEvent: {}", event.eventId());
+        applicationEventPublisher.publishEvent(event);
+    }
 }

@@ -15,57 +15,47 @@ import org.springframework.http.MediaType;
 
 class OrderControllerTest extends ApiTestSetup {
 
-  @Test
-  void testSubmitAndGetAndCancelOrder_Success() throws Exception {
-    OrderRequest orderReq =
-        new OrderRequest("AAPL", BigDecimal.TEN, BigDecimal.valueOf(150.0), "LIMIT", "BUY");
+    @Test
+    void testSubmitAndGetAndCancelOrder_Success() throws Exception {
+        OrderRequest orderReq = new OrderRequest("AAPL", BigDecimal.TEN, BigDecimal.valueOf(150.0), "LIMIT", "BUY");
 
-    String responseJson =
-        mockMvc
-            .perform(
-                post("/api/v1/orders")
-                    .header("Authorization", authToken)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(orderReq)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.symbol").value("AAPL"))
-            .andExpect(jsonPath("$.quantity").value(10))
-            .andExpect(jsonPath("$.price").value(150.0))
-            .andExpect(jsonPath("$.orderType").value("LIMIT"))
-            .andExpect(jsonPath("$.side").value("BUY"))
-            .andExpect(jsonPath("$.status").value("SUBMITTED"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+        String responseJson = mockMvc.perform(post("/api/v1/orders")
+                        .header("Authorization", authToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.symbol").value("AAPL"))
+                .andExpect(jsonPath("$.quantity").value(10))
+                .andExpect(jsonPath("$.price").value(150.0))
+                .andExpect(jsonPath("$.orderType").value("LIMIT"))
+                .andExpect(jsonPath("$.side").value("BUY"))
+                .andExpect(jsonPath("$.status").value("SUBMITTED"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
-    OrderResponse submitted = objectMapper.readValue(responseJson, OrderResponse.class);
+        OrderResponse submitted = objectMapper.readValue(responseJson, OrderResponse.class);
 
-    mockMvc
-        .perform(
-            get("/api/v1/orders/" + submitted.id())
-                .header("Authorization", authToken)
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(submitted.id()))
-        .andExpect(jsonPath("$.status").value("SUBMITTED"));
+        mockMvc.perform(get("/api/v1/orders/" + submitted.id())
+                        .header("Authorization", authToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(submitted.id()))
+                .andExpect(jsonPath("$.status").value("SUBMITTED"));
 
-    mockMvc
-        .perform(
-            delete("/api/v1/orders/" + submitted.id())
-                .header("Authorization", authToken)
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(submitted.id()))
-        .andExpect(jsonPath("$.status").value("CANCELLED"));
-  }
+        mockMvc.perform(delete("/api/v1/orders/" + submitted.id())
+                        .header("Authorization", authToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(submitted.id()))
+                .andExpect(jsonPath("$.status").value("CANCELLED"));
+    }
 
-  @Test
-  void testGetOrderStatus_NotFound() throws Exception {
-    mockMvc
-        .perform(
-            get("/api/v1/orders/non-existent")
-                .header("Authorization", authToken)
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound());
-  }
+    @Test
+    void testGetOrderStatus_NotFound() throws Exception {
+        mockMvc.perform(get("/api/v1/orders/non-existent")
+                        .header("Authorization", authToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }

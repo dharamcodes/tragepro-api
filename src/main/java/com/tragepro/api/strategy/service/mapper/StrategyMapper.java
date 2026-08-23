@@ -12,31 +12,30 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 @Mapper(config = CommonMapper.class)
-public interface StrategyMapper
-    extends BaseMapper<StrategyEntity, StrategyRequest, StrategyResponse> {
+public interface StrategyMapper extends BaseMapper<StrategyEntity, StrategyRequest, StrategyResponse> {
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  StrategyEntity requestToEntity(StrategyRequest strategyRequest);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    StrategyEntity requestToEntity(StrategyRequest strategyRequest);
 
-  @Override
-  StrategyResponse entityToResponse(StrategyEntity strategyEntity);
+    @Override
+    StrategyResponse entityToResponse(StrategyEntity strategyEntity);
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  void merge(StrategyRequest source, @MappingTarget StrategyEntity target);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    void merge(StrategyRequest source, @MappingTarget StrategyEntity target);
 
-  default SymbolDataModel toSymbolData(SymbolModel symbolModel) {
-    return SymbolDataModel.builder()
-        .symbol(symbolModel.getSymbol())
-        .name(symbolModel.getName())
-        .build();
-  }
+    default SymbolDataModel toSymbolData(SymbolModel symbolModel) {
+        return SymbolDataModel.builder()
+                .symbol(symbolModel.getSymbol())
+                .name(symbolModel.getName())
+                .build();
+    }
 
-  @Override
-  default Class<?> getMapperClass() {
-    return StrategyMapper.class;
-  }
+    @Override
+    default Class<?> getMapperClass() {
+        return StrategyMapper.class;
+    }
 
-  StrategyRequest responseToRequest(StrategyResponse strategyResponse);
+    StrategyRequest responseToRequest(StrategyResponse strategyResponse);
 }

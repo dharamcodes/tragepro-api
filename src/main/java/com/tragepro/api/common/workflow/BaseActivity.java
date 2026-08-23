@@ -19,57 +19,59 @@ import java.util.List;
  */
 public abstract class BaseActivity {
 
-  private static final Duration START_TO_CLOSE = Duration.ofSeconds(10);
-  private static final Duration SCHEDULE_TO_CLOSE = Duration.ofMinutes(1);
-  private static final int MAX_RETRY_ATTEMPTS = 3;
+    private static final Duration START_TO_CLOSE = Duration.ofSeconds(10);
+    private static final Duration SCHEDULE_TO_CLOSE = Duration.ofMinutes(1);
+    private static final int MAX_RETRY_ATTEMPTS = 3;
 
-  /**
-   * Creates a Temporal global activity stub with standard retry and timeout options.
-   *
-   * @param clazz the {@code @ActivityInterface} type
-   * @param <C> the activity interface type
-   * @return activity stub for use inside a Temporal Workflow
-   */
-  public static <C> C globalActivity(Class<C> clazz) {
-    return Workflow.newActivityStub(
-        clazz,
-        ActivityOptions.newBuilder()
-            .setStartToCloseTimeout(START_TO_CLOSE)
-            .setScheduleToCloseTimeout(SCHEDULE_TO_CLOSE)
-            .setRetryOptions(
-                RetryOptions.newBuilder().setMaximumAttempts(MAX_RETRY_ATTEMPTS).build())
-            .build());
-  }
+    /**
+     * Creates a Temporal global activity stub with standard retry and timeout options.
+     *
+     * @param clazz the {@code @ActivityInterface} type
+     * @param <C> the activity interface type
+     * @return activity stub for use inside a Temporal Workflow
+     */
+    public static <C> C globalActivity(Class<C> clazz) {
+        return Workflow.newActivityStub(
+                clazz,
+                ActivityOptions.newBuilder()
+                        .setStartToCloseTimeout(START_TO_CLOSE)
+                        .setScheduleToCloseTimeout(SCHEDULE_TO_CLOSE)
+                        .setRetryOptions(RetryOptions.newBuilder()
+                                .setMaximumAttempts(MAX_RETRY_ATTEMPTS)
+                                .build())
+                        .build());
+    }
 
-  /**
-   * Creates a Temporal local activity stub with standard retry and timeout options.
-   *
-   * @param clazz the {@code @ActivityInterface} type
-   * @param <C> the activity interface type
-   * @return local activity stub for use inside a Temporal Workflow
-   */
-  public static <C> C localActivity(Class<C> clazz) {
-    return Workflow.newLocalActivityStub(
-        clazz,
-        LocalActivityOptions.newBuilder()
-            .setStartToCloseTimeout(START_TO_CLOSE)
-            .setScheduleToCloseTimeout(SCHEDULE_TO_CLOSE)
-            .setRetryOptions(
-                RetryOptions.newBuilder().setMaximumAttempts(MAX_RETRY_ATTEMPTS).build())
-            .build());
-  }
+    /**
+     * Creates a Temporal local activity stub with standard retry and timeout options.
+     *
+     * @param clazz the {@code @ActivityInterface} type
+     * @param <C> the activity interface type
+     * @return local activity stub for use inside a Temporal Workflow
+     */
+    public static <C> C localActivity(Class<C> clazz) {
+        return Workflow.newLocalActivityStub(
+                clazz,
+                LocalActivityOptions.newBuilder()
+                        .setStartToCloseTimeout(START_TO_CLOSE)
+                        .setScheduleToCloseTimeout(SCHEDULE_TO_CLOSE)
+                        .setRetryOptions(RetryOptions.newBuilder()
+                                .setMaximumAttempts(MAX_RETRY_ATTEMPTS)
+                                .build())
+                        .build());
+    }
 
-  /**
-   * Returns the list of global {@code @ActivityInterface} classes this bean implements.
-   *
-   * @return list of global activity interface classes, empty if none
-   */
-  public abstract List<Class<?>> globalActivities();
+    /**
+     * Returns the list of global {@code @ActivityInterface} classes this bean implements.
+     *
+     * @return list of global activity interface classes, empty if none
+     */
+    public abstract List<Class<?>> globalActivities();
 
-  /**
-   * Returns the list of local {@code @ActivityInterface} classes this bean implements.
-   *
-   * @return list of local activity interface classes, empty if none
-   */
-  public abstract List<Class<?>> localActivities();
+    /**
+     * Returns the list of local {@code @ActivityInterface} classes this bean implements.
+     *
+     * @return list of local activity interface classes, empty if none
+     */
+    public abstract List<Class<?>> localActivities();
 }

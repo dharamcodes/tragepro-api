@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class ClientProperties {
-  private String identity;
-  private RetryOptions retryOptions;
+    private String identity;
+    private RetryOptions retryOptions;
 }

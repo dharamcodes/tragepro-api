@@ -18,21 +18,21 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
 
-  private final SecurityRepository securityRepository;
-  private final MapperFactory mapperFactory;
+    private final SecurityRepository securityRepository;
+    private final MapperFactory mapperFactory;
 
-  @Override
-  public SecurityResponse fetSecurityBySymbol(String symbol) {
-    var mapper = mapperFactory.getMapper(SecurityMapper.class);
-    if (!StringUtils.hasLength(symbol)) {
-      log.error("Invalid symbol :: {}", symbol);
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+    @Override
+    public SecurityResponse fetSecurityBySymbol(String symbol) {
+        var mapper = mapperFactory.getMapper(SecurityMapper.class);
+        if (!StringUtils.hasLength(symbol)) {
+            log.error("Invalid symbol :: {}", symbol);
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+        var securityEntity = securityRepository.findBySymbol(symbol);
+        if (Objects.isNull(securityEntity)) {
+            log.error("Data not found for symbol :: {}", symbol);
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        return mapper.entityToResponse(securityEntity);
     }
-    var securityEntity = securityRepository.findBySymbol(symbol);
-    if (Objects.isNull(securityEntity)) {
-      log.error("Data not found for symbol :: {}", symbol);
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
-    }
-    return mapper.entityToResponse(securityEntity);
-  }
 }

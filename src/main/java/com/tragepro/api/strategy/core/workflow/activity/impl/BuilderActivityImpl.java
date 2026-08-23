@@ -16,30 +16,28 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BuilderActivityImpl extends BaseActivity implements BuilderActivity {
 
-  @Override
-  public List<Class<?>> globalActivities() {
-    return List.of(BuilderActivity.class);
-  }
+    @Override
+    public List<Class<?>> globalActivities() {
+        return List.of(BuilderActivity.class);
+    }
 
-  @Override
-  public List<Class<?>> localActivities() {
-    return List.of();
-  }
+    @Override
+    public List<Class<?>> localActivities() {
+        return List.of();
+    }
 
-  @Override
-  public StrategyResponse run(StrategyRequest strategyRequest) {
-    return StrategyResponse.builder().build();
-  }
+    @Override
+    public StrategyResponse run(StrategyRequest strategyRequest) {
+        return StrategyResponse.builder().build();
+    }
 
-  @Override
-  public StrategyResponse loadBaseCandleData(
-      StrategyRequest strategyRequest, TimeframeModel baseTimeframe) {
-    return null;
-  }
+    @Override
+    public StrategyResponse loadBaseCandleData(StrategyRequest strategyRequest, TimeframeModel baseTimeframe) {
+        return null;
+    }
 
-  @Override
-  public StrategyResponse candleTimeframeConverter(
-      CandleModel baseData, TimeframeModel timeframeModel) {
-    return null;
-  }
+    @Override
+    public StrategyResponse candleTimeframeConverter(CandleModel baseData, TimeframeModel timeframeModel) {
+        return null;
+    }
 }

@@ -19,36 +19,36 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JournalRequest {
 
-  @NotBlank(message = "Account ID is required")
-  private String accountId;
+    @NotBlank(message = "Account ID is required")
+    private String accountId;
 
-  @NotBlank(message = "Symbol is required")
-  private String symbol;
+    @NotBlank(message = "Symbol is required")
+    private String symbol;
 
-  @NotNull(message = "Trade type is required")
-  private TradeType tradeType;
+    @NotNull(message = "Trade type is required")
+    private TradeType tradeType;
 
-  @NotNull(message = "Trade status is required")
-  private TradeStatus status;
+    @NotNull(message = "Trade status is required")
+    private TradeStatus status;
 
-  @NotNull(message = "Entry price is required")
-  @Positive(message = "Entry price must be positive")
-  private BigDecimal entryPrice;
+    @NotNull(message = "Entry price is required")
+    @Positive(message = "Entry price must be positive")
+    private BigDecimal entryPrice;
 
-  private BigDecimal exitPrice;
+    private BigDecimal exitPrice;
 
-  @NotNull(message = "Quantity is required")
-  @Positive(message = "Quantity must be positive")
-  private BigDecimal quantity;
+    @NotNull(message = "Quantity is required")
+    @Positive(message = "Quantity must be positive")
+    private BigDecimal quantity;
 
-  @NotNull(message = "Entry time is required")
-  private Instant entryTime;
+    @NotNull(message = "Entry time is required")
+    private Instant entryTime;
 
-  private Instant exitTime;
+    private Instant exitTime;
 
-  private BigDecimal pnl;
+    private BigDecimal pnl;
 
-  private String notes;
+    private String notes;
 
-  private List<String> tags;
+    private List<String> tags;
 }

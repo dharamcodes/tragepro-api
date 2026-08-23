@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 
 class StrategyContextTest {
 
-  @Test
-  void testGetAndPut() {
-    StrategyContext config = new StrategyContext();
+    @Test
+    void testGetAndPut() {
+        StrategyContext config = new StrategyContext();
 
-    String key = "test-strategy";
-    StrategyResponse response = StrategyResponse.builder().build();
+        String key = "test-strategy";
+        StrategyResponse response = StrategyResponse.builder().build();
 
-    assertNull(config.get(key));
-    config.put(key, response);
-    assertEquals(response, config.get(key));
-  }
+        assertNull(config.get(key));
+        config.put(key, response);
+        assertEquals(response, config.get(key));
+    }
 }

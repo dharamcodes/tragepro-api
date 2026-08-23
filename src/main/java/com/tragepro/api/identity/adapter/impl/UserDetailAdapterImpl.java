@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserDetailAdapterImpl implements UserDetailAdapter {
-  private final UserDetailService userDetailService;
+    private final UserDetailService userDetailService;
 
-  @Override
-  public UserDetails loadUserByUsername(String username) {
-    return userDetailService.loadUserByUsername(username);
-  }
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return userDetailService.loadUserByUsername(username);
+    }
 }

@@ -5,5 +5,5 @@ import com.tragepro.api.domain.strategy.response.StrategyResponse;
 
 /** Pipeline step for evaluating strategy signals (liquidity, volume, VWAP). */
 public interface StrategyEvaluator {
-  StrategyResponse evaluate(StrategyRequest strategyRequest);
+    StrategyResponse evaluate(StrategyRequest strategyRequest);
 }

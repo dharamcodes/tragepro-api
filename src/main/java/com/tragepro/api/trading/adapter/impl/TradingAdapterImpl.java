@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TradingAdapterImpl implements TradingAdapter {
-  private final TradingService tradingService;
+    private final TradingService tradingService;
 
-  @Override
-  public TradePositionResponse openPosition(TradePositionRequest request) {
-    return tradingService.openPosition(request);
-  }
+    @Override
+    public TradePositionResponse openPosition(TradePositionRequest request) {
+        return tradingService.openPosition(request);
+    }
 
-  @Override
-  public TradePositionResponse getPosition(String positionId) {
-    return tradingService.getPosition(positionId);
-  }
+    @Override
+    public TradePositionResponse getPosition(String positionId) {
+        return tradingService.getPosition(positionId);
+    }
 
-  @Override
-  public List<TradePositionResponse> getActivePositions() {
-    return tradingService.getActivePositions();
-  }
+    @Override
+    public List<TradePositionResponse> getActivePositions() {
+        return tradingService.getActivePositions();
+    }
 }

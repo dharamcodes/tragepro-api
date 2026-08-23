@@ -17,22 +17,22 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @RequiredArgsConstructor
 public class HttpExchangeConfig {
 
-  private final ClientConfig clientConfig;
+    private final ClientConfig clientConfig;
 
-  @Bean
-  public FeedClient dataFeedClient() {
-    SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-    requestFactory.setConnectTimeout(clientConfig.getConTimeout());
-    requestFactory.setReadTimeout(clientConfig.getReadTimeout());
-    RestClient.Builder builder = RestClient.builder().requestFactory(requestFactory);
-    builder.baseUrl(clientConfig.getBaseUrl());
-    Optional.of(clientConfig.getClientHeaders())
-        .orElse(Set.of())
-        .forEach(header -> builder.defaultHeader(header.getName(), header.getValue()));
-    RestClient restClient = builder.build();
-    HttpServiceProxyFactory factory =
-        HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
-    log.info("Client configuration completed for clientName :: {}", clientConfig.getClientName());
-    return factory.createClient(FeedClient.class);
-  }
+    @Bean
+    public FeedClient dataFeedClient() {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(clientConfig.getConTimeout());
+        requestFactory.setReadTimeout(clientConfig.getReadTimeout());
+        RestClient.Builder builder = RestClient.builder().requestFactory(requestFactory);
+        builder.baseUrl(clientConfig.getBaseUrl());
+        Optional.of(clientConfig.getClientHeaders())
+                .orElse(Set.of())
+                .forEach(header -> builder.defaultHeader(header.getName(), header.getValue()));
+        RestClient restClient = builder.build();
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient))
+                .build();
+        log.info("Client configuration completed for clientName :: {}", clientConfig.getClientName());
+        return factory.createClient(FeedClient.class);
+    }
 }

@@ -16,35 +16,34 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Base32IdGenListener extends AbstractMongoEventListener<Object> {
 
-  private final MongoBase32IdGen mongoBase32IdGen;
+    private final MongoBase32IdGen mongoBase32IdGen;
 
-  @Override
-  public void onBeforeConvert(BeforeConvertEvent<Object> event) {
-    Object entity = event.getSource();
-    if (!entity.getClass().isAnnotationPresent(Base32IdGen.class)) {
-      return;
+    @Override
+    public void onBeforeConvert(BeforeConvertEvent<Object> event) {
+        Object entity = event.getSource();
+        if (!entity.getClass().isAnnotationPresent(Base32IdGen.class)) {
+            return;
+        }
+
+        findIdField(entity.getClass()).ifPresent(field -> assignIdIfNull(field, entity));
     }
 
-    findIdField(entity.getClass()).ifPresent(field -> assignIdIfNull(field, entity));
-  }
-
-  private Optional<Field> findIdField(Class<?> clazz) {
-    return Arrays.stream(clazz.getDeclaredFields())
-        .filter(field -> field.isAnnotationPresent(Identifier.class))
-        .findFirst();
-  }
-
-  private void assignIdIfNull(Field field, Object entity) {
-    try {
-      field.setAccessible(true);
-      if (field.get(entity) == null) {
-        Identifier identifier = field.getAnnotation(Identifier.class);
-        String seqName =
-            "default".equals(identifier.value()) ? field.getName() : identifier.value();
-        field.set(entity, mongoBase32IdGen.generateId(seqName));
-      }
-    } catch (IllegalAccessException e) {
-      throw new AppException(ErrorType.INTERNAL_ERROR);
+    private Optional<Field> findIdField(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Identifier.class))
+                .findFirst();
     }
-  }
+
+    private void assignIdIfNull(Field field, Object entity) {
+        try {
+            field.setAccessible(true);
+            if (field.get(entity) == null) {
+                Identifier identifier = field.getAnnotation(Identifier.class);
+                String seqName = "default".equals(identifier.value()) ? field.getName() : identifier.value();
+                field.set(entity, mongoBase32IdGen.generateId(seqName));
+            }
+        } catch (IllegalAccessException e) {
+            throw new AppException(ErrorType.INTERNAL_ERROR);
+        }
+    }
 }

@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TradeFilter {
-  private String accountId;
-  private Integer year;
-  private Integer month;
-  private Integer day;
-  private String symbol;
-  private TradeType tradeType;
+    private String accountId;
+    private Integer year;
+    private Integer month;
+    private Integer day;
+    private String symbol;
+    private TradeType tradeType;
 }

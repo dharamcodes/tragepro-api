@@ -10,26 +10,25 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AccountDetailAdapterImpl implements AccountDetailAdapter {
-  private final AccountDetailService accountDetailService;
+    private final AccountDetailService accountDetailService;
 
-  @Override
-  public AccountDetailResponse createAccount(AccountDetailRequest accountDetailRequest) {
-    return accountDetailService.createAccount(accountDetailRequest);
-  }
+    @Override
+    public AccountDetailResponse createAccount(AccountDetailRequest accountDetailRequest) {
+        return accountDetailService.createAccount(accountDetailRequest);
+    }
 
-  @Override
-  public AccountDetailResponse getAccount(String identifier) {
-    return accountDetailService.getAccount(identifier);
-  }
+    @Override
+    public AccountDetailResponse getAccount(String identifier) {
+        return accountDetailService.getAccount(identifier);
+    }
 
-  @Override
-  public AccountDetailResponse updateAccountDetails(
-      String identifier, AccountDetailRequest accountDetailRequest) {
-    return accountDetailService.updateAccountDetails(identifier, accountDetailRequest);
-  }
+    @Override
+    public AccountDetailResponse updateAccountDetails(String identifier, AccountDetailRequest accountDetailRequest) {
+        return accountDetailService.updateAccountDetails(identifier, accountDetailRequest);
+    }
 
-  @Override
-  public void deactivateAccount(String identifier) {
-    accountDetailService.deactivateAccount(identifier);
-  }
+    @Override
+    public void deactivateAccount(String identifier) {
+        accountDetailService.deactivateAccount(identifier);
+    }
 }

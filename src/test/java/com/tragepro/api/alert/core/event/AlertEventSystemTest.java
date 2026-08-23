@@ -16,21 +16,24 @@ import org.springframework.transaction.support.TransactionTemplate;
 @ActiveProfiles("test")
 class AlertEventSystemTest extends ContainerConfig {
 
-  @Autowired private AlertEventPublisher publisher;
-  @Autowired private PlatformTransactionManager transactionManager;
+    @Autowired
+    private AlertEventPublisher publisher;
 
-  @MockitoSpyBean private AlertEventListener listener;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
-  @Test
-  void testPublishAndListen() {
-    AlertEvent event = new AlertEvent("test-id", "test-message");
+    @MockitoSpyBean
+    private AlertEventListener listener;
 
-    TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-    transactionTemplate.executeWithoutResult(
-        status -> {
-          publisher.publish(event);
+    @Test
+    void testPublishAndListen() {
+        AlertEvent event = new AlertEvent("test-id", "test-message");
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.executeWithoutResult(status -> {
+            publisher.publish(event);
         });
 
-    verify(listener, timeout(5000)).on(event);
-  }
+        verify(listener, timeout(5000)).on(event);
+    }
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JournalEventListener {
 
-  @ApplicationModuleListener
-  public void on(JournalEvent event) {
-    log.info("Received JournalEvent: {} - {}", event.eventId(), event.message());
-  }
+    @ApplicationModuleListener
+    public void on(JournalEvent event) {
+        log.info("Received JournalEvent: {} - {}", event.eventId(), event.message());
+    }
 }

@@ -17,11 +17,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "strategy")
 public class StrategyEntity extends BaseEntity {
-  @Id private String id;
-  private StrategyModel strategy;
-  private SymbolModel symbolData;
-  private CandleModel candleData;
-  private StatusModel currentState;
-  private Set<IndicatorModel> indicators;
-  private Set<TimeframeModel> timeframes;
+    @Id
+    private String id;
+
+    private StrategyModel strategy;
+    private SymbolModel symbolData;
+    private CandleModel candleData;
+    private StatusModel currentState;
+    private Set<IndicatorModel> indicators;
+    private Set<TimeframeModel> timeframes;
 }

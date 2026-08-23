@@ -5,9 +5,9 @@ import com.tragepro.api.domain.trading.response.OrderResponse;
 
 public interface OrderManager {
 
-  OrderResponse submitOrder(OrderRequest request);
+    OrderResponse submitOrder(OrderRequest request);
 
-  OrderResponse cancelOrder(String orderId);
+    OrderResponse cancelOrder(String orderId);
 
-  OrderResponse getOrderStatus(String orderId);
+    OrderResponse getOrderStatus(String orderId);
 }

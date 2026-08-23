@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IndicatorConfig {
-  private IndicatorType name;
-  private Timeframe timeFrame;
+    private IndicatorType name;
+    private Timeframe timeFrame;
 }

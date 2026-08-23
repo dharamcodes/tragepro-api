@@ -9,22 +9,21 @@ import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 
 @Mapper(config = CommonMapper.class)
-public interface SecurityMapper
-    extends BaseMapper<SecurityEntity, SecurityRequest, SecurityResponse> {
+public interface SecurityMapper extends BaseMapper<SecurityEntity, SecurityRequest, SecurityResponse> {
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  SecurityEntity requestToEntity(SecurityRequest securityRequest);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    SecurityEntity requestToEntity(SecurityRequest securityRequest);
 
-  @Override
-  SecurityResponse entityToResponse(SecurityEntity securityEntity);
+    @Override
+    SecurityResponse entityToResponse(SecurityEntity securityEntity);
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  void merge(SecurityRequest source, @org.mapstruct.MappingTarget SecurityEntity target);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    void merge(SecurityRequest source, @org.mapstruct.MappingTarget SecurityEntity target);
 
-  @Override
-  default Class<?> getMapperClass() {
-    return SecurityMapper.class;
-  }
+    @Override
+    default Class<?> getMapperClass() {
+        return SecurityMapper.class;
+    }
 }

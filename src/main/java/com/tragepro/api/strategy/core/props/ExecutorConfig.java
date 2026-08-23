@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExecutorConfig {
-  private StrategyExecutorStep name;
+    private StrategyExecutorStep name;
 }

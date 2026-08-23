@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StrategyModel {
-  private String name;
-  private String desc;
-  private String watchlist;
+    private String name;
+    private String desc;
+    private String watchlist;
 }

@@ -124,3 +124,12 @@ Domain events trigger `AlertEventPublisher`, broadcasting events over Spring's A
 ## 🧪 Bruno API Collection
 
 REST API requests are available in the [`bruno/`](bruno/) directory. Use [Bruno](https://www.usebruno.com/) to import the collection and test authentication, market data feed endpoints, strategy execution, and trade journaling.
+
+---
+
+## 📋 Project Roadmap & Issue Backlog
+
+Detailed issue specifications and architectural plans for all pending flows and feature improvements are documented in the [**Issues Backlog**](docs/issues/README.md):
+
+- **[Pending Core Flows](docs/issues/README.md#-1-pending-core-flows-architecture--pipeline-completion)**: Real-time WebSocket streaming, Temporal lifecycle orchestration, Backtesting simulation engine, Technical indicators calculator, Broker API execution gateway, Pre-trade risk management, and Telegram/Discord alerts.
+- **[Feature Improvements](docs/issues/README.md#-2-feature-improvements-optimizations-security--quality)**: Refresh token rotation & MFA, rate limiting & security audit logs, multi-timeframe candle resampling, dynamic strategy DSL, mark-to-market real-time valuation with SSE, trade analytics, and OpenTelemetry observability.

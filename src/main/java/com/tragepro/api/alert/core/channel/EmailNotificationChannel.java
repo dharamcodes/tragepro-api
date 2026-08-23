@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailNotificationChannel implements NotificationChannel {
 
-  @Override
-  public NotificationChannelType getChannelType() {
-    return NotificationChannelType.EMAIL;
-  }
+    @Override
+    public NotificationChannelType getChannelType() {
+        return NotificationChannelType.EMAIL;
+    }
 
-  @Override
-  public void send(NotificationPayload payload) {
-    log.info("Sending Email alert to {}: {}", payload.recipient(), payload.message());
-  }
+    @Override
+    public void send(NotificationPayload payload) {
+        log.info("Sending Email alert to {}: {}", payload.recipient(), payload.message());
+    }
 }

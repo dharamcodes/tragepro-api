@@ -14,17 +14,17 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "data.rest")
 public class ClientConfig {
 
-  private String clientName;
+    private String clientName;
 
-  @NotNull(message = "Base URL must not be null")
-  private String baseUrl;
+    @NotNull(message = "Base URL must not be null")
+    private String baseUrl;
 
-  @NotNull(message = "Connection timeout must not be null")
-  private Integer conTimeout;
+    @NotNull(message = "Connection timeout must not be null")
+    private Integer conTimeout;
 
-  @NotNull(message = "Read timeout must not be null")
-  private Integer readTimeout;
+    @NotNull(message = "Read timeout must not be null")
+    private Integer readTimeout;
 
-  @NotNull(message = "Headers must not be null")
-  private Set<ClientHeaderModel> clientHeaders;
+    @NotNull(message = "Headers must not be null")
+    private Set<ClientHeaderModel> clientHeaders;
 }

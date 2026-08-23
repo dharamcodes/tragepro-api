@@ -9,6 +9,6 @@ import java.util.Set;
 @WorkflowInterface
 public interface DataInitWorkflow extends BaseWorkflow {
 
-  @WorkflowMethod
-  Set<StrategyResponse> execute(String strategyName);
+    @WorkflowMethod
+    Set<StrategyResponse> execute(String strategyName);
 }

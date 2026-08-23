@@ -1,0 +1,42 @@
+name: "Pending Flow / Core Feature"
+description: "Propose or implement a pending core flow or architecture pipeline"
+title: "[Flow]: "
+labels: ["enhancement", "core-flow"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Pending Flow Specification
+        Thank you for defining this core architectural flow for TragePro API.
+  - type: input
+    id: flow-id
+    attributes:
+      label: Flow Name / Number
+      placeholder: "e.g., Flow 02: Real-time Market Data Streaming"
+    validations:
+      required: true
+  - type: textarea
+    id: overview
+    attributes:
+      label: Flow Overview & Problem Statement
+      description: What architectural gap or workflow does this flow address?
+    validations:
+      required: true
+  - type: textarea
+    id: architecture
+    attributes:
+      label: Proposed Architecture & Component Flow
+      description: Detail the module, layer interactions, and sequence.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: List verifiable criteria.
+      value: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Unit & Integration test coverage >= 95%
+    validations:
+      required: true

@@ -4,5 +4,5 @@ import com.tragepro.api.strategy.core.props.StrategyConfig;
 
 public interface ConfigLoaderService {
 
-  StrategyConfig getStrategyByName(String name);
+    StrategyConfig getStrategyByName(String name);
 }

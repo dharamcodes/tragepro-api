@@ -9,15 +9,15 @@ import java.util.Set;
 @ActivityInterface
 public interface DataInitActivity {
 
-  @ActivityMethod(name = "DATA_INIT_ACTIVITY-RUN")
-  Set<StrategyResponse> run(Set<StrategyRequest> strategyRequests);
+    @ActivityMethod(name = "DATA_INIT_ACTIVITY-RUN")
+    Set<StrategyResponse> run(Set<StrategyRequest> strategyRequests);
 
-  @ActivityMethod(name = "LOAD_CONFIG")
-  StrategyRequest loadConfig(String strategyName);
+    @ActivityMethod(name = "LOAD_CONFIG")
+    StrategyRequest loadConfig(String strategyName);
 
-  @ActivityMethod(name = "LOAD_SYMBOL")
-  Set<StrategyRequest> loadSymbol(StrategyRequest strategyRequest);
+    @ActivityMethod(name = "LOAD_SYMBOL")
+    Set<StrategyRequest> loadSymbol(StrategyRequest strategyRequest);
 
-  @ActivityMethod(name = "STORE_DATA")
-  Set<StrategyRequest> storeData(Set<StrategyRequest> strategyRequests);
+    @ActivityMethod(name = "STORE_DATA")
+    Set<StrategyRequest> storeData(Set<StrategyRequest> strategyRequests);
 }

@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/datafeed")
 public class DataFeedController {
 
-  private final DatafeedService datafeedService;
+    private final DatafeedService datafeedService;
 
-  @PostMapping("/load")
-  public ResponseEntity<LoadCandleResponse> loadData(@RequestBody LoadCandleRequest request) {
-    LoadCandleResponse response = datafeedService.loadData(request);
-    return ResponseEntity.ok().body(response);
-  }
+    @PostMapping("/load")
+    public ResponseEntity<LoadCandleResponse> loadData(@RequestBody LoadCandleRequest request) {
+        LoadCandleResponse response = datafeedService.loadData(request);
+        return ResponseEntity.ok().body(response);
+    }
 }

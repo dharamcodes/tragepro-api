@@ -4,4 +4,4 @@ import lombok.Builder;
 
 @Builder
 public record NotificationPayload(
-    String recipient, String subject, String message, NotificationChannelType channelType) {}
+        String recipient, String subject, String message, NotificationChannelType channelType) {}

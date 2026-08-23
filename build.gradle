@@ -96,9 +96,8 @@ spotless {
         target 'src/*/java/**/*.java'
         importOrder()
         removeUnusedImports()
-        leadingTabsToSpaces(4)
         trimTrailingWhitespace()
-        googleJavaFormat('1.35.0')
+        palantirJavaFormat()
     }
     format 'misc', {
         target '**/*.gradle', '**/*.md', '.gitignore'

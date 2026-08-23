@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IndicatorModel {
-  private IndicatorType name;
-  private Timeframe timeFrame;
-  private Set<CandleDataModel> levels;
+    private IndicatorType name;
+    private Timeframe timeFrame;
+    private Set<CandleDataModel> levels;
 }

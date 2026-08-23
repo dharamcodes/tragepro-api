@@ -31,108 +31,116 @@ import org.springframework.data.domain.Pageable;
 @ExtendWith(MockitoExtension.class)
 class MarketDataAdapterTest {
 
-  @Mock private DatafeedService datafeedService;
-  @Mock private CandleService candleService;
-  @Mock private SecurityService securityService;
-  @Mock private WatchListService watchListService;
+    @Mock
+    private DatafeedService datafeedService;
 
-  private DatafeedAdapterImpl datafeedAdapter;
-  private CandleAdapterImpl candleAdapter;
-  private SecurityAdapterImpl securityAdapter;
-  private WatchListAdapterImpl watchListAdapter;
+    @Mock
+    private CandleService candleService;
 
-  @BeforeEach
-  void setUp() {
-    datafeedAdapter = new DatafeedAdapterImpl(datafeedService);
-    candleAdapter = new CandleAdapterImpl(candleService);
-    securityAdapter = new SecurityAdapterImpl(securityService);
-    watchListAdapter = new WatchListAdapterImpl(watchListService);
-  }
+    @Mock
+    private SecurityService securityService;
 
-  @Test
-  void testLoadData() {
-    LoadCandleRequest request = new LoadCandleRequest("AAPL", 5);
-    LoadCandleResponse expectedResponse =
-        LoadCandleResponse.builder().watchList("AAPL").message("Loaded").build();
-    when(datafeedService.loadData(request)).thenReturn(expectedResponse);
+    @Mock
+    private WatchListService watchListService;
 
-    LoadCandleResponse response = datafeedAdapter.loadData(request);
+    private DatafeedAdapterImpl datafeedAdapter;
+    private CandleAdapterImpl candleAdapter;
+    private SecurityAdapterImpl securityAdapter;
+    private WatchListAdapterImpl watchListAdapter;
 
-    assertNotNull(response);
-    assertEquals("AAPL", response.watchList());
-    verify(datafeedService).loadData(request);
-  }
+    @BeforeEach
+    void setUp() {
+        datafeedAdapter = new DatafeedAdapterImpl(datafeedService);
+        candleAdapter = new CandleAdapterImpl(candleService);
+        securityAdapter = new SecurityAdapterImpl(securityService);
+        watchListAdapter = new WatchListAdapterImpl(watchListService);
+    }
 
-  @Test
-  void testCandleAdapterMethods() {
-    CandleRequest candleRequest = CandleRequest.builder().build();
-    CandleResponse candleResponse = CandleResponse.builder().build();
-    Pageable pageable = PageRequest.of(0, 10);
-    Page<CandleResponse> page = new PageImpl<>(List.of(candleResponse));
+    @Test
+    void testLoadData() {
+        LoadCandleRequest request = new LoadCandleRequest("AAPL", 5);
+        LoadCandleResponse expectedResponse =
+                LoadCandleResponse.builder().watchList("AAPL").message("Loaded").build();
+        when(datafeedService.loadData(request)).thenReturn(expectedResponse);
 
-    when(candleService.create(candleRequest)).thenReturn(candleResponse);
-    assertEquals(candleResponse, candleAdapter.create(candleRequest));
+        LoadCandleResponse response = datafeedAdapter.loadData(request);
 
-    when(candleService.getById("c-1")).thenReturn(Optional.of(candleResponse));
-    assertTrue(candleAdapter.getById("c-1").isPresent());
+        assertNotNull(response);
+        assertEquals("AAPL", response.watchList());
+        verify(datafeedService).loadData(request);
+    }
 
-    when(candleService.getAll(pageable)).thenReturn(page);
-    assertEquals(page, candleAdapter.getAll(pageable));
+    @Test
+    void testCandleAdapterMethods() {
+        CandleRequest candleRequest = CandleRequest.builder().build();
+        CandleResponse candleResponse = CandleResponse.builder().build();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<CandleResponse> page = new PageImpl<>(List.of(candleResponse));
 
-    when(candleService.getAll()).thenReturn(Set.of(candleResponse));
-    assertEquals(1, candleAdapter.getAll().size());
+        when(candleService.create(candleRequest)).thenReturn(candleResponse);
+        assertEquals(candleResponse, candleAdapter.create(candleRequest));
 
-    when(candleService.update("c-1", candleRequest)).thenReturn(candleResponse);
-    assertEquals(candleResponse, candleAdapter.update("c-1", candleRequest));
+        when(candleService.getById("c-1")).thenReturn(Optional.of(candleResponse));
+        assertTrue(candleAdapter.getById("c-1").isPresent());
 
-    candleAdapter.delete("c-1");
-    verify(candleService).delete("c-1");
+        when(candleService.getAll(pageable)).thenReturn(page);
+        assertEquals(page, candleAdapter.getAll(pageable));
 
-    when(candleService.isCandleExists("BTC", 12345L)).thenReturn(true);
-    assertTrue(candleAdapter.isCandleExists("BTC", 12345L));
+        when(candleService.getAll()).thenReturn(Set.of(candleResponse));
+        assertEquals(1, candleAdapter.getAll().size());
 
-    when(candleService.getCandlesBySymbolAndDaysBack("BTC", 7)).thenReturn(List.of(candleResponse));
-    assertEquals(1, candleAdapter.getCandlesBySymbolAndDaysBack("BTC", 7).size());
+        when(candleService.update("c-1", candleRequest)).thenReturn(candleResponse);
+        assertEquals(candleResponse, candleAdapter.update("c-1", candleRequest));
 
-    when(candleService.getLatestCandlesBySymbols(Set.of("BTC"))).thenReturn(Set.of(candleResponse));
-    assertEquals(1, candleAdapter.getLatestCandlesBySymbols(Set.of("BTC")).size());
-  }
+        candleAdapter.delete("c-1");
+        verify(candleService).delete("c-1");
 
-  @Test
-  void testSecurityAdapterMethods() {
-    SecurityResponse securityResponse = SecurityResponse.builder().symbol("AAPL").build();
-    when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(securityResponse);
+        when(candleService.isCandleExists("BTC", 12345L)).thenReturn(true);
+        assertTrue(candleAdapter.isCandleExists("BTC", 12345L));
 
-    assertEquals(securityResponse, securityAdapter.fetSecurityBySymbol("AAPL"));
-    verify(securityService).fetSecurityBySymbol("AAPL");
-  }
+        when(candleService.getCandlesBySymbolAndDaysBack("BTC", 7)).thenReturn(List.of(candleResponse));
+        assertEquals(1, candleAdapter.getCandlesBySymbolAndDaysBack("BTC", 7).size());
 
-  @Test
-  void testWatchListAdapterMethods() {
-    WatchListRequest request = WatchListRequest.builder().name("Tech").build();
-    WatchListResponse response = WatchListResponse.builder().name("Tech").build();
-    Pageable pageable = PageRequest.of(0, 10);
-    Page<WatchListResponse> page = new PageImpl<>(List.of(response));
+        when(candleService.getLatestCandlesBySymbols(Set.of("BTC"))).thenReturn(Set.of(candleResponse));
+        assertEquals(1, candleAdapter.getLatestCandlesBySymbols(Set.of("BTC")).size());
+    }
 
-    when(watchListService.create(request)).thenReturn(response);
-    assertEquals(response, watchListAdapter.create(request));
+    @Test
+    void testSecurityAdapterMethods() {
+        SecurityResponse securityResponse =
+                SecurityResponse.builder().symbol("AAPL").build();
+        when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(securityResponse);
 
-    when(watchListService.getById("w-1")).thenReturn(Optional.of(response));
-    assertTrue(watchListAdapter.getById("w-1").isPresent());
+        assertEquals(securityResponse, securityAdapter.fetSecurityBySymbol("AAPL"));
+        verify(securityService).fetSecurityBySymbol("AAPL");
+    }
 
-    when(watchListService.getAll(pageable)).thenReturn(page);
-    assertEquals(page, watchListAdapter.getAll(pageable));
+    @Test
+    void testWatchListAdapterMethods() {
+        WatchListRequest request = WatchListRequest.builder().name("Tech").build();
+        WatchListResponse response = WatchListResponse.builder().name("Tech").build();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<WatchListResponse> page = new PageImpl<>(List.of(response));
 
-    when(watchListService.getAll()).thenReturn(Set.of(response));
-    assertEquals(1, watchListAdapter.getAll().size());
+        when(watchListService.create(request)).thenReturn(response);
+        assertEquals(response, watchListAdapter.create(request));
 
-    when(watchListService.update("w-1", request)).thenReturn(response);
-    assertEquals(response, watchListAdapter.update("w-1", request));
+        when(watchListService.getById("w-1")).thenReturn(Optional.of(response));
+        assertTrue(watchListAdapter.getById("w-1").isPresent());
 
-    watchListAdapter.delete("w-1");
-    verify(watchListService).delete("w-1");
+        when(watchListService.getAll(pageable)).thenReturn(page);
+        assertEquals(page, watchListAdapter.getAll(pageable));
 
-    when(watchListService.patch("w-1", request)).thenReturn(response);
-    assertEquals(response, watchListAdapter.patch("w-1", request));
-  }
+        when(watchListService.getAll()).thenReturn(Set.of(response));
+        assertEquals(1, watchListAdapter.getAll().size());
+
+        when(watchListService.update("w-1", request)).thenReturn(response);
+        assertEquals(response, watchListAdapter.update("w-1", request));
+
+        watchListAdapter.delete("w-1");
+        verify(watchListService).delete("w-1");
+
+        when(watchListService.patch("w-1", request)).thenReturn(response);
+        assertEquals(response, watchListAdapter.patch("w-1", request));
+    }
 }

@@ -5,9 +5,9 @@ import com.tragepro.api.domain.strategy.response.StrategyResponse;
 import java.util.Set;
 
 public interface StrategyAdapter {
-  StrategyResponse create(StrategyRequest strategyRequest);
+    StrategyResponse create(StrategyRequest strategyRequest);
 
-  StrategyResponse createOrUpdate(StrategyRequest strategyRequest);
+    StrategyResponse createOrUpdate(StrategyRequest strategyRequest);
 
-  Set<StrategyResponse> getAll();
+    Set<StrategyResponse> getAll();
 }

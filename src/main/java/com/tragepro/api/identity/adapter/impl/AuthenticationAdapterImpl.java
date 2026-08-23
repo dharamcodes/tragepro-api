@@ -13,46 +13,46 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationAdapterImpl implements AuthenticationAdapter {
-  private final AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
-  @Override
-  public LoginResponse loginUser(LoginRequest loginRequest) {
-    return authenticationService.login(loginRequest);
-  }
+    @Override
+    public LoginResponse loginUser(LoginRequest loginRequest) {
+        return authenticationService.login(loginRequest);
+    }
 
-  @Override
-  public AuthenticationResponse signup(AuthenticationRequest authenticationRequest) {
-    return authenticationService.signup(authenticationRequest);
-  }
+    @Override
+    public AuthenticationResponse signup(AuthenticationRequest authenticationRequest) {
+        return authenticationService.signup(authenticationRequest);
+    }
 
-  @Override
-  public AuthenticationResponse getByUserName(String userName) {
-    return authenticationService.getByUserName(userName);
-  }
+    @Override
+    public AuthenticationResponse getByUserName(String userName) {
+        return authenticationService.getByUserName(userName);
+    }
 
-  @Override
-  public AuthenticationResponse updateAuthenticationDetails(
-      String userName, AuthenticationRequest authenticationRequest) {
-    return authenticationService.updateAuthenticationDetails(userName, authenticationRequest);
-  }
+    @Override
+    public AuthenticationResponse updateAuthenticationDetails(
+            String userName, AuthenticationRequest authenticationRequest) {
+        return authenticationService.updateAuthenticationDetails(userName, authenticationRequest);
+    }
 
-  @Override
-  public void changePassword(ResetPasswordRequest resetPasswordRequest) {
-    authenticationService.changePassword(resetPasswordRequest);
-  }
+    @Override
+    public void changePassword(ResetPasswordRequest resetPasswordRequest) {
+        authenticationService.changePassword(resetPasswordRequest);
+    }
 
-  @Override
-  public void deactivateAuthentication(String userName) {
-    authenticationService.deactivateAuthentication(userName);
-  }
+    @Override
+    public void deactivateAuthentication(String userName) {
+        authenticationService.deactivateAuthentication(userName);
+    }
 
-  @Override
-  public void resetPassword(String userName) {
-    authenticationService.resetPassword(userName);
-  }
+    @Override
+    public void resetPassword(String userName) {
+        authenticationService.resetPassword(userName);
+    }
 
-  @Override
-  public void deleteAuthentication(String userName) {
-    authenticationService.deleteAuthentication(userName);
-  }
+    @Override
+    public void deleteAuthentication(String userName) {
+        authenticationService.deleteAuthentication(userName);
+    }
 }

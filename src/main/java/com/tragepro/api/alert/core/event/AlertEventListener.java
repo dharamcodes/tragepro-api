@@ -13,22 +13,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AlertEventListener {
 
-  private final NotificationChannelFactory notificationChannelFactory;
+    private final NotificationChannelFactory notificationChannelFactory;
 
-  @ApplicationModuleListener
-  public void on(AlertEvent event) {
-    log.info("Received AlertEvent: {} - {}", event.eventId(), event.message());
-    try {
-      NotificationPayload payload =
-          NotificationPayload.builder()
-              .recipient("system-alerts@tragepro.com")
-              .subject("Alert Notification")
-              .message(event.message())
-              .channelType(NotificationChannelType.EMAIL)
-              .build();
-      notificationChannelFactory.getChannel(payload.channelType()).send(payload);
-    } catch (Exception e) {
-      log.error("Failed to process alert for AlertEvent: {}", event.eventId(), e);
+    @ApplicationModuleListener
+    public void on(AlertEvent event) {
+        log.info("Received AlertEvent: {} - {}", event.eventId(), event.message());
+        try {
+            NotificationPayload payload = NotificationPayload.builder()
+                    .recipient("system-alerts@tragepro.com")
+                    .subject("Alert Notification")
+                    .message(event.message())
+                    .channelType(NotificationChannelType.EMAIL)
+                    .build();
+            notificationChannelFactory.getChannel(payload.channelType()).send(payload);
+        } catch (Exception e) {
+            log.error("Failed to process alert for AlertEvent: {}", event.eventId(), e);
+        }
     }
-  }
 }

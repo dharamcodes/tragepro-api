@@ -14,37 +14,39 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AlertEventListenerTest {
 
-  @Mock private NotificationChannelFactory notificationChannelFactory;
-  @Mock private NotificationChannel notificationChannel;
+    @Mock
+    private NotificationChannelFactory notificationChannelFactory;
 
-  private AlertEventListener alertEventListener;
+    @Mock
+    private NotificationChannel notificationChannel;
 
-  @BeforeEach
-  void setUp() {
-    alertEventListener = new AlertEventListener(notificationChannelFactory);
-  }
+    private AlertEventListener alertEventListener;
 
-  @Test
-  void testOn_Success() {
-    AlertEvent event = new AlertEvent("event-1", "System alert");
-    when(notificationChannelFactory.getChannel(NotificationChannelType.EMAIL))
-        .thenReturn(notificationChannel);
+    @BeforeEach
+    void setUp() {
+        alertEventListener = new AlertEventListener(notificationChannelFactory);
+    }
 
-    alertEventListener.on(event);
+    @Test
+    void testOn_Success() {
+        AlertEvent event = new AlertEvent("event-1", "System alert");
+        when(notificationChannelFactory.getChannel(NotificationChannelType.EMAIL))
+                .thenReturn(notificationChannel);
 
-    verify(notificationChannelFactory).getChannel(NotificationChannelType.EMAIL);
-    verify(notificationChannel).send(any());
-  }
+        alertEventListener.on(event);
 
-  @Test
-  void testOn_Exception() {
-    AlertEvent event = new AlertEvent("event-2", "Error alert");
-    when(notificationChannelFactory.getChannel(any()))
-        .thenThrow(new RuntimeException("Channel lookup failed"));
+        verify(notificationChannelFactory).getChannel(NotificationChannelType.EMAIL);
+        verify(notificationChannel).send(any());
+    }
 
-    // Ensure exception is handled and does not propagate
-    alertEventListener.on(event);
+    @Test
+    void testOn_Exception() {
+        AlertEvent event = new AlertEvent("event-2", "Error alert");
+        when(notificationChannelFactory.getChannel(any())).thenThrow(new RuntimeException("Channel lookup failed"));
 
-    verify(notificationChannelFactory).getChannel(NotificationChannelType.EMAIL);
-  }
+        // Ensure exception is handled and does not propagate
+        alertEventListener.on(event);
+
+        verify(notificationChannelFactory).getChannel(NotificationChannelType.EMAIL);
+    }
 }

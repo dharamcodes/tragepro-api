@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebhookNotificationChannel implements NotificationChannel {
 
-  @Override
-  public NotificationChannelType getChannelType() {
-    return NotificationChannelType.WEBHOOK;
-  }
+    @Override
+    public NotificationChannelType getChannelType() {
+        return NotificationChannelType.WEBHOOK;
+    }
 
-  @Override
-  public void send(NotificationPayload payload) {
-    log.info("Sending Webhook payload to {}: {}", payload.recipient(), payload.message());
-  }
+    @Override
+    public void send(NotificationPayload payload) {
+        log.info("Sending Webhook payload to {}: {}", payload.recipient(), payload.message());
+    }
 }

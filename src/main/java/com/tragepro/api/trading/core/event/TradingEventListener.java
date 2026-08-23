@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TradingEventListener {
 
-  @ApplicationModuleListener
-  public void on(TradingEvent event) {
-    log.info("Received TradingEvent: {} - {}", event.eventId(), event.message());
-  }
+    @ApplicationModuleListener
+    public void on(TradingEvent event) {
+        log.info("Received TradingEvent: {} - {}", event.eventId(), event.message());
+    }
 }

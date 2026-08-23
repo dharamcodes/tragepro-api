@@ -4,5 +4,5 @@ import com.tragepro.api.domain.alert.NotificationPayload;
 
 public interface NotificationAdapter {
 
-  void sendNotification(NotificationPayload payload);
+    void sendNotification(NotificationPayload payload);
 }

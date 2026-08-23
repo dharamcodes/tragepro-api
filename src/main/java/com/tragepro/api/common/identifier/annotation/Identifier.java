@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Identifier {
-  String value() default "default";
+    String value() default "default";
 }

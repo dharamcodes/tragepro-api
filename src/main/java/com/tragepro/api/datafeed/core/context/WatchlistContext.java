@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class WatchlistContext {
 
-  private final Map<String, Set<SymbolDataModel>> watchlist = new ConcurrentHashMap<>();
+    private final Map<String, Set<SymbolDataModel>> watchlist = new ConcurrentHashMap<>();
 
-  /** Returns an unmodifiable view of the watchlist to prevent external mutation. */
-  public Set<SymbolDataModel> getWatchlist(String name) {
-    return Collections.unmodifiableSet(watchlist.getOrDefault(name, Set.of()));
-  }
-
-  public void addWatchlist(String name, Set<SymbolDataModel> symbols) {
-    Set<SymbolDataModel> set = ConcurrentHashMap.newKeySet();
-    if (symbols != null) {
-      set.addAll(symbols);
+    /** Returns an unmodifiable view of the watchlist to prevent external mutation. */
+    public Set<SymbolDataModel> getWatchlist(String name) {
+        return Collections.unmodifiableSet(watchlist.getOrDefault(name, Set.of()));
     }
-    watchlist.put(name, set);
-  }
+
+    public void addWatchlist(String name, Set<SymbolDataModel> symbols) {
+        Set<SymbolDataModel> set = ConcurrentHashMap.newKeySet();
+        if (symbols != null) {
+            set.addAll(symbols);
+        }
+        watchlist.put(name, set);
+    }
 }

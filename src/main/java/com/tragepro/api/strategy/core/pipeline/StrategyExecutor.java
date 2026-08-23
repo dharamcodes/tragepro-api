@@ -5,5 +5,5 @@ import com.tragepro.api.domain.strategy.response.StrategyResponse;
 
 /** Pipeline step for executing strategy orders (buy, sell, notify). */
 public interface StrategyExecutor {
-  StrategyResponse execute(StrategyRequest strategyRequest);
+    StrategyResponse execute(StrategyRequest strategyRequest);
 }

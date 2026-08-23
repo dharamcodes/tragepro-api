@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component("EVALUATE_VOLUME_VWAP")
 public class EvaluateVolumeVwap implements StrategyEvaluator {
 
-  @Override
-  public StrategyResponse evaluate(StrategyRequest strategyRequest) {
-    return null;
-  }
+    @Override
+    public StrategyResponse evaluate(StrategyRequest strategyRequest) {
+        return null;
+    }
 }

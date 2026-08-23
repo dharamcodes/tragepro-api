@@ -6,7 +6,7 @@ import com.tragepro.api.domain.alert.NotificationPayload;
 /** Strategy interface for alert channels (Email, Telegram, Webhook). */
 public interface NotificationChannel {
 
-  NotificationChannelType getChannelType();
+    NotificationChannelType getChannelType();
 
-  void send(NotificationPayload payload);
+    void send(NotificationPayload payload);
 }

@@ -12,23 +12,23 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = CommonMapper.class)
 public interface AuthenticationMapper
-    extends BaseMapper<AuthenticationEntity, AuthenticationRequest, AuthenticationResponse> {
+        extends BaseMapper<AuthenticationEntity, AuthenticationRequest, AuthenticationResponse> {
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  @Mapping(target = "identifiers", ignore = true)
-  AuthenticationEntity requestToEntity(AuthenticationRequest authenticationRequest);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    @Mapping(target = "identifiers", ignore = true)
+    AuthenticationEntity requestToEntity(AuthenticationRequest authenticationRequest);
 
-  @Override
-  AuthenticationResponse entityToResponse(AuthenticationEntity authenticationEntity);
+    @Override
+    AuthenticationResponse entityToResponse(AuthenticationEntity authenticationEntity);
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  @Mapping(target = "identifiers", ignore = true)
-  void merge(AuthenticationRequest source, @MappingTarget AuthenticationEntity target);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    @Mapping(target = "identifiers", ignore = true)
+    void merge(AuthenticationRequest source, @MappingTarget AuthenticationEntity target);
 
-  @Override
-  default Class<?> getMapperClass() {
-    return AuthenticationMapper.class;
-  }
+    @Override
+    default Class<?> getMapperClass() {
+        return AuthenticationMapper.class;
+    }
 }

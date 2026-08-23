@@ -18,61 +18,55 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(
-    prefix = "temporal",
-    name = "enabled",
-    havingValue = "true",
-    matchIfMissing = false)
+@ConditionalOnProperty(prefix = "temporal", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class TemporalConfig {
 
-  @Bean
-  public WorkflowServiceStubs workflowService(TemporalProperties props) {
-    return WorkflowServiceStubs.newServiceStubs(
-        WorkflowServiceStubsOptions.newBuilder().setTarget(props.getServer().getTarget()).build());
-  }
-
-  @Bean
-  public WorkflowClient workflowClient(
-      WorkflowServiceStubs workflowService, TemporalProperties props) {
-    return WorkflowClient.newInstance(
-        workflowService,
-        WorkflowClientOptions.newBuilder()
-            .setNamespace(props.getServer().getNamespace())
-            .setIdentity(props.getClient().getIdentity())
-            .build());
-  }
-
-  @Bean
-  public WorkerFactory workerFactory(WorkflowClient client) {
-    return WorkerFactory.newInstance(client);
-  }
-
-  @Bean
-  public Worker worker(
-      WorkerFactory factory,
-      TemporalProperties props,
-      ActivityRegistry activityRegistry,
-      WorkflowRegistry workflowRegistry) {
-    Worker worker = factory.newWorker(props.getWorker().getTaskQueue());
-
-    ActivityOptions activityOptions =
-        ActivityOptions.newBuilder()
-            .setStartToCloseTimeout(
-                Duration.ofSeconds(props.getWorker().getActivityStartToCloseTimeoutSeconds()))
-            .build();
-
-    WorkflowImplementationOptions options =
-        WorkflowImplementationOptions.newBuilder()
-            .setActivityOptions(Map.of("DataInitActivity", activityOptions))
-            .build();
-
-    Class<?>[] workflowClasses =
-        workflowRegistry.workflowImplementationTypes().toArray(new Class<?>[0]);
-    if (workflowClasses.length > 0) {
-      worker.registerWorkflowImplementationTypes(options, workflowClasses);
+    @Bean
+    public WorkflowServiceStubs workflowService(TemporalProperties props) {
+        return WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
+                .setTarget(props.getServer().getTarget())
+                .build());
     }
-    worker.registerActivitiesImplementations(activityRegistry.globalInstances().toArray());
-    factory.start();
-    return worker;
-  }
+
+    @Bean
+    public WorkflowClient workflowClient(WorkflowServiceStubs workflowService, TemporalProperties props) {
+        return WorkflowClient.newInstance(
+                workflowService,
+                WorkflowClientOptions.newBuilder()
+                        .setNamespace(props.getServer().getNamespace())
+                        .setIdentity(props.getClient().getIdentity())
+                        .build());
+    }
+
+    @Bean
+    public WorkerFactory workerFactory(WorkflowClient client) {
+        return WorkerFactory.newInstance(client);
+    }
+
+    @Bean
+    public Worker worker(
+            WorkerFactory factory,
+            TemporalProperties props,
+            ActivityRegistry activityRegistry,
+            WorkflowRegistry workflowRegistry) {
+        Worker worker = factory.newWorker(props.getWorker().getTaskQueue());
+
+        ActivityOptions activityOptions = ActivityOptions.newBuilder()
+                .setStartToCloseTimeout(Duration.ofSeconds(props.getWorker().getActivityStartToCloseTimeoutSeconds()))
+                .build();
+
+        WorkflowImplementationOptions options = WorkflowImplementationOptions.newBuilder()
+                .setActivityOptions(Map.of("DataInitActivity", activityOptions))
+                .build();
+
+        Class<?>[] workflowClasses =
+                workflowRegistry.workflowImplementationTypes().toArray(new Class<?>[0]);
+        if (workflowClasses.length > 0) {
+            worker.registerWorkflowImplementationTypes(options, workflowClasses);
+        }
+        worker.registerActivitiesImplementations(
+                activityRegistry.globalInstances().toArray());
+        factory.start();
+        return worker;
+    }
 }

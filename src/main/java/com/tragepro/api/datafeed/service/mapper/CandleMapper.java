@@ -17,40 +17,43 @@ import org.mapstruct.MappingTarget;
 @Mapper(config = CommonMapper.class, unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
 public interface CandleMapper extends BaseMapper<CandleEntity, CandleRequest, CandleResponse> {
 
-  @Override
-  CandleEntity requestToEntity(CandleRequest candleRequest);
+    @Override
+    CandleEntity requestToEntity(CandleRequest candleRequest);
 
-  @Override
-  @Mapping(source = "id", target = "id")
-  @Mapping(ignore = true, target = "dataTimeType")
-  CandleResponse entityToResponse(CandleEntity candleEntity);
+    @Override
+    @Mapping(source = "id", target = "id")
+    @Mapping(ignore = true, target = "dataTimeType")
+    CandleResponse entityToResponse(CandleEntity candleEntity);
 
-  @Override
-  void merge(CandleRequest source, @MappingTarget CandleEntity target);
+    @Override
+    void merge(CandleRequest source, @MappingTarget CandleEntity target);
 
-  default CandleDataModel mapCandleData(CandleDataModel source) {
-    if (ObjectUtils.isEmpty(source)) {
-      throw new ServerException(ErrorType.INTERNAL_ERROR);
+    default CandleDataModel mapCandleData(CandleDataModel source) {
+        if (ObjectUtils.isEmpty(source)) {
+            throw new ServerException(ErrorType.INTERNAL_ERROR);
+        }
+        return CandleDataModel.builder()
+                .timestamp(source.timestamp())
+                .open(source.open())
+                .high(source.high())
+                .low(source.low())
+                .close(source.close())
+                .volume(source.volume())
+                .build();
     }
-    return CandleDataModel.builder()
-        .timestamp(source.timestamp())
-        .open(source.open())
-        .high(source.high())
-        .low(source.low())
-        .close(source.close())
-        .volume(source.volume())
-        .build();
-  }
 
-  default SymbolDataModel mapSymbolData(SymbolDataModel source) {
-    if (ObjectUtils.isEmpty(source)) {
-      throw new ServerException(ErrorType.INTERNAL_ERROR);
+    default SymbolDataModel mapSymbolData(SymbolDataModel source) {
+        if (ObjectUtils.isEmpty(source)) {
+            throw new ServerException(ErrorType.INTERNAL_ERROR);
+        }
+        return SymbolDataModel.builder()
+                .symbol(source.symbol())
+                .name(source.name())
+                .build();
     }
-    return SymbolDataModel.builder().symbol(source.symbol()).name(source.name()).build();
-  }
 
-  @Override
-  default Class<?> getMapperClass() {
-    return CandleMapper.class;
-  }
+    @Override
+    default Class<?> getMapperClass() {
+        return CandleMapper.class;
+    }
 }

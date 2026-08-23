@@ -16,30 +16,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class NotificationAdapterTest {
 
-  @Mock private NotificationChannelFactory notificationChannelFactory;
+    @Mock
+    private NotificationChannelFactory notificationChannelFactory;
 
-  @Mock private NotificationChannel notificationChannel;
+    @Mock
+    private NotificationChannel notificationChannel;
 
-  private NotificationAdapterImpl notificationAdapter;
+    private NotificationAdapterImpl notificationAdapter;
 
-  @BeforeEach
-  void setUp() {
-    notificationAdapter = new NotificationAdapterImpl(notificationChannelFactory);
-  }
+    @BeforeEach
+    void setUp() {
+        notificationAdapter = new NotificationAdapterImpl(notificationChannelFactory);
+    }
 
-  @Test
-  void testSendNotification() {
-    NotificationPayload payload =
-        NotificationPayload.builder()
-            .channelType(NotificationChannelType.EMAIL)
-            .message("Test Alert")
-            .build();
-    when(notificationChannelFactory.getChannel(NotificationChannelType.EMAIL))
-        .thenReturn(notificationChannel);
+    @Test
+    void testSendNotification() {
+        NotificationPayload payload = NotificationPayload.builder()
+                .channelType(NotificationChannelType.EMAIL)
+                .message("Test Alert")
+                .build();
+        when(notificationChannelFactory.getChannel(NotificationChannelType.EMAIL))
+                .thenReturn(notificationChannel);
 
-    notificationAdapter.sendNotification(payload);
+        notificationAdapter.sendNotification(payload);
 
-    verify(notificationChannelFactory).getChannel(NotificationChannelType.EMAIL);
-    verify(notificationChannel).send(payload);
-  }
+        verify(notificationChannelFactory).getChannel(NotificationChannelType.EMAIL);
+        verify(notificationChannel).send(payload);
+    }
 }

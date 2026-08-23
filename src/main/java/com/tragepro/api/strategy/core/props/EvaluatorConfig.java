@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EvaluatorConfig {
-  private StrategyEvaluatorStep name;
-  private double probability;
+    private StrategyEvaluatorStep name;
+    private double probability;
 }

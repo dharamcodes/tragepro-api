@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataEventListener {
 
-  @ApplicationModuleListener
-  public void on(DataEvent event) {
-    log.info("Received DataEvent: {} - {}", event.eventId(), event);
-  }
+    @ApplicationModuleListener
+    public void on(DataEvent event) {
+        log.info("Received DataEvent: {} - {}", event.eventId(), event);
+    }
 }

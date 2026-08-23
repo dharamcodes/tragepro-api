@@ -13,17 +13,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StrategyInitializer implements CommandLineRunner {
 
-  private final StrategyService strategyService;
-  private final StrategyContext strategyContext;
+    private final StrategyService strategyService;
+    private final StrategyContext strategyContext;
 
-  @Override
-  public void run(String @NonNull ... args) throws Exception {
-    strategyService
-        .getAll()
-        .forEach(
-            strategy -> {
-              log.info("loading strategy - name :: {}", strategy.getStrategy().getName());
-              strategyContext.put(strategy.getStrategy().getName(), strategy);
-            });
-  }
+    @Override
+    public void run(String @NonNull ... args) throws Exception {
+        strategyService.getAll().forEach(strategy -> {
+            log.info("loading strategy - name :: {}", strategy.getStrategy().getName());
+            strategyContext.put(strategy.getStrategy().getName(), strategy);
+        });
+    }
 }

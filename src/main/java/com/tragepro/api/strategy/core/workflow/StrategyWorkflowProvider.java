@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class StrategyWorkflowProvider implements WorkflowProvider {
 
-  @Override
-  public Collection<Class<?>> getWorkflowImplementationTypes() {
-    return List.of(DataInitWorkflowImpl.class);
-  }
+    @Override
+    public Collection<Class<?>> getWorkflowImplementationTypes() {
+        return List.of(DataInitWorkflowImpl.class);
+    }
 }

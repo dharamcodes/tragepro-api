@@ -12,19 +12,22 @@ import org.springframework.context.ApplicationEventPublisher;
 @ExtendWith(MockitoExtension.class)
 class TradingEventSystemTest {
 
-  @Mock private ApplicationEventPublisher applicationEventPublisher;
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
-  @InjectMocks private TradingEventPublisher publisher;
+    @InjectMocks
+    private TradingEventPublisher publisher;
 
-  @InjectMocks private TradingEventListener listener;
+    @InjectMocks
+    private TradingEventListener listener;
 
-  @Test
-  void testPublishAndListen() {
-    TradingEvent event = new TradingEvent("test-id", "test-message");
+    @Test
+    void testPublishAndListen() {
+        TradingEvent event = new TradingEvent("test-id", "test-message");
 
-    publisher.publish(event);
-    verify(applicationEventPublisher).publishEvent(event);
+        publisher.publish(event);
+        verify(applicationEventPublisher).publishEvent(event);
 
-    listener.on(event);
-  }
+        listener.on(event);
+    }
 }

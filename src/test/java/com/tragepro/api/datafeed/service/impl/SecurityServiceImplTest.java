@@ -21,57 +21,58 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class SecurityServiceImplTest {
 
-  @Mock private SecurityRepository securityRepository;
+    @Mock
+    private SecurityRepository securityRepository;
 
-  @Mock private MapperFactory mapperFactory;
+    @Mock
+    private MapperFactory mapperFactory;
 
-  @Mock private SecurityMapper securityMapper;
+    @Mock
+    private SecurityMapper securityMapper;
 
-  @InjectMocks private SecurityServiceImpl securityService;
+    @InjectMocks
+    private SecurityServiceImpl securityService;
 
-  @BeforeEach
-  void setUp() {
-    // Only mock the mapper factory where necessary, but since it's the first line in the method:
-  }
+    @BeforeEach
+    void setUp() {
+        // Only mock the mapper factory where necessary, but since it's the first line in the method:
+    }
 
-  @Test
-  void testFetSecurityBySymbol_InvalidSymbol() {
-    when(mapperFactory.getMapper(SecurityMapper.class)).thenReturn(securityMapper);
+    @Test
+    void testFetSecurityBySymbol_InvalidSymbol() {
+        when(mapperFactory.getMapper(SecurityMapper.class)).thenReturn(securityMapper);
 
-    AppException exception =
-        assertThrows(AppException.class, () -> securityService.fetSecurityBySymbol(""));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+        AppException exception = assertThrows(AppException.class, () -> securityService.fetSecurityBySymbol(""));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
 
-    exception = assertThrows(AppException.class, () -> securityService.fetSecurityBySymbol(null));
-    assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
-  }
+        exception = assertThrows(AppException.class, () -> securityService.fetSecurityBySymbol(null));
+        assertEquals(ErrorType.INVALID_PARAMETER, exception.getErrorType());
+    }
 
-  @Test
-  void testFetSecurityBySymbol_DataNotFound() {
-    when(mapperFactory.getMapper(SecurityMapper.class)).thenReturn(securityMapper);
-    when(securityRepository.findBySymbol("AAPL")).thenReturn(null);
+    @Test
+    void testFetSecurityBySymbol_DataNotFound() {
+        when(mapperFactory.getMapper(SecurityMapper.class)).thenReturn(securityMapper);
+        when(securityRepository.findBySymbol("AAPL")).thenReturn(null);
 
-    AppException exception =
-        assertThrows(AppException.class, () -> securityService.fetSecurityBySymbol("AAPL"));
-    assertEquals(ErrorType.DATA_NOT_FOUND, exception.getErrorType());
-  }
+        AppException exception = assertThrows(AppException.class, () -> securityService.fetSecurityBySymbol("AAPL"));
+        assertEquals(ErrorType.DATA_NOT_FOUND, exception.getErrorType());
+    }
 
-  @Test
-  void testFetSecurityBySymbol_Success() {
-    when(mapperFactory.getMapper(SecurityMapper.class)).thenReturn(securityMapper);
-    SecurityEntity entity = new SecurityEntity();
-    entity.setSymbol("AAPL");
-    entity.setName("Apple");
+    @Test
+    void testFetSecurityBySymbol_Success() {
+        when(mapperFactory.getMapper(SecurityMapper.class)).thenReturn(securityMapper);
+        SecurityEntity entity = new SecurityEntity();
+        entity.setSymbol("AAPL");
+        entity.setName("Apple");
 
-    SecurityResponse response =
-        new SecurityResponse("NSE", "EQ", 123, "INE", "EQ", "AAPL", "AAPL", "Apple");
+        SecurityResponse response = new SecurityResponse("NSE", "EQ", 123, "INE", "EQ", "AAPL", "AAPL", "Apple");
 
-    when(securityRepository.findBySymbol("AAPL")).thenReturn(entity);
-    when(securityMapper.entityToResponse(entity)).thenReturn(response);
+        when(securityRepository.findBySymbol("AAPL")).thenReturn(entity);
+        when(securityMapper.entityToResponse(entity)).thenReturn(response);
 
-    SecurityResponse result = securityService.fetSecurityBySymbol("AAPL");
+        SecurityResponse result = securityService.fetSecurityBySymbol("AAPL");
 
-    assertEquals("AAPL", result.symbol());
-    assertEquals("Apple", result.name());
-  }
+        assertEquals("AAPL", result.symbol());
+        assertEquals("Apple", result.name());
+    }
 }

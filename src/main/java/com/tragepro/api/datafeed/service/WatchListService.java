@@ -9,17 +9,17 @@ import org.springframework.data.domain.Pageable;
 
 public interface WatchListService {
 
-  WatchListResponse create(WatchListRequest request);
+    WatchListResponse create(WatchListRequest request);
 
-  Optional<WatchListResponse> getById(String id);
+    Optional<WatchListResponse> getById(String id);
 
-  Page<WatchListResponse> getAll(Pageable pageable);
+    Page<WatchListResponse> getAll(Pageable pageable);
 
-  Set<WatchListResponse> getAll();
+    Set<WatchListResponse> getAll();
 
-  WatchListResponse update(String id, WatchListRequest request);
+    WatchListResponse update(String id, WatchListRequest request);
 
-  void delete(String id);
+    void delete(String id);
 
-  WatchListResponse patch(String id, WatchListRequest request);
+    WatchListResponse patch(String id, WatchListRequest request);
 }

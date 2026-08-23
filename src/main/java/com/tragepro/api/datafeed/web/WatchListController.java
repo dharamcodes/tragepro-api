@@ -19,42 +19,41 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/watchlists")
 public class WatchListController {
 
-  private final WatchListService watchListService;
+    private final WatchListService watchListService;
 
-  @PostMapping
-  public ResponseEntity<WatchListResponse> create(@Valid @RequestBody WatchListRequest request) {
-    return ResponseEntity.ok().body(watchListService.create(request));
-  }
+    @PostMapping
+    public ResponseEntity<WatchListResponse> create(@Valid @RequestBody WatchListRequest request) {
+        return ResponseEntity.ok().body(watchListService.create(request));
+    }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<WatchListResponse> getById(@PathVariable String id) {
-    return watchListService
-        .getById(id)
-        .map(response -> ResponseEntity.ok().body(response))
-        .orElse(ResponseEntity.notFound().build());
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<WatchListResponse> getById(@PathVariable String id) {
+        return watchListService
+                .getById(id)
+                .map(response -> ResponseEntity.ok().body(response))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-  @GetMapping
-  public ResponseEntity<PagedResponse<WatchListResponse>> getAll(
-      @PageableDefault(size = 20) Pageable pageable) {
-    return ResponseEntity.ok().body(PagedResponse.of(watchListService.getAll(pageable)));
-  }
+    @GetMapping
+    public ResponseEntity<PagedResponse<WatchListResponse>> getAll(@PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok().body(PagedResponse.of(watchListService.getAll(pageable)));
+    }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<WatchListResponse> update(
-      @NotNull @PathVariable String id, @Valid @RequestBody WatchListRequest request) {
-    return ResponseEntity.ok().body(watchListService.update(id, request));
-  }
+    @PutMapping("/{id}")
+    public ResponseEntity<WatchListResponse> update(
+            @NotNull @PathVariable String id, @Valid @RequestBody WatchListRequest request) {
+        return ResponseEntity.ok().body(watchListService.update(id, request));
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@NotNull @PathVariable String id) {
-    watchListService.delete(id);
-    return ResponseEntity.ok().build();
-  }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@NotNull @PathVariable String id) {
+        watchListService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<WatchListResponse> patch(
-      @NotNull @PathVariable String id, @Valid @RequestBody WatchListRequest request) {
-    return ResponseEntity.ok().body(watchListService.patch(id, request));
-  }
+    @PatchMapping("/{id}")
+    public ResponseEntity<WatchListResponse> patch(
+            @NotNull @PathVariable String id, @Valid @RequestBody WatchListRequest request) {
+        return ResponseEntity.ok().body(watchListService.patch(id, request));
+    }
 }

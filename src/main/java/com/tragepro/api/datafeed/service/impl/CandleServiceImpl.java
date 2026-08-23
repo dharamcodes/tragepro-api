@@ -27,100 +27,96 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CandleServiceImpl implements CandleService {
 
-  private final CandleRepository candleRepository;
-  private final MapperFactory mapperFactory;
+    private final CandleRepository candleRepository;
+    private final MapperFactory mapperFactory;
 
-  @Override
-  public CandleResponse create(CandleRequest candleRequest) {
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    var candleEntity = mapper.requestToEntity(candleRequest);
-    candleRepository.save(candleEntity);
-    return mapper.entityToResponse(candleEntity);
-  }
-
-  @Override
-  public Optional<CandleResponse> getById(String id) {
-    var candleEntity = candleRepository.findById(id);
-    if (candleEntity.isEmpty()) {
-      log.error("candleEntity is empty or invalid for getById {}", candleEntity);
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
+    @Override
+    public CandleResponse create(CandleRequest candleRequest) {
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        var candleEntity = mapper.requestToEntity(candleRequest);
+        candleRepository.save(candleEntity);
+        return mapper.entityToResponse(candleEntity);
     }
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    return Optional.of(mapper.entityToResponse(candleEntity.get()));
-  }
 
-  @Override
-  public Page<CandleResponse> getAll(Pageable pageable) {
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    var candleEntities = candleRepository.findAll(pageable);
-    if (candleEntities.isEmpty()) {
-      log.error("candleEntities is empty or invalid for getAll {}", candleEntities);
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
+    @Override
+    public Optional<CandleResponse> getById(String id) {
+        var candleEntity = candleRepository.findById(id);
+        if (candleEntity.isEmpty()) {
+            log.error("candleEntity is empty or invalid for getById {}", candleEntity);
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        return Optional.of(mapper.entityToResponse(candleEntity.get()));
     }
-    return candleEntities.map(mapper::entityToResponse);
-  }
 
-  @Override
-  public Set<CandleResponse> getAll() {
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    List<CandleEntity> candleEntities = candleRepository.findAll();
-    if (candleEntities.isEmpty()) {
-      log.error("candleEntities is empty for getAll {}", candleEntities);
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
+    @Override
+    public Page<CandleResponse> getAll(Pageable pageable) {
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        var candleEntities = candleRepository.findAll(pageable);
+        if (candleEntities.isEmpty()) {
+            log.error("candleEntities is empty or invalid for getAll {}", candleEntities);
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        return candleEntities.map(mapper::entityToResponse);
     }
-    return candleEntities.stream().map(mapper::entityToResponse).collect(Collectors.toSet());
-  }
 
-  @Override
-  public CandleResponse update(String id, CandleRequest candleRequest) {
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    var candleEntity = candleRepository.findById(id);
-    if (candleEntity.isEmpty()) {
-      log.error("candleEntity is empty or invalid for update {}", candleEntity);
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
+    @Override
+    public Set<CandleResponse> getAll() {
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        List<CandleEntity> candleEntities = candleRepository.findAll();
+        if (candleEntities.isEmpty()) {
+            log.error("candleEntities is empty for getAll {}", candleEntities);
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        return candleEntities.stream().map(mapper::entityToResponse).collect(Collectors.toSet());
     }
-    mapper.merge(candleRequest, candleEntity.get());
-    candleRepository.save(candleEntity.get());
-    return mapper.entityToResponse(candleEntity.get());
-  }
 
-  @Override
-  public void delete(String id) {
-    var candleEntity = candleRepository.findById(id);
-    var entityToDelete =
-        candleEntity.orElseThrow(
-            () -> {
-              log.error("candleEntity is empty or invalid for delete, id: {}", id);
-              return new AppException(ErrorType.DATA_NOT_FOUND);
-            });
-    candleRepository.delete(entityToDelete);
-  }
-
-  @Override
-  public boolean isCandleExists(String name, long timestamp) {
-    return candleRepository.existsBySymbolDataNameAndCandleDataTimestamp(name, timestamp);
-  }
-
-  @Override
-  public java.util.List<CandleResponse> getCandlesBySymbolAndDaysBack(
-      String symbolName, int daysBack) {
-    long timestampFrom = Instant.now().minus(daysBack, ChronoUnit.DAYS).getEpochSecond();
-    var candleEntities =
-        candleRepository.findBySymbolDataNameAndCandleDataTimestampGreaterThanEqual(
-            symbolName, timestampFrom);
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    return candleEntities.stream().map(mapper::entityToResponse).toList();
-  }
-
-  @Override
-  public Set<CandleResponse> getLatestCandlesBySymbols(Set<String> symbols) {
-    log.info("finding latest candles for symbols: {}", symbols);
-    List<CandleEntity> latestCandles = candleRepository.findLatestCandlesBySymbols(symbols);
-    if (latestCandles.isEmpty()) {
-      log.warn("No candles found for the given symbols: {}", symbols);
-      return new HashSet<>();
+    @Override
+    public CandleResponse update(String id, CandleRequest candleRequest) {
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        var candleEntity = candleRepository.findById(id);
+        if (candleEntity.isEmpty()) {
+            log.error("candleEntity is empty or invalid for update {}", candleEntity);
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        mapper.merge(candleRequest, candleEntity.get());
+        candleRepository.save(candleEntity.get());
+        return mapper.entityToResponse(candleEntity.get());
     }
-    var mapper = mapperFactory.getMapper(CandleMapper.class);
-    return latestCandles.stream().map(mapper::entityToResponse).collect(Collectors.toSet());
-  }
+
+    @Override
+    public void delete(String id) {
+        var candleEntity = candleRepository.findById(id);
+        var entityToDelete = candleEntity.orElseThrow(() -> {
+            log.error("candleEntity is empty or invalid for delete, id: {}", id);
+            return new AppException(ErrorType.DATA_NOT_FOUND);
+        });
+        candleRepository.delete(entityToDelete);
+    }
+
+    @Override
+    public boolean isCandleExists(String name, long timestamp) {
+        return candleRepository.existsBySymbolDataNameAndCandleDataTimestamp(name, timestamp);
+    }
+
+    @Override
+    public java.util.List<CandleResponse> getCandlesBySymbolAndDaysBack(String symbolName, int daysBack) {
+        long timestampFrom = Instant.now().minus(daysBack, ChronoUnit.DAYS).getEpochSecond();
+        var candleEntities =
+                candleRepository.findBySymbolDataNameAndCandleDataTimestampGreaterThanEqual(symbolName, timestampFrom);
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        return candleEntities.stream().map(mapper::entityToResponse).toList();
+    }
+
+    @Override
+    public Set<CandleResponse> getLatestCandlesBySymbols(Set<String> symbols) {
+        log.info("finding latest candles for symbols: {}", symbols);
+        List<CandleEntity> latestCandles = candleRepository.findLatestCandlesBySymbols(symbols);
+        if (latestCandles.isEmpty()) {
+            log.warn("No candles found for the given symbols: {}", symbols);
+            return new HashSet<>();
+        }
+        var mapper = mapperFactory.getMapper(CandleMapper.class);
+        return latestCandles.stream().map(mapper::entityToResponse).collect(Collectors.toSet());
+    }
 }

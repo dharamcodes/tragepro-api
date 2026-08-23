@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class TelegramNotificationChannel implements NotificationChannel {
 
-  @Override
-  public NotificationChannelType getChannelType() {
-    return NotificationChannelType.TELEGRAM;
-  }
+    @Override
+    public NotificationChannelType getChannelType() {
+        return NotificationChannelType.TELEGRAM;
+    }
 
-  @Override
-  public void send(NotificationPayload payload) {
-    log.info("Sending Telegram message to {}: {}", payload.recipient(), payload.message());
-  }
+    @Override
+    public void send(NotificationPayload payload) {
+        log.info("Sending Telegram message to {}: {}", payload.recipient(), payload.message());
+    }
 }

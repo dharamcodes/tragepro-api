@@ -27,127 +27,133 @@ import org.springframework.data.domain.Pageable;
 @ExtendWith(MockitoExtension.class)
 class WatchListServiceImplTest {
 
-  @Mock private WatchListRepository watchListRepository;
-  @Mock private MapperFactory mapperFactory;
-  @Mock private WatchListMapper watchListMapper;
+    @Mock
+    private WatchListRepository watchListRepository;
 
-  @InjectMocks private WatchListServiceImpl watchListService;
+    @Mock
+    private MapperFactory mapperFactory;
 
-  private WatchListRequest request;
-  private WatchListEntity entity;
-  private WatchListResponse response;
+    @Mock
+    private WatchListMapper watchListMapper;
 
-  @BeforeEach
-  void setUp() {
-    request = WatchListRequest.builder().name("WL1").build();
-    entity = new WatchListEntity();
-    entity.setId("id1");
-    response = WatchListResponse.builder().id("id1").name("WL1").build();
-    lenient().when(mapperFactory.getMapper(WatchListMapper.class)).thenReturn(watchListMapper);
-  }
+    @InjectMocks
+    private WatchListServiceImpl watchListService;
 
-  @Test
-  void testCreate() {
-    when(watchListMapper.requestToEntity(request)).thenReturn(entity);
-    when(watchListRepository.save(entity)).thenReturn(entity);
-    when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+    private WatchListRequest request;
+    private WatchListEntity entity;
+    private WatchListResponse response;
 
-    WatchListResponse result = watchListService.create(request);
-    assertEquals(response, result);
-  }
+    @BeforeEach
+    void setUp() {
+        request = WatchListRequest.builder().name("WL1").build();
+        entity = new WatchListEntity();
+        entity.setId("id1");
+        response = WatchListResponse.builder().id("id1").name("WL1").build();
+        lenient().when(mapperFactory.getMapper(WatchListMapper.class)).thenReturn(watchListMapper);
+    }
 
-  @Test
-  void testGetById_Success() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
-    when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+    @Test
+    void testCreate() {
+        when(watchListMapper.requestToEntity(request)).thenReturn(entity);
+        when(watchListRepository.save(entity)).thenReturn(entity);
+        when(watchListMapper.entityToResponse(entity)).thenReturn(response);
 
-    Optional<WatchListResponse> result = watchListService.getById("id1");
-    assertTrue(result.isPresent());
-    assertEquals(response, result.get());
-  }
+        WatchListResponse result = watchListService.create(request);
+        assertEquals(response, result);
+    }
 
-  @Test
-  void testGetById_NotFound() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
-    assertThrows(AppException.class, () -> watchListService.getById("id1"));
-  }
+    @Test
+    void testGetById_Success() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
+        when(watchListMapper.entityToResponse(entity)).thenReturn(response);
 
-  @Test
-  void testGetAllPageable_Success() {
-    Page<WatchListEntity> page = new PageImpl<>(List.of(entity));
-    when(watchListRepository.getWatchListSummery(any(Pageable.class))).thenReturn(page);
-    when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+        Optional<WatchListResponse> result = watchListService.getById("id1");
+        assertTrue(result.isPresent());
+        assertEquals(response, result.get());
+    }
 
-    Page<WatchListResponse> result = watchListService.getAll(Pageable.unpaged());
-    assertEquals(1, result.getTotalElements());
-  }
+    @Test
+    void testGetById_NotFound() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
+        assertThrows(AppException.class, () -> watchListService.getById("id1"));
+    }
 
-  @Test
-  void testGetAllPageable_Empty() {
-    when(watchListRepository.getWatchListSummery(any(Pageable.class))).thenReturn(Page.empty());
-    assertThrows(AppException.class, () -> watchListService.getAll(Pageable.unpaged()));
-  }
+    @Test
+    void testGetAllPageable_Success() {
+        Page<WatchListEntity> page = new PageImpl<>(List.of(entity));
+        when(watchListRepository.getWatchListSummery(any(Pageable.class))).thenReturn(page);
+        when(watchListMapper.entityToResponse(entity)).thenReturn(response);
 
-  @Test
-  void testGetAllSet_Success() {
-    when(watchListRepository.findAll()).thenReturn(List.of(entity));
-    when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+        Page<WatchListResponse> result = watchListService.getAll(Pageable.unpaged());
+        assertEquals(1, result.getTotalElements());
+    }
 
-    Set<WatchListResponse> result = watchListService.getAll();
-    assertEquals(1, result.size());
-  }
+    @Test
+    void testGetAllPageable_Empty() {
+        when(watchListRepository.getWatchListSummery(any(Pageable.class))).thenReturn(Page.empty());
+        assertThrows(AppException.class, () -> watchListService.getAll(Pageable.unpaged()));
+    }
 
-  @Test
-  void testGetAllSet_Empty() {
-    when(watchListRepository.findAll()).thenReturn(Collections.emptyList());
-    Set<WatchListResponse> result = watchListService.getAll();
-    assertTrue(result.isEmpty());
-  }
+    @Test
+    void testGetAllSet_Success() {
+        when(watchListRepository.findAll()).thenReturn(List.of(entity));
+        when(watchListMapper.entityToResponse(entity)).thenReturn(response);
 
-  @Test
-  void testUpdate_Success() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
-    when(watchListRepository.save(entity)).thenReturn(entity);
-    when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+        Set<WatchListResponse> result = watchListService.getAll();
+        assertEquals(1, result.size());
+    }
 
-    WatchListResponse result = watchListService.update("id1", request);
-    assertEquals(response, result);
-    verify(watchListMapper).merge(request, entity);
-  }
+    @Test
+    void testGetAllSet_Empty() {
+        when(watchListRepository.findAll()).thenReturn(Collections.emptyList());
+        Set<WatchListResponse> result = watchListService.getAll();
+        assertTrue(result.isEmpty());
+    }
 
-  @Test
-  void testUpdate_NotFound() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
-    assertThrows(AppException.class, () -> watchListService.update("id1", request));
-  }
+    @Test
+    void testUpdate_Success() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
+        when(watchListRepository.save(entity)).thenReturn(entity);
+        when(watchListMapper.entityToResponse(entity)).thenReturn(response);
 
-  @Test
-  void testDelete_Success() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
-    assertDoesNotThrow(() -> watchListService.delete("id1"));
-    verify(watchListRepository).delete(entity);
-  }
+        WatchListResponse result = watchListService.update("id1", request);
+        assertEquals(response, result);
+        verify(watchListMapper).merge(request, entity);
+    }
 
-  @Test
-  void testDelete_NotFound() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
-    assertThrows(AppException.class, () -> watchListService.delete("id1"));
-  }
+    @Test
+    void testUpdate_NotFound() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
+        assertThrows(AppException.class, () -> watchListService.update("id1", request));
+    }
 
-  @Test
-  void testPatch_Success() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
-    when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+    @Test
+    void testDelete_Success() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
+        assertDoesNotThrow(() -> watchListService.delete("id1"));
+        verify(watchListRepository).delete(entity);
+    }
 
-    WatchListResponse result = watchListService.patch("id1", request);
-    assertEquals(response, result);
-    verify(watchListMapper).merge(request, entity);
-    verify(watchListRepository).save(entity);
-  }
+    @Test
+    void testDelete_NotFound() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
+        assertThrows(AppException.class, () -> watchListService.delete("id1"));
+    }
 
-  @Test
-  void testPatch_NotFound() {
-    when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
-    assertThrows(AppException.class, () -> watchListService.patch("id1", request));
-  }
+    @Test
+    void testPatch_Success() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.of(entity));
+        when(watchListMapper.entityToResponse(entity)).thenReturn(response);
+
+        WatchListResponse result = watchListService.patch("id1", request);
+        assertEquals(response, result);
+        verify(watchListMapper).merge(request, entity);
+        verify(watchListRepository).save(entity);
+    }
+
+    @Test
+    void testPatch_NotFound() {
+        when(watchListRepository.findById("id1")).thenReturn(Optional.empty());
+        assertThrows(AppException.class, () -> watchListService.patch("id1", request));
+    }
 }

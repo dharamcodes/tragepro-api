@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Exchange {
-  NSE,
-  BSE;
+    NSE,
+    BSE;
 }

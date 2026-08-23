@@ -1,0 +1,42 @@
+name: "Feature Improvement"
+description: "Propose an optimization, architectural refactoring, or improvement to an existing feature"
+title: "[Improvement]: "
+labels: ["enhancement", "improvement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Feature Improvement Proposal
+        Use this template to specify improvements to existing modules and features.
+  - type: input
+    id: target-module
+    attributes:
+      label: Target Module & Feature
+      placeholder: "e.g., identity module - Refresh Token Rotation"
+    validations:
+      required: true
+  - type: textarea
+    id: current-limitation
+    attributes:
+      label: Current State & Limitations
+      description: Describe how the current implementation works and what needs improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Solution & Technical Design
+      description: Explain the design, algorithms, caching, or security enhancements.
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Implementation Checklist
+      value: |
+        - [ ] Design and implement changes
+        - [ ] Update Swagger / OpenAPI docs
+        - [ ] Add unit and integration tests (>= 95% line coverage)
+        - [ ] Spotless code formatting check
+    validations:
+      required: true

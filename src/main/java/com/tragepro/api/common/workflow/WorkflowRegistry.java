@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WorkflowRegistry {
 
-  private final List<WorkflowProvider> workflowProviders;
+    private final List<WorkflowProvider> workflowProviders;
 
-  public Collection<Class<?>> workflowImplementationTypes() {
-    return workflowProviders.stream()
-        .flatMap(provider -> provider.getWorkflowImplementationTypes().stream())
-        .toList();
-  }
+    public Collection<Class<?>> workflowImplementationTypes() {
+        return workflowProviders.stream()
+                .flatMap(provider -> provider.getWorkflowImplementationTypes().stream())
+                .toList();
+    }
 }

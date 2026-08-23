@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class SecurityAdapterImpl implements SecurityAdapter {
-  private final SecurityService securityService;
+    private final SecurityService securityService;
 
-  @Override
-  public SecurityResponse fetSecurityBySymbol(String symbol) {
-    return securityService.fetSecurityBySymbol(symbol);
-  }
+    @Override
+    public SecurityResponse fetSecurityBySymbol(String symbol) {
+        return securityService.fetSecurityBySymbol(symbol);
+    }
 }

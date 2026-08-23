@@ -22,59 +22,59 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class FeedClientAdapterTest {
 
-  @Mock private FeedClient feedClient;
-  @Mock private FeedClientMapper feedClientMapper;
+    @Mock
+    private FeedClient feedClient;
 
-  @InjectMocks private FeedClientAdapter feedClientAdapter;
+    @Mock
+    private FeedClientMapper feedClientMapper;
 
-  private FeedClientRequest request;
-  private FeedClientResponse response;
-  private List<CandleRequest> mappedRequests;
+    @InjectMocks
+    private FeedClientAdapter feedClientAdapter;
 
-  @BeforeEach
-  void setUp() {
-    request = FeedClientRequest.builder().securityId(123).build();
-    response = new FeedClientResponse(null, null, null, null, null, null, null);
-    mappedRequests = List.of(CandleRequest.builder().build());
-  }
+    private FeedClientRequest request;
+    private FeedClientResponse response;
+    private List<CandleRequest> mappedRequests;
 
-  @Test
-  void testHistoricalDataAdapter() {
-    when(feedClient.getHistoricalFeed(request)).thenReturn(response);
-    when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
+    @BeforeEach
+    void setUp() {
+        request = FeedClientRequest.builder().securityId(123).build();
+        response = new FeedClientResponse(null, null, null, null, null, null, null);
+        mappedRequests = List.of(CandleRequest.builder().build());
+    }
 
-    List<CandleRequest> result = feedClientAdapter.historicalDataAdapter(request);
+    @Test
+    void testHistoricalDataAdapter() {
+        when(feedClient.getHistoricalFeed(request)).thenReturn(response);
+        when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
 
-    assertEquals(mappedRequests, result);
-    verify(feedClient).getHistoricalFeed(request);
-    verify(feedClientMapper).map(response, request);
-  }
+        List<CandleRequest> result = feedClientAdapter.historicalDataAdapter(request);
 
-  @Test
-  void testIntradayDataAdapter() {
-    when(feedClient.getIntradayFeed(request)).thenReturn(response);
-    when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
+        assertEquals(mappedRequests, result);
+        verify(feedClient).getHistoricalFeed(request);
+        verify(feedClientMapper).map(response, request);
+    }
 
-    List<CandleRequest> result = feedClientAdapter.intradayDataAdapter(request);
+    @Test
+    void testIntradayDataAdapter() {
+        when(feedClient.getIntradayFeed(request)).thenReturn(response);
+        when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
 
-    assertEquals(mappedRequests, result);
-    verify(feedClient).getIntradayFeed(request);
-    verify(feedClientMapper).map(response, request);
-  }
+        List<CandleRequest> result = feedClientAdapter.intradayDataAdapter(request);
 
-  @Test
-  void testFallbackMethods() {
-    Throwable cause = new RuntimeException("Rate limit");
-    assertThrows(
-        AppException.class,
-        () ->
-            ReflectionTestUtils.invokeMethod(
-                feedClientAdapter, "apiCallFallbackHistorical", request, cause));
+        assertEquals(mappedRequests, result);
+        verify(feedClient).getIntradayFeed(request);
+        verify(feedClientMapper).map(response, request);
+    }
 
-    assertThrows(
-        AppException.class,
-        () ->
-            ReflectionTestUtils.invokeMethod(
-                feedClientAdapter, "apiCallFallbackIntraday", request, cause));
-  }
+    @Test
+    void testFallbackMethods() {
+        Throwable cause = new RuntimeException("Rate limit");
+        assertThrows(
+                AppException.class,
+                () -> ReflectionTestUtils.invokeMethod(feedClientAdapter, "apiCallFallbackHistorical", request, cause));
+
+        assertThrows(
+                AppException.class,
+                () -> ReflectionTestUtils.invokeMethod(feedClientAdapter, "apiCallFallbackIntraday", request, cause));
+    }
 }

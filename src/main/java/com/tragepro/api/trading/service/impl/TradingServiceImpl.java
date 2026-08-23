@@ -18,44 +18,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class TradingServiceImpl implements TradingService {
 
-  private final Map<String, TradePositionResponse> positions = new ConcurrentHashMap<>();
+    private final Map<String, TradePositionResponse> positions = new ConcurrentHashMap<>();
 
-  @Override
-  public TradePositionResponse openPosition(TradePositionRequest request) {
-    if (request == null) {
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+    @Override
+    public TradePositionResponse openPosition(TradePositionRequest request) {
+        if (request == null) {
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+        log.info("Opening position for symbol: {}", request.symbol());
+        String id = UUID.randomUUID().toString();
+        TradePositionResponse response = new TradePositionResponse(
+                id, request.symbol(), request.quantity(), request.entryPrice(), request.side(), "OPEN", Instant.now());
+        positions.put(id, response);
+        return response;
     }
-    log.info("Opening position for symbol: {}", request.symbol());
-    String id = UUID.randomUUID().toString();
-    TradePositionResponse response =
-        new TradePositionResponse(
-            id,
-            request.symbol(),
-            request.quantity(),
-            request.entryPrice(),
-            request.side(),
-            "OPEN",
-            Instant.now());
-    positions.put(id, response);
-    return response;
-  }
 
-  @Override
-  public TradePositionResponse getPosition(String positionId) {
-    log.info("Fetching position with id: {}", positionId);
-    if (positionId == null) {
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+    @Override
+    public TradePositionResponse getPosition(String positionId) {
+        log.info("Fetching position with id: {}", positionId);
+        if (positionId == null) {
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+        TradePositionResponse position = positions.get(positionId);
+        if (position == null) {
+            throw new AppException(ErrorType.DATA_NOT_FOUND);
+        }
+        return position;
     }
-    TradePositionResponse position = positions.get(positionId);
-    if (position == null) {
-      throw new AppException(ErrorType.DATA_NOT_FOUND);
-    }
-    return position;
-  }
 
-  @Override
-  public List<TradePositionResponse> getActivePositions() {
-    log.info("Fetching all active positions");
-    return new ArrayList<>(positions.values());
-  }
+    @Override
+    public List<TradePositionResponse> getActivePositions() {
+        log.info("Fetching all active positions");
+        return new ArrayList<>(positions.values());
+    }
 }

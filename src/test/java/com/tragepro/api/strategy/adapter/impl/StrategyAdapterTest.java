@@ -21,46 +21,51 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class StrategyAdapterTest {
 
-  @Mock private StrategyService strategyService;
-  @Mock private ConfigLoaderService configLoaderService;
+    @Mock
+    private StrategyService strategyService;
 
-  private StrategyAdapterImpl strategyAdapter;
-  private ConfigLoaderAdapterImpl configLoaderAdapter;
+    @Mock
+    private ConfigLoaderService configLoaderService;
 
-  @BeforeEach
-  void setUp() {
-    strategyAdapter = new StrategyAdapterImpl(strategyService);
-    configLoaderAdapter = new ConfigLoaderAdapterImpl(configLoaderService);
-  }
+    private StrategyAdapterImpl strategyAdapter;
+    private ConfigLoaderAdapterImpl configLoaderAdapter;
 
-  @Test
-  void testStrategyAdapterMethods() {
-    StrategyModel model = StrategyModel.builder().name("IntradayV1").desc("Test Strategy").build();
-    StrategyRequest request = StrategyRequest.builder().strategy(model).build();
-    StrategyResponse expectedResponse = StrategyResponse.builder().strategy(model).build();
+    @BeforeEach
+    void setUp() {
+        strategyAdapter = new StrategyAdapterImpl(strategyService);
+        configLoaderAdapter = new ConfigLoaderAdapterImpl(configLoaderService);
+    }
 
-    when(strategyService.create(request)).thenReturn(expectedResponse);
-    assertEquals(expectedResponse, strategyAdapter.create(request));
+    @Test
+    void testStrategyAdapterMethods() {
+        StrategyModel model =
+                StrategyModel.builder().name("IntradayV1").desc("Test Strategy").build();
+        StrategyRequest request = StrategyRequest.builder().strategy(model).build();
+        StrategyResponse expectedResponse =
+                StrategyResponse.builder().strategy(model).build();
 
-    when(strategyService.createOrUpdate(request)).thenReturn(expectedResponse);
-    StrategyResponse response = strategyAdapter.createOrUpdate(request);
-    assertNotNull(response);
-    assertEquals("IntradayV1", response.getStrategy().getName());
-    verify(strategyService).createOrUpdate(request);
+        when(strategyService.create(request)).thenReturn(expectedResponse);
+        assertEquals(expectedResponse, strategyAdapter.create(request));
 
-    when(strategyService.getAll()).thenReturn(Set.of(expectedResponse));
-    assertEquals(1, strategyAdapter.getAll().size());
-  }
+        when(strategyService.createOrUpdate(request)).thenReturn(expectedResponse);
+        StrategyResponse response = strategyAdapter.createOrUpdate(request);
+        assertNotNull(response);
+        assertEquals("IntradayV1", response.getStrategy().getName());
+        verify(strategyService).createOrUpdate(request);
 
-  @Test
-  void testConfigLoaderAdapterMethods() {
-    StrategyConfig config = new StrategyConfig();
-    config.setName("IntradayV1");
+        when(strategyService.getAll()).thenReturn(Set.of(expectedResponse));
+        assertEquals(1, strategyAdapter.getAll().size());
+    }
 
-    when(configLoaderService.getStrategyByName("IntradayV1")).thenReturn(config);
-    StrategyConfig result = configLoaderAdapter.getStrategyByName("IntradayV1");
-    assertNotNull(result);
-    assertEquals("IntradayV1", result.getName());
-    verify(configLoaderService).getStrategyByName("IntradayV1");
-  }
+    @Test
+    void testConfigLoaderAdapterMethods() {
+        StrategyConfig config = new StrategyConfig();
+        config.setName("IntradayV1");
+
+        when(configLoaderService.getStrategyByName("IntradayV1")).thenReturn(config);
+        StrategyConfig result = configLoaderAdapter.getStrategyByName("IntradayV1");
+        assertNotNull(result);
+        assertEquals("IntradayV1", result.getName());
+        verify(configLoaderService).getStrategyByName("IntradayV1");
+    }
 }

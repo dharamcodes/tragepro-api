@@ -12,19 +12,22 @@ import org.springframework.context.ApplicationEventPublisher;
 @ExtendWith(MockitoExtension.class)
 class JournalEventSystemTest {
 
-  @Mock private ApplicationEventPublisher applicationEventPublisher;
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
-  @InjectMocks private JournalEventPublisher publisher;
+    @InjectMocks
+    private JournalEventPublisher publisher;
 
-  @InjectMocks private JournalEventListener listener;
+    @InjectMocks
+    private JournalEventListener listener;
 
-  @Test
-  void testPublishAndListen() {
-    JournalEvent event = new JournalEvent("test-id", "test-message");
+    @Test
+    void testPublishAndListen() {
+        JournalEvent event = new JournalEvent("test-id", "test-message");
 
-    publisher.publish(event);
-    verify(applicationEventPublisher).publishEvent(event);
+        publisher.publish(event);
+        verify(applicationEventPublisher).publishEvent(event);
 
-    listener.on(event);
-  }
+        listener.on(event);
+    }
 }

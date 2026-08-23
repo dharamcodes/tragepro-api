@@ -19,21 +19,24 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class StrategyInitializerTest {
 
-  @Mock private StrategyService strategyService;
-  @Mock private StrategyContext strategyContext;
+    @Mock
+    private StrategyService strategyService;
 
-  @InjectMocks private StrategyInitializer strategyInitializer;
+    @Mock
+    private StrategyContext strategyContext;
 
-  @Test
-  void testRun() {
-    StrategyResponse response =
-        StrategyResponse.builder()
-            .strategy(StrategyModel.builder().name("TestStrategy").build())
-            .build();
-    when(strategyService.getAll()).thenReturn(Set.of(response));
+    @InjectMocks
+    private StrategyInitializer strategyInitializer;
 
-    assertDoesNotThrow(() -> strategyInitializer.run());
+    @Test
+    void testRun() {
+        StrategyResponse response = StrategyResponse.builder()
+                .strategy(StrategyModel.builder().name("TestStrategy").build())
+                .build();
+        when(strategyService.getAll()).thenReturn(Set.of(response));
 
-    verify(strategyContext).put("TestStrategy", response);
-  }
+        assertDoesNotThrow(() -> strategyInitializer.run());
+
+        verify(strategyContext).put("TestStrategy", response);
+    }
 }

@@ -5,22 +5,17 @@ import static org.mockito.Mockito.*;
 
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.datafeed.core.context.DatafeedContext;
-import com.tragepro.api.datafeed.core.feed.DataFeedAdapter;
-import com.tragepro.api.datafeed.core.feed.FeedAdapterFactory;
-import com.tragepro.api.datafeed.service.CandleService;
+import com.tragepro.api.datafeed.core.feed.CandleIngestAdapter;
 import com.tragepro.api.datafeed.service.SecurityService;
 import com.tragepro.api.datafeed.service.WatchListService;
-import com.tragepro.api.domain.datafeed.CandleDataModel;
-import com.tragepro.api.domain.datafeed.DatafeedModel;
 import com.tragepro.api.domain.datafeed.SymbolDataModel;
-import com.tragepro.api.domain.datafeed.request.CandleRequest;
+import com.tragepro.api.domain.datafeed.constant.DatafeedState;
 import com.tragepro.api.domain.datafeed.request.LoadCandleRequest;
 import com.tragepro.api.domain.datafeed.response.LoadCandleResponse;
 import com.tragepro.api.domain.datafeed.response.SecurityResponse;
 import com.tragepro.api.domain.datafeed.response.WatchListResponse;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Set;
-import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,117 +25,145 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DatafeedServiceImplTest {
 
-  @Mock private WatchListService watchListService;
-  @Mock private SecurityService securityService;
-  @Mock private CandleService candleService;
-  @Mock private FeedAdapterFactory feedAdapterFactory;
-  @Mock private DataFeedAdapter dataFeedAdapter;
-  @Mock private DatafeedContext datafeedContext;
+    @Mock
+    private WatchListService watchListService;
 
-  private Executor executor = Runnable::run; // Sync executor for tests
+    @Mock
+    private SecurityService securityService;
 
-  private DatafeedServiceImpl datafeedService;
+    @Mock
+    private CandleIngestAdapter candleIngestAdapter;
 
-  @BeforeEach
-  void setUp() {
-    lenient().when(feedAdapterFactory.get()).thenReturn(dataFeedAdapter);
-    datafeedService =
-        new DatafeedServiceImpl(
-            watchListService,
-            securityService,
-            candleService,
-            feedAdapterFactory,
-            datafeedContext,
-            executor);
-  }
+    @Mock
+    private DatafeedContext datafeedContext;
 
-  @Test
-  void testLoadData_Success() {
-    LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
-    SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
-    WatchListResponse watchlist =
-        WatchListResponse.builder().name("MyWatchlist").stocks(Set.of(stock)).build();
+    private DatafeedServiceImpl datafeedService;
 
-    SecurityResponse security =
-        SecurityResponse.builder().securityId(1001).symbol("AAPL").name("Apple Inc.").build();
+    @BeforeEach
+    void setUp() {
+        datafeedService =
+                new DatafeedServiceImpl(watchListService, securityService, candleIngestAdapter, datafeedContext);
+    }
 
-    CandleRequest mockCandle =
-        CandleRequest.builder()
-            .candleData(new CandleDataModel(1609459200000L, 100.0, 110.0, 90.0, 105.0, 1000L))
-            .build();
+    @Test
+    void testLoadData_Success() {
+        LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
+        SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
+        WatchListResponse watchlist = WatchListResponse.builder()
+                .name("MyWatchlist")
+                .stocks(Set.of(stock))
+                .build();
 
-    when(watchListService.getAll()).thenReturn(Set.of(watchlist));
-    when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(security);
-    when(dataFeedAdapter.intradayDataAdapter(any())).thenReturn(List.of(mockCandle));
-    when(candleService.isCandleExists(anyString(), anyLong())).thenReturn(false);
+        SecurityResponse security = SecurityResponse.builder()
+                .securityId(1001)
+                .symbol("AAPL")
+                .name("Apple Inc.")
+                .build();
 
-    LoadCandleResponse response = datafeedService.loadData(request);
+        when(watchListService.getAll()).thenReturn(Set.of(watchlist));
+        when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(security);
+        when(candleIngestAdapter.fetchAndIngest(security, stock, 5)).thenReturn(LocalDate.now());
 
-    assertNotNull(response);
-    assertEquals("MyWatchlist", response.watchList());
-    assertEquals("Data load initiated successfully", response.message());
+        LoadCandleResponse response = datafeedService.loadData(request);
 
-    verify(candleService).create(any());
-  }
+        assertNotNull(response);
+        assertEquals("MyWatchlist", response.watchList());
+        assertEquals("Data load initiated successfully", response.message());
 
-  @Test
-  void testLoadData_WatchlistNotFound() {
-    LoadCandleRequest request = new LoadCandleRequest("NonExistent", 5);
-    when(watchListService.getAll()).thenReturn(Set.of());
+        verify(datafeedContext).transitionTo(stock, DatafeedState.PROCESSING);
+        verify(datafeedContext).transitionTo(eq(stock), eq(DatafeedState.COMPLETED), any());
+        verify(datafeedContext).transitionTo(stock, DatafeedState.INITIALIZED);
+    }
 
-    assertThrows(AppException.class, () -> datafeedService.loadData(request));
-  }
+    @Test
+    void testLoadData_NullRequest_ThrowsException() {
+        assertThrows(AppException.class, () -> datafeedService.loadData(null));
+        assertThrows(AppException.class, () -> datafeedService.loadData(new LoadCandleRequest(null, 5)));
+    }
 
-  @Test
-  void testLoadData_EmptyStocks() {
-    LoadCandleRequest request = new LoadCandleRequest("EmptyWatchlist", 5);
-    WatchListResponse watchlist =
-        WatchListResponse.builder().name("EmptyWatchlist").stocks(Set.of()).build();
+    @Test
+    void testLoadData_WatchlistNotFound() {
+        LoadCandleRequest request = new LoadCandleRequest("NonExistent", 5);
+        when(watchListService.getAll()).thenReturn(Set.of());
 
-    when(watchListService.getAll()).thenReturn(Set.of(watchlist));
+        assertThrows(AppException.class, () -> datafeedService.loadData(request));
+    }
 
-    LoadCandleResponse response = datafeedService.loadData(request);
+    @Test
+    void testLoadData_EmptyStocks() {
+        LoadCandleRequest request = new LoadCandleRequest("EmptyWatchlist", 5);
+        WatchListResponse watchlist = WatchListResponse.builder()
+                .name("EmptyWatchlist")
+                .stocks(Set.of())
+                .build();
 
-    assertNotNull(response);
-    assertEquals("EmptyWatchlist", response.watchList());
-    assertEquals("No symbols found in watchlist to process", response.message());
-  }
+        when(watchListService.getAll()).thenReturn(Set.of(watchlist));
 
-  @Test
-  void testLoadData_SecurityNotFound_SkipsStock() {
-    LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
-    SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
-    WatchListResponse watchlist =
-        WatchListResponse.builder().name("MyWatchlist").stocks(Set.of(stock)).build();
+        LoadCandleResponse response = datafeedService.loadData(request);
 
-    when(watchListService.getAll()).thenReturn(Set.of(watchlist));
-    when(securityService.fetSecurityBySymbol("AAPL")).thenThrow(new RuntimeException("Not Found"));
+        assertNotNull(response);
+        assertEquals("EmptyWatchlist", response.watchList());
+        assertEquals("No symbols found in watchlist to process", response.message());
+    }
 
-    LoadCandleResponse response = datafeedService.loadData(request);
+    @Test
+    void testLoadData_NullStocks() {
+        LoadCandleRequest request = new LoadCandleRequest("NullStocksWatchlist", 5);
+        WatchListResponse watchlist = WatchListResponse.builder()
+                .name("NullStocksWatchlist")
+                .stocks(null)
+                .build();
 
-    assertNotNull(response);
-    verify(dataFeedAdapter, never()).intradayDataAdapter(any());
-  }
+        when(watchListService.getAll()).thenReturn(Set.of(watchlist));
 
-  @Test
-  void testLoadData_AdapterThrowsException_RevertsState() {
-    LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
-    SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
-    WatchListResponse watchlist =
-        WatchListResponse.builder().name("MyWatchlist").stocks(Set.of(stock)).build();
+        LoadCandleResponse response = datafeedService.loadData(request);
 
-    SecurityResponse security =
-        SecurityResponse.builder().securityId(1001).symbol("AAPL").name("Apple Inc.").build();
+        assertNotNull(response);
+        assertEquals("NullStocksWatchlist", response.watchList());
+        assertEquals("No symbols found in watchlist to process", response.message());
+    }
 
-    when(watchListService.getAll()).thenReturn(Set.of(watchlist));
-    when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(security);
-    when(datafeedContext.get(stock)).thenReturn(DatafeedModel.builder().build());
-    when(dataFeedAdapter.intradayDataAdapter(any()))
-        .thenThrow(new RuntimeException("Network Error"));
+    @Test
+    void testLoadData_SecurityNotFound_SkipsStock() {
+        LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
+        SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
+        WatchListResponse watchlist = WatchListResponse.builder()
+                .name("MyWatchlist")
+                .stocks(Set.of(stock))
+                .build();
 
-    LoadCandleResponse response = datafeedService.loadData(request);
+        when(watchListService.getAll()).thenReturn(Set.of(watchlist));
+        when(securityService.fetSecurityBySymbol("AAPL")).thenThrow(new RuntimeException("Not Found"));
 
-    assertNotNull(response);
-    verify(datafeedContext, atLeastOnce()).updateStatus(eq(stock), any());
-  }
+        LoadCandleResponse response = datafeedService.loadData(request);
+
+        assertNotNull(response);
+        verify(candleIngestAdapter, never()).fetchAndIngest(any(), any(), anyInt());
+    }
+
+    @Test
+    void testLoadData_IngestionThrowsException_RevertsState() {
+        LoadCandleRequest request = new LoadCandleRequest("MyWatchlist", 5);
+        SymbolDataModel stock = new SymbolDataModel("AAPL", "Apple Inc.");
+        WatchListResponse watchlist = WatchListResponse.builder()
+                .name("MyWatchlist")
+                .stocks(Set.of(stock))
+                .build();
+
+        SecurityResponse security = SecurityResponse.builder()
+                .securityId(1001)
+                .symbol("AAPL")
+                .name("Apple Inc.")
+                .build();
+
+        when(watchListService.getAll()).thenReturn(Set.of(watchlist));
+        when(securityService.fetSecurityBySymbol("AAPL")).thenReturn(security);
+        when(candleIngestAdapter.fetchAndIngest(security, stock, 5)).thenThrow(new RuntimeException("Network Error"));
+
+        LoadCandleResponse response = datafeedService.loadData(request);
+
+        assertNotNull(response);
+        verify(datafeedContext).transitionTo(stock, DatafeedState.PROCESSING);
+        verify(datafeedContext).transitionTo(stock, DatafeedState.INITIALIZED);
+    }
 }

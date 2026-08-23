@@ -14,40 +14,40 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WatchListAdapterImpl implements WatchListAdapter {
-  private final WatchListService watchListService;
+    private final WatchListService watchListService;
 
-  @Override
-  public WatchListResponse create(WatchListRequest request) {
-    return watchListService.create(request);
-  }
+    @Override
+    public WatchListResponse create(WatchListRequest request) {
+        return watchListService.create(request);
+    }
 
-  @Override
-  public Optional<WatchListResponse> getById(String id) {
-    return watchListService.getById(id);
-  }
+    @Override
+    public Optional<WatchListResponse> getById(String id) {
+        return watchListService.getById(id);
+    }
 
-  @Override
-  public Page<WatchListResponse> getAll(Pageable pageable) {
-    return watchListService.getAll(pageable);
-  }
+    @Override
+    public Page<WatchListResponse> getAll(Pageable pageable) {
+        return watchListService.getAll(pageable);
+    }
 
-  @Override
-  public Set<WatchListResponse> getAll() {
-    return watchListService.getAll();
-  }
+    @Override
+    public Set<WatchListResponse> getAll() {
+        return watchListService.getAll();
+    }
 
-  @Override
-  public WatchListResponse update(String id, WatchListRequest request) {
-    return watchListService.update(id, request);
-  }
+    @Override
+    public WatchListResponse update(String id, WatchListRequest request) {
+        return watchListService.update(id, request);
+    }
 
-  @Override
-  public void delete(String id) {
-    watchListService.delete(id);
-  }
+    @Override
+    public void delete(String id) {
+        watchListService.delete(id);
+    }
 
-  @Override
-  public WatchListResponse patch(String id, WatchListRequest request) {
-    return watchListService.patch(id, request);
-  }
+    @Override
+    public WatchListResponse patch(String id, WatchListRequest request) {
+        return watchListService.patch(id, request);
+    }
 }

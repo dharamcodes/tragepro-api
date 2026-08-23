@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Timeframe {
-  BASE,
-  LOWER,
-  HIGHER
+    BASE,
+    LOWER,
+    HIGHER
 }

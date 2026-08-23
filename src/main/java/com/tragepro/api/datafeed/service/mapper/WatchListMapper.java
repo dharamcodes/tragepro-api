@@ -15,30 +15,29 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(config = CommonMapper.class)
-public interface WatchListMapper
-    extends BaseMapper<WatchListEntity, WatchListRequest, WatchListResponse> {
+public interface WatchListMapper extends BaseMapper<WatchListEntity, WatchListRequest, WatchListResponse> {
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  WatchListEntity requestToEntity(WatchListRequest watchListRequest);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    WatchListEntity requestToEntity(WatchListRequest watchListRequest);
 
-  @Override
-  @Mapping(source = "id", target = "id")
-  WatchListResponse entityToResponse(WatchListEntity watchListEntity);
+    @Override
+    @Mapping(source = "id", target = "id")
+    WatchListResponse entityToResponse(WatchListEntity watchListEntity);
 
-  @Override
-  @InheritConfiguration(name = "toEntity")
-  void merge(WatchListRequest source, @MappingTarget WatchListEntity target);
+    @Override
+    @InheritConfiguration(name = "toEntity")
+    void merge(WatchListRequest source, @MappingTarget WatchListEntity target);
 
-  default void mapSymbolData(SymbolDataModel source) {
-    if (ObjectUtils.isEmpty(source)) {
-      throw new ServerException(ErrorType.INTERNAL_ERROR);
+    default void mapSymbolData(SymbolDataModel source) {
+        if (ObjectUtils.isEmpty(source)) {
+            throw new ServerException(ErrorType.INTERNAL_ERROR);
+        }
+        SymbolDataModel.builder().symbol(source.symbol()).name(source.name()).build();
     }
-    SymbolDataModel.builder().symbol(source.symbol()).name(source.name()).build();
-  }
 
-  @Override
-  default Class<?> getMapperClass() {
-    return WatchListMapper.class;
-  }
+    @Override
+    default Class<?> getMapperClass() {
+        return WatchListMapper.class;
+    }
 }

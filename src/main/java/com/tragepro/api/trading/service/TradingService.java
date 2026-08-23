@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface TradingService {
 
-  TradePositionResponse openPosition(TradePositionRequest request);
+    TradePositionResponse openPosition(TradePositionRequest request);
 
-  TradePositionResponse getPosition(String positionId);
+    TradePositionResponse getPosition(String positionId);
 
-  List<TradePositionResponse> getActivePositions();
+    List<TradePositionResponse> getActivePositions();
 }

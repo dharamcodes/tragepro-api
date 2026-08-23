@@ -14,26 +14,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ActivityRegistry {
 
-  private final List<BaseActivity> activities;
+    private final List<BaseActivity> activities;
 
-  /** Returns all activity bean instances that declare global activity interfaces. */
-  public List<Object> globalInstances() {
-    return activities.stream()
-        .filter(a -> !a.globalActivities().isEmpty())
-        .map(Object.class::cast)
-        .toList();
-  }
+    /** Returns all activity bean instances that declare global activity interfaces. */
+    public List<Object> globalInstances() {
+        return activities.stream()
+                .filter(a -> !a.globalActivities().isEmpty())
+                .map(Object.class::cast)
+                .toList();
+    }
 
-  /** Returns all activity bean instances that declare local activity interfaces. */
-  public List<Object> localInstances() {
-    return activities.stream()
-        .filter(a -> !a.localActivities().isEmpty())
-        .map(Object.class::cast)
-        .toList();
-  }
+    /** Returns all activity bean instances that declare local activity interfaces. */
+    public List<Object> localInstances() {
+        return activities.stream()
+                .filter(a -> !a.localActivities().isEmpty())
+                .map(Object.class::cast)
+                .toList();
+    }
 
-  /** Returns a flat list of all global activity interface classes for worker registration. */
-  public Collection<Class<?>> globalActivityInterfaces() {
-    return activities.stream().flatMap(a -> a.globalActivities().stream()).toList();
-  }
+    /** Returns a flat list of all global activity interface classes for worker registration. */
+    public Collection<Class<?>> globalActivityInterfaces() {
+        return activities.stream().flatMap(a -> a.globalActivities().stream()).toList();
+    }
 }

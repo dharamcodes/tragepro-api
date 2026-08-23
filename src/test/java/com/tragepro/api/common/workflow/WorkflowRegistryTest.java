@@ -14,16 +14,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WorkflowRegistryTest {
 
-  @Mock private WorkflowProvider provider;
+    @Mock
+    private WorkflowProvider provider;
 
-  @Test
-  void testWorkflowImplementationTypes() {
-    when(provider.getWorkflowImplementationTypes()).thenReturn(List.of(String.class));
-    WorkflowRegistry registry = new WorkflowRegistry(List.of(provider));
+    @Test
+    void testWorkflowImplementationTypes() {
+        when(provider.getWorkflowImplementationTypes()).thenReturn(List.of(String.class));
+        WorkflowRegistry registry = new WorkflowRegistry(List.of(provider));
 
-    Collection<Class<?>> types = registry.workflowImplementationTypes();
-    assertNotNull(types);
-    assertEquals(1, types.size());
-    assertEquals(String.class, types.iterator().next());
-  }
+        Collection<Class<?>> types = registry.workflowImplementationTypes();
+        assertNotNull(types);
+        assertEquals(1, types.size());
+        assertEquals(String.class, types.iterator().next());
+    }
 }

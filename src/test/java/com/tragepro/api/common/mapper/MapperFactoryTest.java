@@ -14,20 +14,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MapperFactoryTest {
 
-  @Mock private BaseMapper<?, ?, ?> mockMapper;
+    @Mock
+    private BaseMapper<?, ?, ?> mockMapper;
 
-  @Test
-  void testListConstructor() {
-    when(mockMapper.getMapperClass()).thenAnswer(inv -> DummyMapper.class);
-    MapperFactory factory = new MapperFactory(List.of(mockMapper));
-    assertNotNull(factory.getMapper(DummyMapper.class));
-  }
+    @Test
+    void testListConstructor() {
+        when(mockMapper.getMapperClass()).thenAnswer(inv -> DummyMapper.class);
+        MapperFactory factory = new MapperFactory(List.of(mockMapper));
+        assertNotNull(factory.getMapper(DummyMapper.class));
+    }
 
-  @Test
-  void testMapConstructor() {
-    MapperFactory factory = new MapperFactory(Map.of(DummyMapper.class, mockMapper));
-    assertEquals(mockMapper, factory.getMapper(DummyMapper.class));
-  }
+    @Test
+    void testMapConstructor() {
+        MapperFactory factory = new MapperFactory(Map.of(DummyMapper.class, mockMapper));
+        assertEquals(mockMapper, factory.getMapper(DummyMapper.class));
+    }
 
-  private interface DummyMapper extends BaseMapper<Object, Object, Object> {}
+    private interface DummyMapper extends BaseMapper<Object, Object, Object> {}
 }

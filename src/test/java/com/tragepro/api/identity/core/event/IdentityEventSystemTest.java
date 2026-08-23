@@ -12,19 +12,22 @@ import org.springframework.context.ApplicationEventPublisher;
 @ExtendWith(MockitoExtension.class)
 class IdentityEventSystemTest {
 
-  @Mock private ApplicationEventPublisher applicationEventPublisher;
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
-  @InjectMocks private IdentityEventPublisher publisher;
+    @InjectMocks
+    private IdentityEventPublisher publisher;
 
-  @InjectMocks private IdentityEventListener listener;
+    @InjectMocks
+    private IdentityEventListener listener;
 
-  @Test
-  void testPublishAndListen() {
-    IdentityEvent event = new IdentityEvent("test-id", "test-message");
+    @Test
+    void testPublishAndListen() {
+        IdentityEvent event = new IdentityEvent("test-id", "test-message");
 
-    publisher.publish(event);
-    verify(applicationEventPublisher).publishEvent(event);
+        publisher.publish(event);
+        verify(applicationEventPublisher).publishEvent(event);
 
-    listener.on(event);
-  }
+        listener.on(event);
+    }
 }

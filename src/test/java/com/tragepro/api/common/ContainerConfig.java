@@ -7,14 +7,22 @@ import org.testcontainers.mongodb.MongoDBContainer;
 
 public class ContainerConfig {
 
-  @Container @ServiceConnection
-  protected static MongoDBContainer mongo =
-      new MongoDBContainer("mongo:latest").withReplicaSet().withReuse(true);
+    @Container
+    @ServiceConnection
+    protected static MongoDBContainer mongo = new MongoDBContainer("mongo:latest").withReplicaSet();
 
-  @BeforeAll
-  static void init() {
-    if (!mongo.isRunning()) {
-      mongo.start();
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (mongo != null && mongo.isRunning()) {
+                mongo.stop();
+            }
+        }));
     }
-  }
+
+    @BeforeAll
+    static void init() {
+        if (!mongo.isRunning()) {
+            mongo.start();
+        }
+    }
 }

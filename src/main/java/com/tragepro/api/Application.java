@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class Application {
 
-  static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
-  }
+    static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }

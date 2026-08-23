@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StepsConfig {
-  private List<BuilderConfig> strategyBuilder;
-  private List<EvaluatorConfig> strategyEvaluator;
-  private List<ExecutorConfig> strategyExecutor;
+    private List<BuilderConfig> strategyBuilder;
+    private List<EvaluatorConfig> strategyEvaluator;
+    private List<ExecutorConfig> strategyExecutor;
 }

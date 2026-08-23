@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component("BUILD_TIMEFRAME_DATA")
 public class BuildTimeframeData implements StrategyBuilder {
 
-  @Override
-  public StrategyResponse build(StrategyRequest strategyRequest) {
-    return null;
-  }
+    @Override
+    public StrategyResponse build(StrategyRequest strategyRequest) {
+        return null;
+    }
 }

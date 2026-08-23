@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserDetailServiceImpl implements UserDetailService {
 
-  private final AuthenticationRepository authenticationRepository;
+    private final AuthenticationRepository authenticationRepository;
 
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    var userDetail = authenticationRepository.findByUserNameAndIsActive(username, true);
-    return User.builder()
-        .username(userDetail.getUserName())
-        .password(userDetail.getPassword())
-        .roles(userDetail.getRole().getValue())
-        .build();
-  }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var userDetail = authenticationRepository.findByUserNameAndIsActive(username, true);
+        return User.builder()
+                .username(userDetail.getUserName())
+                .password(userDetail.getPassword())
+                .roles(userDetail.getRole().getValue())
+                .build();
+    }
 }

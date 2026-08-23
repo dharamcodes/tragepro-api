@@ -7,8 +7,8 @@ import lombok.Builder;
 
 @Builder
 public record CandleResponse(
-    String id, DataTimeType dataTimeType, SymbolDataModel symbolData, CandleDataModel candleData) {
-  public CandleResponse add(DataTimeType dataTimeType) {
-    return new CandleResponse(id, dataTimeType, symbolData, candleData);
-  }
+        String id, DataTimeType dataTimeType, SymbolDataModel symbolData, CandleDataModel candleData) {
+    public CandleResponse add(DataTimeType dataTimeType) {
+        return new CandleResponse(id, dataTimeType, symbolData, candleData);
+    }
 }

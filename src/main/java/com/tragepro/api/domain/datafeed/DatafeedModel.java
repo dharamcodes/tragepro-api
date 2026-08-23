@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DatafeedModel {
-  private String symbol;
-  private LocalDate timestamp;
-  private DatafeedState state;
+    private String symbol;
+    private LocalDate timestamp;
+    private DatafeedState state;
 }

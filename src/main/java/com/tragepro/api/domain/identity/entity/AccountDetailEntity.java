@@ -24,24 +24,25 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "account")
 public class AccountDetailEntity extends BaseEntity {
 
-  @Id private String id;
+    @Id
+    private String id;
 
-  @NotBlank(message = "User name cannot be blank")
-  private String name;
+    @NotBlank(message = "User name cannot be blank")
+    private String name;
 
-  @Indexed(unique = true)
-  @Email(message = "Invalid email format")
-  @NotBlank(message = "Email cannot be blank")
-  private String email;
+    @Indexed(unique = true)
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be blank")
+    private String email;
 
-  @Indexed(unique = true)
-  @Identifier(value = "accountIdentifier")
-  private String identifier;
+    @Indexed(unique = true)
+    @Identifier(value = "accountIdentifier")
+    private String identifier;
 
-  @NotNull(message = "Phone number cannot be null")
-  @Min(value = 1000000000L, message = "Phone number must be at least 10 digits")
-  @Max(value = 999999999999L, message = "Phone number must be at most 12 digits")
-  private Long phoneNumber;
+    @NotNull(message = "Phone number cannot be null")
+    @Min(value = 1000000000L, message = "Phone number must be at least 10 digits")
+    @Max(value = 999999999999L, message = "Phone number must be at most 12 digits")
+    private Long phoneNumber;
 
-  private Boolean isActive;
+    private Boolean isActive;
 }

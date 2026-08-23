@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StrategyEventPublisher {
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void publish(StrategyEvent event) {
-    log.info("Publishing StrategyEvent: {}", event.eventId());
-    applicationEventPublisher.publishEvent(event);
-  }
+    public void publish(StrategyEvent event) {
+        log.info("Publishing StrategyEvent: {}", event.eventId());
+        applicationEventPublisher.publishEvent(event);
+    }
 }

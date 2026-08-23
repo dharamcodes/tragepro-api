@@ -5,11 +5,11 @@ import com.tragepro.api.domain.strategy.request.StrategyRequest;
 import com.tragepro.api.domain.strategy.response.StrategyResponse;
 
 public interface Strategy {
-  StrategyResponse builder(StrategyRequest request);
+    StrategyResponse builder(StrategyRequest request);
 
-  StrategyResponse evaluator(StrategyRequest request);
+    StrategyResponse evaluator(StrategyRequest request);
 
-  StrategyResponse executor(StrategyRequest request);
+    StrategyResponse executor(StrategyRequest request);
 
-  StrategyType getStrategyType();
+    StrategyType getStrategyType();
 }

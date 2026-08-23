@@ -7,23 +7,23 @@ import com.tragepro.api.strategy.core.Strategy;
 
 public class IntradayStrategy implements Strategy {
 
-  @Override
-  public StrategyResponse builder(StrategyRequest request) {
-    return null;
-  }
+    @Override
+    public StrategyResponse builder(StrategyRequest request) {
+        return null;
+    }
 
-  @Override
-  public StrategyResponse evaluator(StrategyRequest request) {
-    return null;
-  }
+    @Override
+    public StrategyResponse evaluator(StrategyRequest request) {
+        return null;
+    }
 
-  @Override
-  public StrategyResponse executor(StrategyRequest request) {
-    return null;
-  }
+    @Override
+    public StrategyResponse executor(StrategyRequest request) {
+        return null;
+    }
 
-  @Override
-  public StrategyType getStrategyType() {
-    return StrategyType.INTRADAY_STRATEGY;
-  }
+    @Override
+    public StrategyType getStrategyType() {
+        return StrategyType.INTRADAY_STRATEGY;
+    }
 }

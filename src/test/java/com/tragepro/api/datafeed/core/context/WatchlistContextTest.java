@@ -11,27 +11,27 @@ import org.junit.jupiter.api.Test;
 
 class WatchlistContextTest {
 
-  private WatchlistContext watchlistContext;
+    private WatchlistContext watchlistContext;
 
-  @BeforeEach
-  void setUp() {
-    watchlistContext = new WatchlistContext();
-  }
+    @BeforeEach
+    void setUp() {
+        watchlistContext = new WatchlistContext();
+    }
 
-  @Test
-  void testAddAndGetWatchlist() {
-    SymbolDataModel symbol = new SymbolDataModel("AAPL", "Apple Inc.");
-    watchlistContext.addWatchlist("Tech", Set.of(symbol));
+    @Test
+    void testAddAndGetWatchlist() {
+        SymbolDataModel symbol = new SymbolDataModel("AAPL", "Apple Inc.");
+        watchlistContext.addWatchlist("Tech", Set.of(symbol));
 
-    Set<SymbolDataModel> result = watchlistContext.getWatchlist("Tech");
-    assertEquals(1, result.size());
-    assertTrue(result.contains(symbol));
-  }
+        Set<SymbolDataModel> result = watchlistContext.getWatchlist("Tech");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(symbol));
+    }
 
-  @Test
-  void testGetWatchlist_NonExistent_ReturnsEmptySet() {
-    Set<SymbolDataModel> result = watchlistContext.getWatchlist("NonExistent");
-    assertNotNull(result);
-    assertTrue(result.isEmpty());
-  }
+    @Test
+    void testGetWatchlist_NonExistent_ReturnsEmptySet() {
+        Set<SymbolDataModel> result = watchlistContext.getWatchlist("NonExistent");
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
 }

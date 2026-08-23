@@ -21,20 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 
-  private final OrderManager orderManager;
+    private final OrderManager orderManager;
 
-  @PostMapping
-  public ResponseEntity<OrderResponse> submitOrder(@Valid @RequestBody OrderRequest request) {
-    return ResponseEntity.ok(orderManager.submitOrder(request));
-  }
+    @PostMapping
+    public ResponseEntity<OrderResponse> submitOrder(@Valid @RequestBody OrderRequest request) {
+        return ResponseEntity.ok(orderManager.submitOrder(request));
+    }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<OrderResponse> getOrderStatus(@PathVariable String id) {
-    return ResponseEntity.ok(orderManager.getOrderStatus(id));
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> getOrderStatus(@PathVariable String id) {
+        return ResponseEntity.ok(orderManager.getOrderStatus(id));
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<OrderResponse> cancelOrder(@PathVariable String id) {
-    return ResponseEntity.ok(orderManager.cancelOrder(id));
-  }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable String id) {
+        return ResponseEntity.ok(orderManager.cancelOrder(id));
+    }
 }

@@ -16,8 +16,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "candles")
 public class CandleEntity extends BaseEntity {
-  @Id private String id;
+    @Id
+    private String id;
 
-  private SymbolDataModel symbolData;
-  private CandleDataModel candleData;
+    private SymbolDataModel symbolData;
+    private CandleDataModel candleData;
 }

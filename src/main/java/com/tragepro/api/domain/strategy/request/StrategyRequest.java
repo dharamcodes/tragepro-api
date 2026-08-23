@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyRequest {
-  private StrategyModel strategy;
-  private SymbolModel symbolData;
-  private CandleModel candleData;
-  private StatusModel currentState;
-  private Set<IndicatorModel> indicators;
-  private Set<TimeframeModel> timeframes;
+    private StrategyModel strategy;
+    private SymbolModel symbolData;
+    private CandleModel candleData;
+    private StatusModel currentState;
+    private Set<IndicatorModel> indicators;
+    private Set<TimeframeModel> timeframes;
 }

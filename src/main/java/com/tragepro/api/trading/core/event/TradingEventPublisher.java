@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TradingEventPublisher {
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void publish(TradingEvent event) {
-    log.info("Publishing TradingEvent: {}", event.eventId());
-    applicationEventPublisher.publishEvent(event);
-  }
+    public void publish(TradingEvent event) {
+        log.info("Publishing TradingEvent: {}", event.eventId());
+        applicationEventPublisher.publishEvent(event);
+    }
 }

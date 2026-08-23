@@ -13,20 +13,23 @@ import org.springframework.context.ApplicationEventPublisher;
 @ExtendWith(MockitoExtension.class)
 class DataEventSystemTest {
 
-  @Mock private ApplicationEventPublisher applicationEventPublisher;
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
-  @InjectMocks private DataEventPublisher publisher;
+    @InjectMocks
+    private DataEventPublisher publisher;
 
-  @InjectMocks private DataEventListener listener;
+    @InjectMocks
+    private DataEventListener listener;
 
-  @Test
-  void testPublishAndListen() {
-    DataEvent event = new DataEvent("test-id", List.of());
+    @Test
+    void testPublishAndListen() {
+        DataEvent event = new DataEvent("test-id", List.of());
 
-    publisher.publish(event);
-    verify(applicationEventPublisher).publishEvent(event);
+        publisher.publish(event);
+        verify(applicationEventPublisher).publishEvent(event);
 
-    // Call listener directly to cover it
-    listener.on(event);
-  }
+        // Call listener directly to cover it
+        listener.on(event);
+    }
 }

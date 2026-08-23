@@ -13,16 +13,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @EnableMongoAuditing
 public class MongoAuditConfig {
 
-  @Bean
-  public AuditorAware<String> auditorProvider() {
-    return () -> {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (authentication == null
-          || !authentication.isAuthenticated()
-          || Objects.requireNonNull(authentication.getPrincipal()).equals("anonymousUser")) {
-        return Optional.of("system");
-      }
-      return Optional.ofNullable(authentication.getName());
-    };
-  }
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null
+                    || !authentication.isAuthenticated()
+                    || Objects.requireNonNull(authentication.getPrincipal()).equals("anonymousUser")) {
+                return Optional.of("system");
+            }
+            return Optional.ofNullable(authentication.getName());
+        };
+    }
 }

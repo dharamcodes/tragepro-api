@@ -27,227 +27,234 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceImplTest {
 
-  @Mock private AuthenticationManager authenticationManager;
-  @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
-  @Mock private AuthenticationRepository authenticationRepository;
-  @Mock private MapperFactory mapperFactory;
-  @Mock private AuthenticationMapper authenticationMapper;
-  @Mock private JwtTokenHelper jwtTokenHelper;
+    @Mock
+    private AuthenticationManager authenticationManager;
 
-  @InjectMocks private AuthenticationServiceImpl authenticationService;
+    @Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  private AuthenticationEntity user;
+    @Mock
+    private AuthenticationRepository authenticationRepository;
 
-  @BeforeEach
-  void setUp() {
-    user =
-        new AuthenticationEntity(
-            "id1",
-            "user1@test.com",
-            "user1",
-            "hashedPass",
-            RoleType.APP_USER,
-            true,
-            java.util.Set.of());
-  }
+    @Mock
+    private MapperFactory mapperFactory;
 
-  @Test
-  void testLogin_Success() {
-    LoginRequest req = new LoginRequest("user1", "pass1");
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
-    when(bCryptPasswordEncoder.matches("pass1", "hashedPass")).thenReturn(true);
-    when(jwtTokenHelper.generateToken(anyString(), anyMap())).thenReturn("token123");
+    @Mock
+    private AuthenticationMapper authenticationMapper;
 
-    LoginResponse response = authenticationService.login(req);
-    assertEquals("user1", response.userName());
-    assertEquals("token123", response.token());
-  }
+    @Mock
+    private JwtTokenHelper jwtTokenHelper;
 
-  @Test
-  void testLogin_UserNotFound() {
-    LoginRequest req = new LoginRequest("user1", "pass1");
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
+    @InjectMocks
+    private AuthenticationServiceImpl authenticationService;
 
-    assertThrows(AppException.class, () -> authenticationService.login(req));
-  }
+    private AuthenticationEntity user;
 
-  @Test
-  void testLogin_InvalidPassword() {
-    LoginRequest req = new LoginRequest("user1", "pass1");
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
-    when(bCryptPasswordEncoder.matches("pass1", "hashedPass")).thenReturn(false);
+    @BeforeEach
+    void setUp() {
+        user = new AuthenticationEntity(
+                "id1", "user1@test.com", "user1", "hashedPass", RoleType.APP_USER, true, java.util.Set.of());
+    }
 
-    assertThrows(AppException.class, () -> authenticationService.login(req));
-  }
+    @Test
+    void testLogin_Success() {
+        LoginRequest req = new LoginRequest("user1", "pass1");
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+        when(bCryptPasswordEncoder.matches("pass1", "hashedPass")).thenReturn(true);
+        when(jwtTokenHelper.generateToken(anyString(), anyMap())).thenReturn("token123");
 
-  @Test
-  void testSignup_Success() {
-    AuthenticationRequest req =
-        AuthenticationRequest.builder()
-            .userName("user1")
-            .password("pass1")
-            .email("user1@test.com")
-            .build();
+        LoginResponse response = authenticationService.login(req);
+        assertEquals("user1", response.userName());
+        assertEquals("token123", response.token());
+    }
 
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("user1")).thenReturn(null);
-    when(bCryptPasswordEncoder.encode("pass1")).thenReturn("encoded");
-    when(authenticationMapper.requestToEntity(req)).thenReturn(user);
-    when(authenticationRepository.save(user)).thenReturn(user);
-    when(authenticationMapper.entityToResponse(user))
-        .thenReturn(AuthenticationResponse.builder().userName("user1").build());
+    @Test
+    void testLogin_UserNotFound() {
+        LoginRequest req = new LoginRequest("user1", "pass1");
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
 
-    AuthenticationResponse response = authenticationService.signup(req);
-    assertEquals("user1", response.userName());
-  }
+        assertThrows(AppException.class, () -> authenticationService.login(req));
+    }
 
-  @Test
-  void testSignup_UserExists() {
-    AuthenticationRequest req =
-        AuthenticationRequest.builder().userName("user1").password("pass1").build();
+    @Test
+    void testLogin_InvalidPassword() {
+        LoginRequest req = new LoginRequest("user1", "pass1");
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+        when(bCryptPasswordEncoder.matches("pass1", "hashedPass")).thenReturn(false);
 
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("user1")).thenReturn(user);
+        assertThrows(AppException.class, () -> authenticationService.login(req));
+    }
 
-    assertThrows(AppException.class, () -> authenticationService.signup(req));
-  }
+    @Test
+    void testSignup_Success() {
+        AuthenticationRequest req = AuthenticationRequest.builder()
+                .userName("user1")
+                .password("pass1")
+                .email("user1@test.com")
+                .build();
 
-  @Test
-  void testSignup_UserNameBlank() {
-    AuthenticationRequest req =
-        AuthenticationRequest.builder()
-            .userName("")
-            .password("pass1")
-            .email("user1@test.com")
-            .build();
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("user1")).thenReturn(null);
+        when(bCryptPasswordEncoder.encode("pass1")).thenReturn("encoded");
+        when(authenticationMapper.requestToEntity(req)).thenReturn(user);
+        when(authenticationRepository.save(user)).thenReturn(user);
+        when(authenticationMapper.entityToResponse(user))
+                .thenReturn(AuthenticationResponse.builder().userName("user1").build());
 
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("")).thenReturn(null);
-    when(bCryptPasswordEncoder.encode("pass1")).thenReturn("encoded");
-    when(authenticationMapper.requestToEntity(req)).thenReturn(user);
-    when(authenticationRepository.save(user)).thenReturn(user);
-    when(authenticationMapper.entityToResponse(user))
-        .thenReturn(AuthenticationResponse.builder().userName("user1@test.com").build());
+        AuthenticationResponse response = authenticationService.signup(req);
+        assertEquals("user1", response.userName());
+    }
 
-    AuthenticationResponse response = authenticationService.signup(req);
-    assertEquals("user1@test.com", response.userName());
-  }
+    @Test
+    void testSignup_UserExists() {
+        AuthenticationRequest req = AuthenticationRequest.builder()
+                .userName("user1")
+                .password("pass1")
+                .build();
 
-  @Test
-  void testGetByUserName_Success() {
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("user1")).thenReturn(user);
-    when(authenticationMapper.entityToResponse(user))
-        .thenReturn(AuthenticationResponse.builder().userName("user1").build());
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("user1")).thenReturn(user);
 
-    AuthenticationResponse response = authenticationService.getByUserName("user1");
-    assertEquals("user1", response.userName());
-  }
+        assertThrows(AppException.class, () -> authenticationService.signup(req));
+    }
 
-  @Test
-  void testGetByUserName_NotFound() {
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("user1")).thenReturn(null);
+    @Test
+    void testSignup_UserNameBlank() {
+        AuthenticationRequest req = AuthenticationRequest.builder()
+                .userName("")
+                .password("pass1")
+                .email("user1@test.com")
+                .build();
 
-    assertThrows(AppException.class, () -> authenticationService.getByUserName("user1"));
-  }
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("")).thenReturn(null);
+        when(bCryptPasswordEncoder.encode("pass1")).thenReturn("encoded");
+        when(authenticationMapper.requestToEntity(req)).thenReturn(user);
+        when(authenticationRepository.save(user)).thenReturn(user);
+        when(authenticationMapper.entityToResponse(user))
+                .thenReturn(AuthenticationResponse.builder()
+                        .userName("user1@test.com")
+                        .build());
 
-  @Test
-  void testUpdateAuthenticationDetails_Success() {
-    AuthenticationRequest req = AuthenticationRequest.builder().userName("user1").build();
+        AuthenticationResponse response = authenticationService.signup(req);
+        assertEquals("user1@test.com", response.userName());
+    }
 
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("user1")).thenReturn(user);
-    when(authenticationRepository.save(user)).thenReturn(user);
-    when(authenticationMapper.entityToResponse(user))
-        .thenReturn(AuthenticationResponse.builder().userName("user1").build());
+    @Test
+    void testGetByUserName_Success() {
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("user1")).thenReturn(user);
+        when(authenticationMapper.entityToResponse(user))
+                .thenReturn(AuthenticationResponse.builder().userName("user1").build());
 
-    AuthenticationResponse response =
-        authenticationService.updateAuthenticationDetails("user1", req);
-    assertEquals("user1", response.userName());
-    verify(authenticationMapper).merge(req, user);
-  }
+        AuthenticationResponse response = authenticationService.getByUserName("user1");
+        assertEquals("user1", response.userName());
+    }
 
-  @Test
-  void testUpdateAuthenticationDetails_NotFound() {
-    AuthenticationRequest req = AuthenticationRequest.builder().userName("user1").build();
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserName("user1")).thenReturn(null);
+    @Test
+    void testGetByUserName_NotFound() {
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("user1")).thenReturn(null);
 
-    assertThrows(
-        AppException.class, () -> authenticationService.updateAuthenticationDetails("user1", req));
-  }
+        assertThrows(AppException.class, () -> authenticationService.getByUserName("user1"));
+    }
 
-  @Test
-  void testChangePassword_Success() {
-    ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "newPass");
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
-    when(bCryptPasswordEncoder.encode("newPass")).thenReturn("encodedNew");
+    @Test
+    void testUpdateAuthenticationDetails_Success() {
+        AuthenticationRequest req =
+                AuthenticationRequest.builder().userName("user1").build();
 
-    assertDoesNotThrow(() -> authenticationService.changePassword(req));
-    verify(authenticationRepository).save(user);
-  }
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("user1")).thenReturn(user);
+        when(authenticationRepository.save(user)).thenReturn(user);
+        when(authenticationMapper.entityToResponse(user))
+                .thenReturn(AuthenticationResponse.builder().userName("user1").build());
 
-  @Test
-  void testChangePassword_Mismatch() {
-    ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "otherPass");
-    assertThrows(AppException.class, () -> authenticationService.changePassword(req));
-  }
+        AuthenticationResponse response = authenticationService.updateAuthenticationDetails("user1", req);
+        assertEquals("user1", response.userName());
+        verify(authenticationMapper).merge(req, user);
+    }
 
-  @Test
-  void testChangePassword_UserNotFound() {
-    ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "newPass");
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
+    @Test
+    void testUpdateAuthenticationDetails_NotFound() {
+        AuthenticationRequest req =
+                AuthenticationRequest.builder().userName("user1").build();
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserName("user1")).thenReturn(null);
 
-    assertThrows(AppException.class, () -> authenticationService.changePassword(req));
-  }
+        assertThrows(AppException.class, () -> authenticationService.updateAuthenticationDetails("user1", req));
+    }
 
-  @Test
-  void testDeactivateAuthentication_Success() {
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+    @Test
+    void testChangePassword_Success() {
+        ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "newPass");
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+        when(bCryptPasswordEncoder.encode("newPass")).thenReturn("encodedNew");
 
-    assertDoesNotThrow(() -> authenticationService.deactivateAuthentication("user1"));
-    verify(authenticationRepository).save(user);
-  }
+        assertDoesNotThrow(() -> authenticationService.changePassword(req));
+        verify(authenticationRepository).save(user);
+    }
 
-  @Test
-  void testDeactivateAuthentication_NotFound() {
-    when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
+    @Test
+    void testChangePassword_Mismatch() {
+        ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "otherPass");
+        assertThrows(AppException.class, () -> authenticationService.changePassword(req));
+    }
 
-    assertThrows(AppException.class, () -> authenticationService.deactivateAuthentication("user1"));
-  }
+    @Test
+    void testChangePassword_UserNotFound() {
+        ResetPasswordRequest req = new ResetPasswordRequest("user1", "newPass", "newPass");
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
 
-  @Test
-  void testResetPassword_Success() {
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
-    when(jwtTokenHelper.generateResetPasswordToken(eq("user1"), anyMap())).thenReturn("resetToken");
+        assertThrows(AppException.class, () -> authenticationService.changePassword(req));
+    }
 
-    assertDoesNotThrow(() -> authenticationService.resetPassword("user1"));
-  }
+    @Test
+    void testDeactivateAuthentication_Success() {
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
 
-  @Test
-  void testResetPassword_NotFound() {
-    when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
+        assertDoesNotThrow(() -> authenticationService.deactivateAuthentication("user1"));
+        verify(authenticationRepository).save(user);
+    }
 
-    assertThrows(AppException.class, () -> authenticationService.resetPassword("user1"));
-  }
+    @Test
+    void testDeactivateAuthentication_NotFound() {
+        when(mapperFactory.getMapper(AuthenticationMapper.class)).thenReturn(authenticationMapper);
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
 
-  @Test
-  void testDeleteAuthentication_Success() {
-    when(authenticationRepository.findByUserName("user1")).thenReturn(user);
+        assertThrows(AppException.class, () -> authenticationService.deactivateAuthentication("user1"));
+    }
 
-    assertDoesNotThrow(() -> authenticationService.deleteAuthentication("user1"));
-    verify(authenticationRepository).delete(user);
-  }
+    @Test
+    void testResetPassword_Success() {
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(user);
+        when(jwtTokenHelper.generateResetPasswordToken(eq("user1"), anyMap())).thenReturn("resetToken");
 
-  @Test
-  void testDeleteAuthentication_NotFound() {
-    when(authenticationRepository.findByUserName("user1")).thenReturn(null);
+        assertDoesNotThrow(() -> authenticationService.resetPassword("user1"));
+    }
 
-    assertThrows(AppException.class, () -> authenticationService.deleteAuthentication("user1"));
-  }
+    @Test
+    void testResetPassword_NotFound() {
+        when(authenticationRepository.findByUserNameAndIsActive("user1", true)).thenReturn(null);
+
+        assertThrows(AppException.class, () -> authenticationService.resetPassword("user1"));
+    }
+
+    @Test
+    void testDeleteAuthentication_Success() {
+        when(authenticationRepository.findByUserName("user1")).thenReturn(user);
+
+        assertDoesNotThrow(() -> authenticationService.deleteAuthentication("user1"));
+        verify(authenticationRepository).delete(user);
+    }
+
+    @Test
+    void testDeleteAuthentication_NotFound() {
+        when(authenticationRepository.findByUserName("user1")).thenReturn(null);
+
+        assertThrows(AppException.class, () -> authenticationService.deleteAuthentication("user1"));
+    }
 }

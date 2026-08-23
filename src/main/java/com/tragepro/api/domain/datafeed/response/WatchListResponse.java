@@ -9,4 +9,4 @@ import lombok.Builder;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record WatchListResponse(
-    String id, String name, String description, Exchange exchange, Set<SymbolDataModel> stocks) {}
+        String id, String name, String description, Exchange exchange, Set<SymbolDataModel> stocks) {}

@@ -16,14 +16,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Base32IdGenServiceImpl implements Base32IdGenService {
 
-  private final MongoOperations mongoOperations;
+    private final MongoOperations mongoOperations;
 
-  @Override
-  public long getNextSequence(String key) {
-    Query query = new Query(Criteria.where("_id").is(key));
-    Update update = new Update().inc("sequence", 1);
-    FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true).upsert(true);
-    Base32IdSeq counter = mongoOperations.findAndModify(query, update, options, Base32IdSeq.class);
-    return Objects.requireNonNull(counter).getSequence();
-  }
+    @Override
+    public long getNextSequence(String key) {
+        Query query = new Query(Criteria.where("_id").is(key));
+        Update update = new Update().inc("sequence", 1);
+        FindAndModifyOptions options =
+                FindAndModifyOptions.options().returnNew(true).upsert(true);
+        Base32IdSeq counter = mongoOperations.findAndModify(query, update, options, Base32IdSeq.class);
+        return Objects.requireNonNull(counter).getSequence();
+    }
 }

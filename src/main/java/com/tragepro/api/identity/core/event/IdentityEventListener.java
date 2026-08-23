@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class IdentityEventListener {
 
-  @ApplicationModuleListener
-  public void on(IdentityEvent event) {
-    log.info("Received IdentityEvent: {} - {}", event.eventId(), event.message());
-    // Handle the event
-  }
+    @ApplicationModuleListener
+    public void on(IdentityEvent event) {
+        log.info("Received IdentityEvent: {} - {}", event.eventId(), event.message());
+        // Handle the event
+    }
 }

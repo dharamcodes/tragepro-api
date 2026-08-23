@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SymbolModel {
-  private String symbol;
-  private String name;
-  private Exchange exchange;
+    private String symbol;
+    private String name;
+    private Exchange exchange;
 }

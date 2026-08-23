@@ -10,20 +10,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class OrderAdapterImpl implements OrderAdapter {
-  private final OrderManager orderManager;
+    private final OrderManager orderManager;
 
-  @Override
-  public OrderResponse submitOrder(OrderRequest request) {
-    return orderManager.submitOrder(request);
-  }
+    @Override
+    public OrderResponse submitOrder(OrderRequest request) {
+        return orderManager.submitOrder(request);
+    }
 
-  @Override
-  public OrderResponse cancelOrder(String orderId) {
-    return orderManager.cancelOrder(orderId);
-  }
+    @Override
+    public OrderResponse cancelOrder(String orderId) {
+        return orderManager.cancelOrder(orderId);
+    }
 
-  @Override
-  public OrderResponse getOrderStatus(String orderId) {
-    return orderManager.getOrderStatus(orderId);
-  }
+    @Override
+    public OrderResponse getOrderStatus(String orderId) {
+        return orderManager.getOrderStatus(orderId);
+    }
 }

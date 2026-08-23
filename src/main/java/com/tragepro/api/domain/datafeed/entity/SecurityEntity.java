@@ -15,14 +15,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "security")
 public class SecurityEntity extends BaseEntity {
 
-  @Id private String id;
+    @Id
+    private String id;
 
-  private String name;
-  private String isin;
-  private String symbol;
-  private String symbolName;
-  private String exchange;
-  private String segment;
-  private Integer securityId;
-  private String instrument;
+    private String name;
+    private String isin;
+    private String symbol;
+    private String symbolName;
+    private String exchange;
+    private String segment;
+    private Integer securityId;
+    private String instrument;
 }

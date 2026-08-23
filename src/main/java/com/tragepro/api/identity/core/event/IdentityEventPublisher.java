@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class IdentityEventPublisher {
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void publish(IdentityEvent event) {
-    log.info("Publishing IdentityEvent: {}", event.eventId());
-    applicationEventPublisher.publishEvent(event);
-  }
+    public void publish(IdentityEvent event) {
+        log.info("Publishing IdentityEvent: {}", event.eventId());
+        applicationEventPublisher.publishEvent(event);
+    }
 }

@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ConfigLoaderServiceImpl implements ConfigLoaderService {
-  private final WorkflowConfig workflowConfig;
+    private final WorkflowConfig workflowConfig;
 
-  @Override
-  public StrategyConfig getStrategyByName(String name) {
-    return workflowConfig.getStrategy().stream()
-        .filter(s -> s.getName().equalsIgnoreCase(name))
-        .findFirst()
-        .orElseThrow(() -> new AppException(ErrorType.INTERNAL_ERROR));
-  }
+    @Override
+    public StrategyConfig getStrategyByName(String name) {
+        return workflowConfig.getStrategy().stream()
+                .filter(s -> s.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorType.INTERNAL_ERROR));
+    }
 }

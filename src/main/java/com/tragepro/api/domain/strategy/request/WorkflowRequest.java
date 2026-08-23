@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkflowRequest {
-  private String strategyId;
-  private String symbol;
+    private String strategyId;
+    private String symbol;
 }

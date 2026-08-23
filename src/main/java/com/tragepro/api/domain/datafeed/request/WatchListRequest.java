@@ -6,5 +6,4 @@ import java.util.Set;
 import lombok.Builder;
 
 @Builder
-public record WatchListRequest(
-    String name, String description, Exchange exchange, Set<SymbolDataModel> stocks) {}
+public record WatchListRequest(String name, String description, Exchange exchange, Set<SymbolDataModel> stocks) {}

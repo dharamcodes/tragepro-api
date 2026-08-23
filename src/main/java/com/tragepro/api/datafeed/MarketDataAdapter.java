@@ -14,33 +14,33 @@ import org.springframework.data.domain.Pageable;
 
 public interface MarketDataAdapter {
 
-  List<CandleResponse> getLatestCandles(List<String> symbols);
+    List<CandleResponse> getLatestCandles(List<String> symbols);
 
-  LoadCandleResponse loadData(LoadCandleRequest request);
+    LoadCandleResponse loadData(LoadCandleRequest request);
 
-  CandleResponse createCandle(CandleRequest candleRequest);
+    CandleResponse createCandle(CandleRequest candleRequest);
 
-  Optional<CandleResponse> getCandleById(String id);
+    Optional<CandleResponse> getCandleById(String id);
 
-  Page<CandleResponse> getAllCandles(Pageable pageable);
+    Page<CandleResponse> getAllCandles(Pageable pageable);
 
-  CandleResponse updateCandle(String id, CandleRequest candleRequest);
+    CandleResponse updateCandle(String id, CandleRequest candleRequest);
 
-  void deleteCandle(String id);
+    void deleteCandle(String id);
 
-  Set<CandleResponse> getLatestCandlesBySymbols(Set<String> symbols);
+    Set<CandleResponse> getLatestCandlesBySymbols(Set<String> symbols);
 
-  WatchListResponse createWatchList(WatchListRequest request);
+    WatchListResponse createWatchList(WatchListRequest request);
 
-  Optional<WatchListResponse> getWatchListById(String id);
+    Optional<WatchListResponse> getWatchListById(String id);
 
-  Page<WatchListResponse> getAllWatchLists(Pageable pageable);
+    Page<WatchListResponse> getAllWatchLists(Pageable pageable);
 
-  Set<WatchListResponse> getAllWatchLists();
+    Set<WatchListResponse> getAllWatchLists();
 
-  WatchListResponse updateWatchList(String id, WatchListRequest request);
+    WatchListResponse updateWatchList(String id, WatchListRequest request);
 
-  void deleteWatchList(String id);
+    void deleteWatchList(String id);
 
-  WatchListResponse patchWatchList(String id, WatchListRequest request);
+    WatchListResponse patchWatchList(String id, WatchListRequest request);
 }

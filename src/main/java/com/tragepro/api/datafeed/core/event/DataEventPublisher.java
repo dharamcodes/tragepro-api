@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataEventPublisher {
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void publish(DataEvent event) {
-    log.info("Publishing DataEvent: {}", event.eventId());
-    applicationEventPublisher.publishEvent(event);
-  }
+    public void publish(DataEvent event) {
+        log.info("Publishing DataEvent: {}", event.eventId());
+        applicationEventPublisher.publishEvent(event);
+    }
 }

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DatafeedAdapterImpl implements DatafeedAdapter {
-  private final DatafeedService datafeedService;
+    private final DatafeedService datafeedService;
 
-  @Override
-  public LoadCandleResponse loadData(LoadCandleRequest request) {
-    return datafeedService.loadData(request);
-  }
+    @Override
+    public LoadCandleResponse loadData(LoadCandleRequest request) {
+        return datafeedService.loadData(request);
+    }
 }

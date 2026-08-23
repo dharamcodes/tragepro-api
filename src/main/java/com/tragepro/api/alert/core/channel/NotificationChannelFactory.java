@@ -13,19 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotificationChannelFactory {
 
-  private final Map<NotificationChannelType, NotificationChannel> channelMap;
+    private final Map<NotificationChannelType, NotificationChannel> channelMap;
 
-  public NotificationChannelFactory(List<NotificationChannel> channels) {
-    this.channelMap =
-        channels.stream()
-            .collect(Collectors.toMap(NotificationChannel::getChannelType, Function.identity()));
-  }
-
-  public NotificationChannel getChannel(NotificationChannelType type) {
-    NotificationChannel channel = channelMap.get(type);
-    if (channel == null) {
-      throw new AppException(ErrorType.INVALID_PARAMETER);
+    public NotificationChannelFactory(List<NotificationChannel> channels) {
+        this.channelMap =
+                channels.stream().collect(Collectors.toMap(NotificationChannel::getChannelType, Function.identity()));
     }
-    return channel;
-  }
+
+    public NotificationChannel getChannel(NotificationChannelType type) {
+        NotificationChannel channel = channelMap.get(type);
+        if (channel == null) {
+            throw new AppException(ErrorType.INVALID_PARAMETER);
+        }
+        return channel;
+    }
 }

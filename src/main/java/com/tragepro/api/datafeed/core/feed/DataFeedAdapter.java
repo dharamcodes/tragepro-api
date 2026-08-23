@@ -5,7 +5,7 @@ import com.tragepro.api.domain.datafeed.request.FeedClientRequest;
 import java.util.List;
 
 public interface DataFeedAdapter {
-  List<CandleRequest> historicalDataAdapter(FeedClientRequest request);
+    List<CandleRequest> historicalDataAdapter(FeedClientRequest request);
 
-  List<CandleRequest> intradayDataAdapter(FeedClientRequest request);
+    List<CandleRequest> intradayDataAdapter(FeedClientRequest request);
 }

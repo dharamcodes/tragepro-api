@@ -6,8 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JournalRepository
-    extends MongoRepository<JournalEntity, String>, JournalRepositoryCustom {
+public interface JournalRepository extends MongoRepository<JournalEntity, String>, JournalRepositoryCustom {
 
-  List<JournalEntity> findByAccountId(String accountId);
+    List<JournalEntity> findByAccountId(String accountId);
 }

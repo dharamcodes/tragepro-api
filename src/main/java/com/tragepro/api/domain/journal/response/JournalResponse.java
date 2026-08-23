@@ -16,37 +16,37 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JournalResponse {
 
-  private String id;
+    private String id;
 
-  private String accountId;
+    private String accountId;
 
-  private String symbol;
+    private String symbol;
 
-  private TradeType tradeType;
+    private TradeType tradeType;
 
-  private TradeStatus status;
+    private TradeStatus status;
 
-  private BigDecimal entryPrice;
+    private BigDecimal entryPrice;
 
-  private BigDecimal exitPrice;
+    private BigDecimal exitPrice;
 
-  private BigDecimal quantity;
+    private BigDecimal quantity;
 
-  private Instant entryTime;
+    private Instant entryTime;
 
-  private Instant exitTime;
+    private Instant exitTime;
 
-  private BigDecimal pnl;
+    private BigDecimal pnl;
 
-  private String notes;
+    private String notes;
 
-  private List<String> tags;
+    private List<String> tags;
 
-  private String createdBy;
+    private String createdBy;
 
-  private Instant createdAt;
+    private Instant createdAt;
 
-  private String updatedBy;
+    private String updatedBy;
 
-  private Instant updatedAt;
+    private Instant updatedAt;
 }

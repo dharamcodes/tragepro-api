@@ -10,13 +10,12 @@ import io.temporal.activity.ActivityMethod;
 @ActivityInterface
 public interface BuilderActivity {
 
-  @ActivityMethod(name = "BUILDER_ACTIVITY-RUN")
-  StrategyResponse run(StrategyRequest strategyRequest);
+    @ActivityMethod(name = "BUILDER_ACTIVITY-RUN")
+    StrategyResponse run(StrategyRequest strategyRequest);
 
-  @ActivityMethod(name = "LOAD_BASE_CANDLE_DATA")
-  StrategyResponse loadBaseCandleData(
-      StrategyRequest strategyRequest, TimeframeModel baseTimeframe);
+    @ActivityMethod(name = "LOAD_BASE_CANDLE_DATA")
+    StrategyResponse loadBaseCandleData(StrategyRequest strategyRequest, TimeframeModel baseTimeframe);
 
-  @ActivityMethod(name = "CANDLE_TIMEFRAME_CONVERTER")
-  StrategyResponse candleTimeframeConverter(CandleModel baseData, TimeframeModel timeframeModel);
+    @ActivityMethod(name = "CANDLE_TIMEFRAME_CONVERTER")
+    StrategyResponse candleTimeframeConverter(CandleModel baseData, TimeframeModel timeframeModel);
 }

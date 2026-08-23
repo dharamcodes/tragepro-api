@@ -3,5 +3,4 @@ package com.tragepro.api.domain.datafeed;
 import lombok.Builder;
 
 @Builder
-public record CandleDataModel(
-    long timestamp, double open, double high, double low, double close, long volume) {}
+public record CandleDataModel(long timestamp, double open, double high, double low, double close, long volume) {}

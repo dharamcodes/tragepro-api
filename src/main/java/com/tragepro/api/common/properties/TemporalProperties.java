@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "temporal")
 public class TemporalProperties {
-  private Boolean enabled;
-  private ServerProperties server;
-  private WorkerProperties worker;
-  private ClientProperties client;
+    private Boolean enabled;
+    private ServerProperties server;
+    private WorkerProperties worker;
+    private ClientProperties client;
 }

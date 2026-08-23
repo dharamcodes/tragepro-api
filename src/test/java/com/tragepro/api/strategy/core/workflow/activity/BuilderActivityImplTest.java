@@ -9,31 +9,32 @@ import org.junit.jupiter.api.Test;
 
 class BuilderActivityImplTest {
 
-  private final BuilderActivityImpl builderActivity = new BuilderActivityImpl();
+    private final BuilderActivityImpl builderActivity = new BuilderActivityImpl();
 
-  @Test
-  void testRun() {
-    StrategyResponse response = builderActivity.run(StrategyRequest.builder().build());
-    assertNotNull(response);
-  }
+    @Test
+    void testRun() {
+        StrategyResponse response =
+                builderActivity.run(StrategyRequest.builder().build());
+        assertNotNull(response);
+    }
 
-  @Test
-  void testLoadBaseCandleData() {
-    assertNull(builderActivity.loadBaseCandleData(null, null));
-  }
+    @Test
+    void testLoadBaseCandleData() {
+        assertNull(builderActivity.loadBaseCandleData(null, null));
+    }
 
-  @Test
-  void testCandleTimeframeConverter() {
-    assertNull(builderActivity.candleTimeframeConverter(null, null));
-  }
+    @Test
+    void testCandleTimeframeConverter() {
+        assertNull(builderActivity.candleTimeframeConverter(null, null));
+    }
 
-  @Test
-  void testGlobalAndLocalActivities() {
-    assertNotNull(builderActivity.globalActivities());
-    assertNotNull(dataInitActivityGlobalActivities());
-  }
+    @Test
+    void testGlobalAndLocalActivities() {
+        assertNotNull(builderActivity.globalActivities());
+        assertNotNull(dataInitActivityGlobalActivities());
+    }
 
-  private Object dataInitActivityGlobalActivities() {
-    return builderActivity.localActivities();
-  }
+    private Object dataInitActivityGlobalActivities() {
+        return builderActivity.localActivities();
+    }
 }

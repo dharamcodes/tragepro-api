@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationAdapterImpl implements NotificationAdapter {
 
-  private final NotificationChannelFactory notificationChannelFactory;
+    private final NotificationChannelFactory notificationChannelFactory;
 
-  @Override
-  public void sendNotification(NotificationPayload payload) {
-    NotificationChannel channel = notificationChannelFactory.getChannel(payload.channelType());
-    channel.send(payload);
-  }
+    @Override
+    public void sendNotification(NotificationPayload payload) {
+        NotificationChannel channel = notificationChannelFactory.getChannel(payload.channelType());
+        channel.send(payload);
+    }
 }

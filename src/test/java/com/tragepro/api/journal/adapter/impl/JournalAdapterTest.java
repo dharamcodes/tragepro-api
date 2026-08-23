@@ -23,70 +23,72 @@ import org.springframework.data.domain.Pageable;
 @ExtendWith(MockitoExtension.class)
 class JournalAdapterTest {
 
-  @Mock private JournalService journalService;
+    @Mock
+    private JournalService journalService;
 
-  private JournalAdapterImpl journalAdapter;
+    private JournalAdapterImpl journalAdapter;
 
-  @BeforeEach
-  void setUp() {
-    journalAdapter = new JournalAdapterImpl(journalService);
-  }
+    @BeforeEach
+    void setUp() {
+        journalAdapter = new JournalAdapterImpl(journalService);
+    }
 
-  @Test
-  void testCreateJournal() {
-    JournalRequest request = JournalRequest.builder().notes("Good trade").build();
-    JournalResponse expectedResponse =
-        JournalResponse.builder().id("j-1").notes("Good trade").build();
-    when(journalService.createJournal(request)).thenReturn(expectedResponse);
+    @Test
+    void testCreateJournal() {
+        JournalRequest request = JournalRequest.builder().notes("Good trade").build();
+        JournalResponse expectedResponse =
+                JournalResponse.builder().id("j-1").notes("Good trade").build();
+        when(journalService.createJournal(request)).thenReturn(expectedResponse);
 
-    JournalResponse response = journalAdapter.createJournal(request);
+        JournalResponse response = journalAdapter.createJournal(request);
 
-    assertNotNull(response);
-    assertEquals("j-1", response.getId());
-    verify(journalService).createJournal(request);
-  }
+        assertNotNull(response);
+        assertEquals("j-1", response.getId());
+        verify(journalService).createJournal(request);
+    }
 
-  @Test
-  void testGetJournalById() {
-    JournalResponse expectedResponse =
-        JournalResponse.builder().id("j-1").notes("Good trade").build();
-    when(journalService.getJournalById("j-1")).thenReturn(expectedResponse);
+    @Test
+    void testGetJournalById() {
+        JournalResponse expectedResponse =
+                JournalResponse.builder().id("j-1").notes("Good trade").build();
+        when(journalService.getJournalById("j-1")).thenReturn(expectedResponse);
 
-    JournalResponse response = journalAdapter.getJournalById("j-1");
+        JournalResponse response = journalAdapter.getJournalById("j-1");
 
-    assertNotNull(response);
-    assertEquals("j-1", response.getId());
-    verify(journalService).getJournalById("j-1");
-  }
+        assertNotNull(response);
+        assertEquals("j-1", response.getId());
+        verify(journalService).getJournalById("j-1");
+    }
 
-  @Test
-  void testGetAllJournals() {
-    TradeFilter filter = new TradeFilter("AAPL", null, null, null, null, null);
-    Pageable pageable = PageRequest.of(0, 10);
-    JournalResponse item = JournalResponse.builder().id("j-1").symbol("AAPL").build();
-    PageImpl<JournalResponse> page = new PageImpl<>(List.of(item), pageable, 1);
-    when(journalService.getAllJournals(any(), any())).thenReturn(page);
+    @Test
+    void testGetAllJournals() {
+        TradeFilter filter = new TradeFilter("AAPL", null, null, null, null, null);
+        Pageable pageable = PageRequest.of(0, 10);
+        JournalResponse item =
+                JournalResponse.builder().id("j-1").symbol("AAPL").build();
+        PageImpl<JournalResponse> page = new PageImpl<>(List.of(item), pageable, 1);
+        when(journalService.getAllJournals(any(), any())).thenReturn(page);
 
-    org.springframework.data.domain.Page<JournalResponse> response =
-        journalAdapter.getAllJournals(filter, pageable);
+        org.springframework.data.domain.Page<JournalResponse> response =
+                journalAdapter.getAllJournals(filter, pageable);
 
-    assertNotNull(response);
-    assertEquals(1, response.getContent().size());
-    assertEquals("j-1", response.getContent().get(0).getId());
-    verify(journalService).getAllJournals(any(), any());
-  }
+        assertNotNull(response);
+        assertEquals(1, response.getContent().size());
+        assertEquals("j-1", response.getContent().get(0).getId());
+        verify(journalService).getAllJournals(any(), any());
+    }
 
-  @Test
-  void testUpdateJournal() {
-    JournalRequest request = JournalRequest.builder().notes("Updated trade").build();
-    JournalResponse expectedResponse =
-        JournalResponse.builder().id("j-1").notes("Updated trade").build();
-    when(journalService.updateJournal("j-1", request)).thenReturn(expectedResponse);
+    @Test
+    void testUpdateJournal() {
+        JournalRequest request = JournalRequest.builder().notes("Updated trade").build();
+        JournalResponse expectedResponse =
+                JournalResponse.builder().id("j-1").notes("Updated trade").build();
+        when(journalService.updateJournal("j-1", request)).thenReturn(expectedResponse);
 
-    JournalResponse response = journalAdapter.updateJournal("j-1", request);
+        JournalResponse response = journalAdapter.updateJournal("j-1", request);
 
-    assertNotNull(response);
-    assertEquals("j-1", response.getId());
-    verify(journalService).updateJournal("j-1", request);
-  }
+        assertNotNull(response);
+        assertEquals("j-1", response.getId());
+        verify(journalService).updateJournal("j-1", request);
+    }
 }

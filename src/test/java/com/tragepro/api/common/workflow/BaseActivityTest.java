@@ -6,15 +6,15 @@ import org.junit.jupiter.api.Test;
 
 class BaseActivityTest {
 
-  interface SampleActivity {}
+    interface SampleActivity {}
 
-  @Test
-  void testLocalActivityStub_ThrowsExceptionOutsideWorkflowThread() {
-    assertThrows(Error.class, () -> BaseActivity.localActivity(SampleActivity.class));
-  }
+    @Test
+    void testLocalActivityStub_ThrowsExceptionOutsideWorkflowThread() {
+        assertThrows(Error.class, () -> BaseActivity.localActivity(SampleActivity.class));
+    }
 
-  @Test
-  void testGlobalActivityStub_ThrowsExceptionOutsideWorkflowThread() {
-    assertThrows(Error.class, () -> BaseActivity.globalActivity(SampleActivity.class));
-  }
+    @Test
+    void testGlobalActivityStub_ThrowsExceptionOutsideWorkflowThread() {
+        assertThrows(Error.class, () -> BaseActivity.globalActivity(SampleActivity.class));
+    }
 }

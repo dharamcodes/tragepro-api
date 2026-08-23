@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatusModel {
-  private StrategyState state;
-  private StrategyStep step;
+    private StrategyState state;
+    private StrategyStep step;
 }

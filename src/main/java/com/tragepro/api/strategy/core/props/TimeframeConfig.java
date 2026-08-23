@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeframeConfig {
-  private int value;
-  private TimeUnit uom;
-  private Timeframe type;
+    private int value;
+    private TimeUnit uom;
+    private Timeframe type;
 }

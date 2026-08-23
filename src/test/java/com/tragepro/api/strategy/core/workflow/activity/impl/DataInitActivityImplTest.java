@@ -39,103 +39,113 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DataInitActivityImplTest {
 
-  @Mock private ConfigLoaderService configLoaderService;
-  @Mock private WatchListAdapter watchListAdapter;
-  @Mock private StrategyContext strategyContext;
-  @Mock private StrategyService strategyService;
-  @Mock private MapperFactory mapperFactory;
-  @Mock private StrategyMapper strategyMapper;
+    @Mock
+    private ConfigLoaderService configLoaderService;
 
-  @InjectMocks private DataInitActivityImpl dataInitActivity;
+    @Mock
+    private WatchListAdapter watchListAdapter;
 
-  private StrategyRequest strategyRequest;
-  private StrategyResponse strategyResponse;
-  private StrategyEntity strategyEntity;
+    @Mock
+    private StrategyContext strategyContext;
 
-  @BeforeEach
-  void setUp() {
-    strategyRequest =
-        StrategyRequest.builder()
-            .strategy(StrategyModel.builder().watchlist("WL").build())
-            .symbolData(SymbolModel.builder().symbol("SYM").build())
-            .currentState(
-                StatusModel.builder()
-                    .state(StrategyState.INITIALIZING)
-                    .step(StrategyStep.INIT)
-                    .build())
-            .build();
-    strategyResponse =
-        StrategyResponse.builder()
-            .strategy(StrategyModel.builder().name("STRATEGY_NAME").build())
-            .symbolData(SymbolModel.builder().symbol("SYM").build())
-            .build();
-    strategyEntity = new StrategyEntity();
-  }
+    @Mock
+    private StrategyService strategyService;
 
-  @Test
-  void testRun() {
-    when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
-    when(strategyMapper.requestToEntity(strategyRequest)).thenReturn(strategyEntity);
-    when(strategyMapper.entityToResponse(strategyEntity)).thenReturn(strategyResponse);
+    @Mock
+    private MapperFactory mapperFactory;
 
-    Set<StrategyResponse> result = dataInitActivity.run(Set.of(strategyRequest));
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    verify(strategyContext, times(1)).put(eq("STRATEGY_NAME"), eq(strategyResponse));
-  }
+    @Mock
+    private StrategyMapper strategyMapper;
 
-  @Test
-  void testStoreData() {
-    when(strategyService.createOrUpdate(strategyRequest)).thenReturn(strategyResponse);
-    when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
-    when(strategyMapper.responseToRequest(strategyResponse)).thenReturn(strategyRequest);
+    @InjectMocks
+    private DataInitActivityImpl dataInitActivity;
 
-    Set<StrategyRequest> result = dataInitActivity.storeData(Set.of(strategyRequest));
-    assertNotNull(result);
-    assertEquals(1, result.size());
-  }
+    private StrategyRequest strategyRequest;
+    private StrategyResponse strategyResponse;
+    private StrategyEntity strategyEntity;
 
-  @Test
-  void testLoadConfig() {
-    StrategyConfig config = new StrategyConfig();
-    config.setName("StrategyName");
-    config.setDesc("Desc");
-    config.setWatchList("WL");
+    @BeforeEach
+    void setUp() {
+        strategyRequest = StrategyRequest.builder()
+                .strategy(StrategyModel.builder().watchlist("WL").build())
+                .symbolData(SymbolModel.builder().symbol("SYM").build())
+                .currentState(StatusModel.builder()
+                        .state(StrategyState.INITIALIZING)
+                        .step(StrategyStep.INIT)
+                        .build())
+                .build();
+        strategyResponse = StrategyResponse.builder()
+                .strategy(StrategyModel.builder().name("STRATEGY_NAME").build())
+                .symbolData(SymbolModel.builder().symbol("SYM").build())
+                .build();
+        strategyEntity = new StrategyEntity();
+    }
 
-    IndicatorConfig indicator = new IndicatorConfig();
-    indicator.setName(IndicatorType.VWAP_LEVELS);
-    indicator.setTimeFrame(Timeframe.LOWER);
-    config.setIndicators(Set.of(indicator));
+    @Test
+    void testRun() {
+        when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
+        when(strategyMapper.requestToEntity(strategyRequest)).thenReturn(strategyEntity);
+        when(strategyMapper.entityToResponse(strategyEntity)).thenReturn(strategyResponse);
 
-    TimeframeConfig timeframe = new TimeframeConfig();
-    timeframe.setValue(1);
-    timeframe.setUom(TimeUnit.MINUTE);
-    timeframe.setType(Timeframe.LOWER);
-    config.setTimeframes(List.of(timeframe));
+        Set<StrategyResponse> result = dataInitActivity.run(Set.of(strategyRequest));
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(strategyContext, times(1)).put(eq("STRATEGY_NAME"), eq(strategyResponse));
+    }
 
-    when(configLoaderService.getStrategyByName("StrategyName")).thenReturn(config);
+    @Test
+    void testStoreData() {
+        when(strategyService.createOrUpdate(strategyRequest)).thenReturn(strategyResponse);
+        when(mapperFactory.getMapper(StrategyMapper.class)).thenReturn(strategyMapper);
+        when(strategyMapper.responseToRequest(strategyResponse)).thenReturn(strategyRequest);
 
-    StrategyRequest result = dataInitActivity.loadConfig("StrategyName");
-    assertNotNull(result);
-    assertEquals("StrategyName", result.getStrategy().getName());
-    assertEquals("Desc", result.getStrategy().getDesc());
-    assertEquals("WL", result.getStrategy().getWatchlist());
-  }
+        Set<StrategyRequest> result = dataInitActivity.storeData(Set.of(strategyRequest));
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
 
-  @Test
-  void testLoadSymbol() {
-    SymbolDataModel symbolData = new SymbolDataModel("AAPL", "Apple");
-    WatchListResponse wlResponse = WatchListResponse.builder().stocks(Set.of(symbolData)).build();
-    when(watchListAdapter.getById("WL")).thenReturn(Optional.of(wlResponse));
+    @Test
+    void testLoadConfig() {
+        StrategyConfig config = new StrategyConfig();
+        config.setName("StrategyName");
+        config.setDesc("Desc");
+        config.setWatchList("WL");
 
-    Set<StrategyRequest> result = dataInitActivity.loadSymbol(strategyRequest);
-    assertNotNull(result);
-    assertEquals(1, result.size());
-  }
+        IndicatorConfig indicator = new IndicatorConfig();
+        indicator.setName(IndicatorType.VWAP_LEVELS);
+        indicator.setTimeFrame(Timeframe.LOWER);
+        config.setIndicators(Set.of(indicator));
 
-  @Test
-  void testGlobalAndLocalActivities() {
-    assertNotNull(dataInitActivity.globalActivities());
-    assertNotNull(dataInitActivity.localActivities());
-  }
+        TimeframeConfig timeframe = new TimeframeConfig();
+        timeframe.setValue(1);
+        timeframe.setUom(TimeUnit.MINUTE);
+        timeframe.setType(Timeframe.LOWER);
+        config.setTimeframes(List.of(timeframe));
+
+        when(configLoaderService.getStrategyByName("StrategyName")).thenReturn(config);
+
+        StrategyRequest result = dataInitActivity.loadConfig("StrategyName");
+        assertNotNull(result);
+        assertEquals("StrategyName", result.getStrategy().getName());
+        assertEquals("Desc", result.getStrategy().getDesc());
+        assertEquals("WL", result.getStrategy().getWatchlist());
+    }
+
+    @Test
+    void testLoadSymbol() {
+        SymbolDataModel symbolData = new SymbolDataModel("AAPL", "Apple");
+        WatchListResponse wlResponse =
+                WatchListResponse.builder().stocks(Set.of(symbolData)).build();
+        when(watchListAdapter.getById("WL")).thenReturn(Optional.of(wlResponse));
+
+        Set<StrategyRequest> result = dataInitActivity.loadSymbol(strategyRequest);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testGlobalAndLocalActivities() {
+        assertNotNull(dataInitActivity.globalActivities());
+        assertNotNull(dataInitActivity.localActivities());
+    }
 }

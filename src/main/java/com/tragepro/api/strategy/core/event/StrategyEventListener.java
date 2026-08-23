@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class StrategyEventListener {
 
-  @ApplicationModuleListener
-  public void on(StrategyEvent event) {
-    log.info("Received StrategyEvent: {} - {}", event.eventId(), event.message());
-  }
+    @ApplicationModuleListener
+    public void on(StrategyEvent event) {
+        log.info("Received StrategyEvent: {} - {}", event.eventId(), event.message());
+    }
 }

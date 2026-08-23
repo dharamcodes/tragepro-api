@@ -13,25 +13,25 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class JournalAdapterImpl implements JournalAdapter {
-  private final JournalService journalService;
+    private final JournalService journalService;
 
-  @Override
-  public JournalResponse createJournal(JournalRequest request) {
-    return journalService.createJournal(request);
-  }
+    @Override
+    public JournalResponse createJournal(JournalRequest request) {
+        return journalService.createJournal(request);
+    }
 
-  @Override
-  public JournalResponse getJournalById(String id) {
-    return journalService.getJournalById(id);
-  }
+    @Override
+    public JournalResponse getJournalById(String id) {
+        return journalService.getJournalById(id);
+    }
 
-  @Override
-  public Page<JournalResponse> getAllJournals(TradeFilter filter, Pageable pageable) {
-    return journalService.getAllJournals(filter, pageable);
-  }
+    @Override
+    public Page<JournalResponse> getAllJournals(TradeFilter filter, Pageable pageable) {
+        return journalService.getAllJournals(filter, pageable);
+    }
 
-  @Override
-  public JournalResponse updateJournal(String id, JournalRequest request) {
-    return journalService.updateJournal(id, request);
-  }
+    @Override
+    public JournalResponse updateJournal(String id, JournalRequest request) {
+        return journalService.updateJournal(id, request);
+    }
 }

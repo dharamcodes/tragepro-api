@@ -8,13 +8,13 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ObjectCloneUtil {
-  private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-  public <T> T clone(T object, Class<T> type) {
-    try {
-      return objectMapper.readValue(objectMapper.writeValueAsString(object), type);
-    } catch (Exception e) {
-      throw new AppException(ErrorType.INTERNAL_ERROR);
+    public <T> T clone(T object, Class<T> type) {
+        try {
+            return objectMapper.readValue(objectMapper.writeValueAsString(object), type);
+        } catch (Exception e) {
+            throw new AppException(ErrorType.INTERNAL_ERROR);
+        }
     }
-  }
 }
