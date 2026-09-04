@@ -110,7 +110,7 @@ Thor writes clean, robust code and validates behavior across:
 ### Rule 4 — Loki Conducts Exhaustive Code & Test Review
 Loki verifies that:
 - Every acceptance criterion in the issue has corresponding test assertions.
-- Code conforms to Java 25 and Spring Boot 4.1.0 standards.
+- Code conforms to Java 25 and Spring Boot 4.1.1 standards.
 - Bruno tests are deterministic, isolated, and validate error scenarios.
 - All review comments are classified using [Review Severity Guidelines](shared/review-severity.md).
 

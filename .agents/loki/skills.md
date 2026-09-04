@@ -26,7 +26,7 @@ Loki avoids bike-shedding and focuses on high-impact engineering substance:
 
 ---
 
-## 🛠 3. Java 25 & Spring Boot 4.1.0 Mastery
+## 🛠 3. Java 25 & Spring Boot 4.1.1 Mastery
 
 - **Java 25 Idioms**: Ensuring immutable `record` usage for DTOs, proper pattern matching switch expressions, and sealed hierarchies where appropriate.
 - **Spring Boot Best Practices**: Enforcing constructor injection (`@RequiredArgsConstructor`), stateless services, and `@Valid` constraints.

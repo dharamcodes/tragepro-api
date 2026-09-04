@@ -1,6 +1,6 @@
 # Coding Standards & Best Practices
 
-This document defines the strict programming standards for Java 25, Spring Boot 4.1.0, and related frameworks within the `tragepro-api` codebase.
+This document defines the strict programming standards for Java 25, Spring Boot 4.1.1, and related frameworks within the `tragepro-api` codebase.
 
 ---
 
@@ -44,7 +44,7 @@ public BigDecimal calculateFee(OrderType orderType, BigDecimal amount) {
 
 ---
 
-## 🌱 2. Spring Boot 4.1.0 & Spring Modulith Standards
+## 🌱 2. Spring Boot 4.1.1 & Spring Modulith Standards
 
 ### 🔹 Dependency Injection
 - **Mandatory Constructor Injection**: Use Lombok's `@RequiredArgsConstructor` on all Spring components.

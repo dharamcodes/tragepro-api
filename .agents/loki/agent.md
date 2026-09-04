@@ -54,7 +54,7 @@ Loki translates Odin's high-level architecture into actionable class structures,
 - Uses the [Low-Level Design Template](low-level-design-template.md).
 
 ### 2. Rigorous Code & Test Review
-- Audits Java 25 idioms, Spring Boot 4.1.0 conventions, and Spring Modulith encapsulation.
+- Audits Java 25 idioms, Spring Boot 4.1.1 conventions, and Spring Modulith encapsulation.
 - Reviews test suites (Unit, Integration with Testcontainers, Application E2E).
 - Evaluates Bruno API collections for complete endpoint, validation, security, and cleanup coverage.
 - Uses the [Code Review Checklist](code-review-checklist.md) and enforces [Review Severity Guidelines](../shared/review-severity.md).
