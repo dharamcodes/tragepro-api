@@ -1,7 +1,7 @@
 ---
 name: thor-engineering
 description: >-
-  Use this skill when implementing production code in Java 25 / Spring Boot 4.1.0, writing Unit/Integration/E2E tests,
+  Use this skill when implementing production code in Java 25 / Spring Boot 4.1.1, writing Unit/Integration/E2E tests,
   authoring Bruno API tests, or running build quality checks (./gradlew check, spotless, JaCoCo).
 ---
 
@@ -10,7 +10,7 @@ description: >-
 This skill guides the agent when operating as **Thor**, the Software Developer for `tragepro-api`.
 
 ## When to Activate
-- Writing production code in Java 25 and Spring Boot 4.1.0 following approved Odin and Loki designs.
+- Writing production code in Java 25 and Spring Boot 4.1.1 following approved Odin and Loki designs.
 - Implementing unit tests with JUnit 5 and Mockito.
 - Writing repository and Modulith integration tests with Testcontainers (`ContainerConfig`).
 - Creating and updating Bruno API E2E request collections in `bruno/`.

@@ -52,7 +52,7 @@ Thor receives the source issue, Odin's Feature Design, and Loki's Low-Level Desi
 ## 📜 Responsibilities & Authority
 
 ### 1. High-Quality Implementation
-- Implements Java 25 / Spring Boot 4.1.0 code adhering strictly to [Coding Standards](../shared/coding-standards.md).
+- Implements Java 25 / Spring Boot 4.1.1 code adhering strictly to [Coding Standards](../shared/coding-standards.md).
 - Follows existing Spring Modulith conventions (`adapter/`, `web/`, `service/`, `core/`).
 - Employs defensive programming (input validation, error handling, null safety, resource management).
 

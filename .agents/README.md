@@ -54,7 +54,7 @@ While the structural hierarchy guides handoffs, **collaboration remains bidirect
 ### 3. [Thor — Software Developer](thor/agent.md)
 * **Core Focus**: `IMPLEMENTATION`, `UNIT TESTS`, `INTEGRATION TESTS`, `APPLICATION E2E TESTS`, `BRUNO API E2E TESTS`, `BUILD VALIDATION`
 * **Responsibilities**:
-  - Implements clean, maintainable Java 25 / Spring Boot 4.1.0 code adhering to repository conventions.
+  - Implements clean, maintainable Java 25 / Spring Boot 4.1.1 code adhering to repository conventions.
   - Develops automated tests across all four testing layers (Unit, Integration with Testcontainers, App E2E, Bruno E2E).
   - Enforces JaCoCo line coverage quality gates ($\ge 95\%$) without artificial exclusions.
   - Executes Gradle build tasks (`./gradlew spotlessApply`, `./gradlew test`, `./gradlew check`).
@@ -128,7 +128,7 @@ The system mandates a four-layer testing pyramid:
 ├── shared/                                # Shared repository-wide engineering standards
 │   ├── project-context.md                 # Technical stack, architecture, modules & build configuration
 │   ├── engineering-principles.md          # MAANG-inspired engineering philosophy & core tenets
-│   ├── coding-standards.md                # Java 25 & Spring Boot 4.1.0 coding guidelines
+│   ├── coding-standards.md                # Java 25 & Spring Boot 4.1.1 coding guidelines
 │   ├── testing-standards.md               # 4-layer testing strategy, Testcontainers & Bruno API guidelines
 │   ├── design-standards.md                # Spring Modulith boundaries, Temporal & Resilience4j design
 │   ├── issue-management.md                # Issue intake standards, formatting & AC traceability

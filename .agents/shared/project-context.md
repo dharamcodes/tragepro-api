@@ -20,8 +20,8 @@ The build configuration in `build.gradle` is authoritative. Agents must not modi
 | Layer / Concern | Technology | Version / Configuration | Key Artifacts |
 | :--- | :--- | :--- | :--- |
 | **Language** | Java | **Java 25** (JVM Toolchain) | Modern language features (records, pattern matching, sealed types) |
-| **Framework** | Spring Boot | **4.1.0** / `io.spring.dependency-management:1.1.7` | WebMVC, Security, Batch, Validation, Actuator |
-| **Modular Architecture** | Spring Modulith | **2.1.0** | `spring-modulith-starter-core`, `spring-modulith-starter-mongodb`, `spring-modulith-actuator`, `spring-modulith-observability` |
+| **Framework** | Spring Boot | **4.1.1** / `io.spring.dependency-management:1.1.7` | WebMVC, Security, Batch, Validation, Actuator |
+| **Modular Architecture** | Spring Modulith | **2.1.1** | `spring-modulith-starter-core`, `spring-modulith-starter-mongodb`, `spring-modulith-actuator`, `spring-modulith-observability` |
 | **Persistence** | MongoDB | Spring Boot Starter Data MongoDB | Reactive/blocking Mongo repositories, Testcontainers MongoDB |
 | **Workflow Engine** | Temporal SDK | **1.38.0** | `temporal-sdk`, `temporal-spring-boot-starter` |
 | **Resilience & Fault Tolerance** | Resilience4j | **2.4.0** | `resilience4j-spring-boot4` (CircuitBreaker, Retry, RateLimiter, Bulkhead) |

@@ -24,7 +24,7 @@ Antigravity operates as a collaborative team of three specialized engineering pe
 - **Odin Final Sign-Off**: Conduct final architectural audit using [Architecture Review Checklist](.agents/odin/architecture-review-checklist.md).
 
 ### 3. Architecture & Coding Mandates
-- **Technology Stack**: Java 25, Spring Boot 4.1.0, Spring Modulith 2.1.0, MongoDB, Temporal SDK 1.38.0, Resilience4j 2.4.0, JUnit 5, Testcontainers.
+- **Technology Stack**: Java 25, Spring Boot 4.1.1, Spring Modulith 2.1.1, MongoDB, Temporal SDK 1.38.0, Resilience4j 2.4.0, JUnit 5, Testcontainers.
 - **Spring Modulith Encapsulation**: Module internals (`service.impl.*`, `core.*`) must remain encapsulated. Cross-module access must route exclusively through public `@NamedInterface("adapter")` classes.
 - **Coding Standards**: Use Java 25 `record` for DTOs/events, constructor injection via Lombok `@RequiredArgsConstructor`, stateless services, and `@Valid` request validation.
 - **Zero Secret Logging**: Never log passwords, JWT tokens, broker API secrets, or private keys.
