@@ -24,12 +24,9 @@ configurations {
 
 ext {
     jwtVersion = "0.13.0"
-    springAiVersion="1.0.0-RC1"
     openApi = "3.1.0"
     mapStruct = "1.6.3"
     springModulithVersion = "2.1.1"
-    swaggerUiVersion = "5.32.6"
-    copperVersion = "8.0.0"
     lombokMapstruct = "0.2.0"
     temporalVersion = "1.38.0"
     resiliance4jVersion = "2.4.0"
