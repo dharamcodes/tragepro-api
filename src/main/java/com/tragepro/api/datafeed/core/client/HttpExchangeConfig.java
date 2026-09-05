@@ -20,7 +20,7 @@ public class HttpExchangeConfig {
     private final ClientConfig clientConfig;
 
     @Bean
-    public FeedClient dataFeedClient() {
+    public DataFeedRestClient dataFeedClient() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(clientConfig.getConTimeout());
         requestFactory.setReadTimeout(clientConfig.getReadTimeout());
@@ -33,6 +33,6 @@ public class HttpExchangeConfig {
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient))
                 .build();
         log.info("Client configuration completed for clientName :: {}", clientConfig.getClientName());
-        return factory.createClient(FeedClient.class);
+        return factory.createClient(DataFeedRestClient.class);
     }
 }

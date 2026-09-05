@@ -21,10 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
-class FeedClientAdapterTest {
+class DataFeedRestClientAdapterTest {
 
     @Mock
-    private FeedClient feedClient;
+    private DataFeedRestClient dataFeedRestClient;
 
     @Mock
     private FeedClientMapper feedClientMapper;
@@ -45,25 +45,25 @@ class FeedClientAdapterTest {
 
     @Test
     void testHistoricalDataAdapter() {
-        when(feedClient.getHistoricalFeed(request)).thenReturn(response);
+        when(dataFeedRestClient.getHistoricalFeed(request)).thenReturn(response);
         when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
 
         List<CandleRequest> result = feedClientAdapter.historicalDataAdapter(request);
 
         assertEquals(mappedRequests, result);
-        verify(feedClient).getHistoricalFeed(request);
+        verify(dataFeedRestClient).getHistoricalFeed(request);
         verify(feedClientMapper).map(response, request);
     }
 
     @Test
     void testIntradayDataAdapter() {
-        when(feedClient.getIntradayFeed(request)).thenReturn(response);
+        when(dataFeedRestClient.getIntradayFeed(request)).thenReturn(response);
         when(feedClientMapper.map(response, request)).thenReturn(mappedRequests);
 
         List<CandleRequest> result = feedClientAdapter.intradayDataAdapter(request);
 
         assertEquals(mappedRequests, result);
-        verify(feedClient).getIntradayFeed(request);
+        verify(dataFeedRestClient).getIntradayFeed(request);
         verify(feedClientMapper).map(response, request);
     }
 

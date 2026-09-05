@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class FeedClientMapperTest {
+class DataFeedRestClientMapperTest {
 
     private final FeedClientMapper mapper = new FeedClientMapper() {};
 

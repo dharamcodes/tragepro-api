@@ -7,7 +7,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
 @HttpExchange
-public interface FeedClient {
+public interface DataFeedRestClient {
 
     @PostExchange(url = "/charts/historical")
     FeedClientResponse getHistoricalFeed(@RequestBody FeedClientRequest feedClientRequest);

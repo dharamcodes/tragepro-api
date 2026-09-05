@@ -3,7 +3,7 @@ package com.tragepro.api.datafeed.core.client.adapter;
 import com.tragepro.api.common.exception.AppException;
 import com.tragepro.api.common.exception.constant.ErrorType;
 import com.tragepro.api.datafeed.core.client.DataFeedAdapter;
-import com.tragepro.api.datafeed.core.client.FeedClient;
+import com.tragepro.api.datafeed.core.client.DataFeedRestClient;
 import com.tragepro.api.datafeed.service.mapper.FeedClientMapper;
 import com.tragepro.api.domain.datafeed.request.CandleRequest;
 import com.tragepro.api.domain.datafeed.request.FeedClientRequest;
@@ -21,14 +21,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FeedClientAdapter implements DataFeedAdapter {
 
-    private final FeedClient feedClient;
+    private final DataFeedRestClient dataFeedRestClient;
     private final FeedClientMapper feedClientMapper;
 
     @RateLimiter(name = "apiLimiter", fallbackMethod = "apiCallFallbackHistorical")
     @Override
     public List<CandleRequest> historicalDataAdapter(FeedClientRequest request) {
         log.info("Fetching historical client for securityId: {}", request.securityId());
-        FeedClientResponse response = feedClient.getHistoricalFeed(request);
+        FeedClientResponse response = dataFeedRestClient.getHistoricalFeed(request);
         return processResponse(response, request);
     }
 
@@ -36,7 +36,7 @@ public class FeedClientAdapter implements DataFeedAdapter {
     @Override
     public List<CandleRequest> intradayDataAdapter(FeedClientRequest request) {
         log.info("Fetching intraday client for securityId: {}", request.securityId());
-        FeedClientResponse response = feedClient.getIntradayFeed(request);
+        FeedClientResponse response = dataFeedRestClient.getIntradayFeed(request);
         return processResponse(response, request);
     }
 
