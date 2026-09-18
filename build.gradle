@@ -24,7 +24,7 @@ configurations {
 
 ext {
     jwtVersion = "0.13.0"
-    openApi = "3.1.0"
+    openApi = "3.1.1"
     mapStruct = "1.6.3"
     springModulithVersion = "2.1.1"
     lombokMapstruct = "0.2.0"
