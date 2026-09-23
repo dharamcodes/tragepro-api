@@ -28,7 +28,7 @@ ext {
     mapStruct = "1.6.3"
     springModulithVersion = "2.1.1"
     lombokMapstruct = "0.2.0"
-    temporalVersion = "1.38.0"
+    temporalVersion = "1.39.0"
     resiliance4jVersion = "2.4.0"
 }
 
